@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <h1 style="color:green;">Success!</h1>
+  <p class="important">
+    Your data has been successfully submitted. (Next step is to fit your data against our ML model -- in development. Should be done shortly!)
+  </p>
+  <h2>Your data:</h2>
+  <pre style="white-space: pre-wrap; font-size:11px;">
+  {{ data }}
+  </pre>
+{% endblock %}

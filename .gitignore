@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Ignore the usual stuff
+venv
+*.pyc
+.DS_Store
+.env
+*.xml
+*.iml
+
+# Ignore any notebooks
+.ipynb
+
+# Ignore secret! (if they exist)
+secret
+
+# Ignore data
+# data (Don't ignore for now...!)
+data (old)
+old
+
+# Ignore migrations:
+migrations
