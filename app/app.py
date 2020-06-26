@@ -12,8 +12,10 @@ sys.path.append(".")
 import subprocess
 import requests
 import pandas as pd
+
 from flask import Flask, request, jsonify, render_template, flash, redirect
 from flask_wtf.csrf import CSRFProtect
+from flask_sqlalchemy import SQLAlchemy
 
 # Import forms
 from forms.select_data import dataForm
@@ -32,7 +34,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
 
-# db.init_app(app)
+db.init_app(app)
 # with app.app_context():
 #     db.create_all()
 
