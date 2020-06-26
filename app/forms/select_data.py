@@ -19,7 +19,7 @@ class showGenre(FlaskForm):
 class productionType(FlaskForm):
     originals = BooleanField(label="Originals", default=True, render_kw ={'checked':''})
     revivals = BooleanField(label="Revivals", default=True, render_kw ={'checked':''})
-    thers = BooleanField(label="Other", default=True, render_kw ={'checked':''})
+    others = BooleanField(label="Other", default=True, render_kw ={'checked':''})
 
 class theatreInfo(FlaskForm):
     theatreName = StringField(label="Theatre Name (fuzzy)")

@@ -18,13 +18,16 @@ from flask_wtf.csrf import CSRFProtect
 # Import forms
 from forms.select_data import dataForm
 
+# import utils
+from utils.get_db_uri import get_db_uri
+
 # ==============================================================================
 # Begin
 # ==============================================================================
 
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
+app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
@@ -55,7 +58,7 @@ def submit_data():
     form = dataForm(request.form)
 
     if request.method == 'POST':
-        if form.validate():
+        if True: #form.validate():
             my_data = {}
             for key, value in form.allFields.data.items():
                 if type(value)==dict:
@@ -73,8 +76,9 @@ def submit_data():
 
 # ------------------------------------------------------------------------------
 
-@app.route('/fit_data/', methods=['POST'])
+@app.route('/return-data/', methods=['GET','POST'])
 def respond():
+    """submit a specific json, returns data"""
 
     # Retrieve the api_key
     # api_key = request.form.get("api_key", None)

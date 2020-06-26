@@ -12,7 +12,7 @@ import sqlalchemy
 from sqlalchemy import Table, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-# custom stuff
+# import utils
 from utils.get_db_uri import get_db_uri
 
 # ------------------------------------------------------------------------------
