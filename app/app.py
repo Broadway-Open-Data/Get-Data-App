@@ -23,6 +23,10 @@ from forms.select_data import dataForm
 # import utils
 from utils.get_db_uri import get_db_uri
 
+# Import cache
+from common.extensions import cache
+
+
 # ==============================================================================
 # Begin
 # ==============================================================================
@@ -33,8 +37,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
+# Configure the app
+cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
 
-db.init_app(app)
+# db.init_app(app)
 # with app.app_context():
 #     db.create_all()
 
@@ -57,6 +63,7 @@ def index():
 @app.route('/submit-data/',  methods=['GET', 'POST'])
 def submit_data():
 
+
     form = dataForm(request.form)
 
     if request.method == 'POST':
@@ -67,12 +74,50 @@ def submit_data():
                     my_data.update(value)
             # get rid of the csrf token
             del my_data["csrf_token"]
-            return render_template('submit-data-success.html', title="Success", data=my_data)
+            cache.set("user_query",my_data)
+
+            return redirect('/submit-data-success/')
     else:
         return render_template('submit-data.html', title='Submit Data', form=form)
 
 
 # ------------------------------------------------------------------------------
+
+# Submitted query
+@app.route('/submit-data-success/',  methods=['GET'])
+def fit_my_data():
+
+    data = cache.get("user_query")
+
+    # Success vs. Failure
+    if data:
+        # Omit all empty keys
+        # data = {k:v for k,v in data.items() if v not in ["", None]}
+
+        get_selected = lambda arr: [x for x in arr if data.get(x)]
+        show_type = get_selected(["musicals","plays","other_show_genre"])
+        production_type = get_selected(["originals","revivals","other_production_type"])
+
+        show_title = data.get("title")
+        show_keyword = data.get("keyword")
+        show_id = data.get("showId")
+
+        theatre_name = data.get("theatreName")
+        theatre_id = data.get("theatreId")
+
+        # 1. Query db by start and end date
+        start_dt = data.get("startDate")
+        end_dt = data.get("endDate")
+
+        #  *  *  *  *  *  *  *  *  *  *  *  *
+        #  This is where the magic happens
+        #  Make the query here...
+        #  *  *  *  *  *  *  *  *  *  *  *  *
+
+        # return jsonify(prediction)
+        return render_template('submit-data-success.html', title="Success", data=data)
+    else:
+        return render_template('submit-data-failure.html', title="Failure")
 
 
 

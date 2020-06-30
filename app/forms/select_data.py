@@ -14,12 +14,12 @@ class showInfo(FlaskForm):
 class showGenre(FlaskForm):
     musicals = BooleanField(label="Musicals", default=True, render_kw ={'checked':''})
     plays = BooleanField(label="Plays", default=True, render_kw ={'checked':''})
-    others = BooleanField(label="Other", default=True, render_kw ={'checked':''})
+    other_show_genre = BooleanField(label="Other", default=True, render_kw ={'checked':''})
 
 class productionType(FlaskForm):
     originals = BooleanField(label="Originals", default=True, render_kw ={'checked':''})
     revivals = BooleanField(label="Revivals", default=True, render_kw ={'checked':''})
-    others = BooleanField(label="Other", default=True, render_kw ={'checked':''})
+    other_production_type = BooleanField(label="Others", default=True, render_kw ={'checked':''})
 
 class theatreInfo(FlaskForm):
     theatreName = StringField(label="Theatre Name (fuzzy)")
@@ -31,7 +31,7 @@ class dateRange(FlaskForm):
 
 class summarizedFields(FlaskForm):
     """Some description."""
-    showInfoSum = FormField(showInfo, label="Show Info", description="hey")
+    showInfoSum = FormField(showInfo, label="Show Info", description="hey", separator="-")
     showGenreSum = FormField(showGenre, label="Show Genre", description="hey")
     productionTypeSum = FormField(productionType, label="Production Type", description="hey")
     theatreInfoSum = FormField(theatreInfo, label="Choose by Theatre Info",)
