@@ -2,7 +2,7 @@
 <html>
   <head>
     {% block head %}
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <title>{% block title %}{% endblock %} - Open Broadway Data</title>
     {% endblock %}
   </head>
@@ -14,6 +14,7 @@
     <!-- Footer... -->
     <hr>
     <div id="footer">
+      <a href="/">Home</a><br>
       {% block footer %}
       &copy; Copyright 2020 by <a href="https://github.com/Broadway-Open-Data">Open Broadway Data</a>.
       {% endblock %}

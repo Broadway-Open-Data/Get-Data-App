@@ -7,7 +7,6 @@ import uuid
 sys.path.append(".")
 
 import pandas as pd
-
 import sqlalchemy
 from sqlalchemy import Table, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -29,13 +28,13 @@ session = Session(autoflush=False)
 
 
 # Shows
-shows = Table('shows', metadata, autoload=True)
-query_shows = session.query(shows).all()
-df = pd.DataFrame(query_shows)
+# shows = Table('shows', metadata, autoload=True)
+# query_shows = session.query(shows).all()
+# df = pd.DataFrame(query_shows)
 # print(df)
 
 # Theatres
 theatres = Table('theatres', metadata, autoload=True)
-query_theatres = session.query(theatres).all()
-df = pd.DataFrame(query_theatres)
-# print(df)
+# query_theatres = session.query(theatres).all()
+# df = pd.DataFrame(query_theatres)
+print(theatres)

@@ -37,9 +37,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
+
 # Configure the app
 cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
 
+# Connect the db to the app
 # db.init_app(app)
 # with app.app_context():
 #     db.create_all()
@@ -59,10 +61,9 @@ def index():
 
 # ------------------------------------------------------------------------------
 
-
+# Allow the user to request specific data from the app
 @app.route('/submit-data/',  methods=['GET', 'POST'])
 def submit_data():
-
 
     form = dataForm(request.form)
 
@@ -85,7 +86,7 @@ def submit_data():
 
 # Submitted query
 @app.route('/submit-data-success/',  methods=['GET'])
-def fit_my_data():
+def submit_data_success():
 
     data = cache.get("user_query")
 
@@ -124,19 +125,11 @@ def fit_my_data():
 # ------------------------------------------------------------------------------
 
 @app.route('/return-data/', methods=['GET','POST'])
-def respond():
+def return_data():
     """submit a specific json, returns data"""
 
-    # Retrieve the api_key
-    # api_key = request.form.get("api_key", None)
-    # if not api_key:
-    #     return jsonify({
-    #         "ERROR": "api_key not found."
-    #     })
-
-    # Retrieve the data from  parameter
-    data = request.form.get("data", None)
-    # data = request.get_json(force=True)
+    # Retrieve the data from  user's request
+    data = cache.get("user_query")
 
     if not data:
         return jsonify({
@@ -144,11 +137,19 @@ def respond():
         })
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    # Proceed
-    response = {}
+
+    # (Copied from above)
+    # 1. Query db by start and end date
+    start_dt = data.get("startDate")
+    end_dt = data.get("endDate")
+
+    #  *  *  *  *  *  *  *  *  *  *  *  *
+    #  This is where the magic happens
+    #  Make the query here...
+    #  *  *  *  *  *  *  *  *  *  *  *  *
 
     # Return the response in json format
-    return jsonify(response)
+    return render_template('return-data.html', data = data)
 
 
 

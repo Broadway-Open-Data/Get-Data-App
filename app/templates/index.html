@@ -2,13 +2,14 @@
 {% block title %}{{ title }}{% endblock %}
 {% block head %}
 {{ super() }}
-  <style type="text/css">
-    .important { color: #336699; }
-  </style>
+
 {% endblock %}
 {% block content %}
+
   <h1>Open Broadway Data – Data Endpoint</h1>
   <h2>Welcome to this API!</h2>
+
   <p class="important">If you want to submit your data manually, do so through the button below.</p>
   <a href="/submit-data/"><button>Submit Data</button></a><br>
+
 {% endblock %}
