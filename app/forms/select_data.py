@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateField, BooleanField, IntegerField
+from wtforms import StringField, DateField, BooleanField, IntegerField, SubmitField
 from wtforms.fields import FormField, FieldList
 from wtforms.validators import DataRequired
 
@@ -26,18 +26,22 @@ class theatreInfo(FlaskForm):
     theatreId = IntegerField(label="Theatre ID")
 
 class dateRange(FlaskForm):
-    startDate = DateField(label="Start Date", description="this is a description", format='%Y-%m-%d', default=datetime.datetime(1850,1,1), validators=[DataRequired()])
-    endDate = DateField(label="End Date",format='%Y-%m-%d', default=datetime.datetime(2020,6,1))
+    # startDate = DateField(label="Start Date", description="this is a description", format='%Y-%m-%d', default=datetime.datetime(1850,1,1), validators=[DataRequired()])
+    # endDate = DateField(label="End Date",format='%Y-%m-%d', default=datetime.datetime(2020,6,1))
+    startYear = IntegerField(label="Start Year", default=1900, validators=[DataRequired()])
+    endYear = IntegerField(label="End Year",default=2020, validators=[DataRequired()])
 
 class summarizedFields(FlaskForm):
     """Some description."""
-    showInfoSum = FormField(showInfo, label="Show Info", description="hey", separator="-")
+    # showInfoSum = FormField(showInfo, label="Show Info", description="hey", separator="-")
     showGenreSum = FormField(showGenre, label="Show Genre", description="hey")
     productionTypeSum = FormField(productionType, label="Production Type", description="hey")
-    theatreInfoSum = FormField(theatreInfo, label="Choose by Theatre Info",)
+    # theatreInfoSum = FormField(theatreInfo, label="Choose by Theatre Info",)
     dateRangeSum = FormField(dateRange, label="Choose by Date Range",)
+
 
 # The acrtual form!
 class dataForm(FlaskForm):
     """All of the fields as one."""
     allFields = FormField(summarizedFields)
+    submit = SubmitField('Submit')

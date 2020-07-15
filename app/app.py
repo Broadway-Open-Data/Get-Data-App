@@ -75,6 +75,7 @@ def submit_data():
                     my_data.update(value)
             # get rid of the csrf token
             del my_data["csrf_token"]
+
             cache.set("user_query",my_data)
 
             return redirect('/submit-data-success/')
