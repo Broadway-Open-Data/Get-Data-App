@@ -13,12 +13,17 @@ import subprocess
 import requests
 import pandas as pd
 
+
 from flask import Flask, request, jsonify, render_template, flash, redirect
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 
+
 # Import forms
 from forms.select_data import dataForm
+
+# Connect to the db
+from connect_db import select_data
 
 # import utils
 from utils.get_db_uri import get_db_uri
@@ -40,12 +45,6 @@ csrf = CSRFProtect(app)
 
 # Configure the app
 cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
-
-# Connect the db to the app
-# db.init_app(app)
-# with app.app_context():
-#     db.create_all()
-
 
 
 # ==============================================================================
@@ -107,17 +106,13 @@ def submit_data_success():
         theatre_name = data.get("theatreName")
         theatre_id = data.get("theatreId")
 
-        # 1. Query db by start and end date
-        start_dt = data.get("startDate")
-        end_dt = data.get("endDate")
-
         #  *  *  *  *  *  *  *  *  *  *  *  *
         #  This is where the magic happens
         #  Make the query here...
         #  *  *  *  *  *  *  *  *  *  *  *  *
 
-        # return jsonify(prediction)
         return render_template('submit-data-success.html', title="Success", data=data)
+
     else:
         return render_template('submit-data-failure.html', title="Failure")
 
@@ -139,18 +134,16 @@ def return_data():
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    # (Copied from above)
-    # 1. Query db by start and end date
-    start_dt = data.get("startDate")
-    end_dt = data.get("endDate")
-
     #  *  *  *  *  *  *  *  *  *  *  *  *
     #  This is where the magic happens
-    #  Make the query here...
+    df = select_data(my_params=data, theatre_data=True)
+
     #  *  *  *  *  *  *  *  *  *  *  *  *
 
+    # Query is made successfully! Now, present the data more beautifully...
+
     # Return the response in json format
-    return render_template('return-data.html', data = data)
+    return render_template('return-data.html', data = df.to_json())
 
 
 
