@@ -14,7 +14,7 @@ import requests
 import pandas as pd
 
 
-from flask import Flask, request, jsonify, render_template, flash, redirect
+from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -137,14 +137,40 @@ def return_data():
     #  *  *  *  *  *  *  *  *  *  *  *  *
     #  This is where the magic happens
     df = select_data(my_params=data, theatre_data=True)
+    cache.set("my_data", df.to_dict(orient="records"))
 
     #  *  *  *  *  *  *  *  *  *  *  *  *
 
     # Query is made successfully! Now, present the data more beautifully...
 
     # Return the response in json format
-    return render_template('return-data.html', data = df.to_json())
+    return render_template('return-data.html', summary = df.describe().to_html(header="true", table_id="summary-data"),data = df.to_html(header="true", table_id="show-data"))
 
+
+# ------------------------------------------------------------------------------
+
+@app.route('/download-data/')
+def download_data():
+    """Download the data to the user as a csv..."""
+
+    # Retrieve the data from  user's request
+    data = cache.get("my_data")
+
+    if not data:
+        return jsonify({
+            "ERROR": "data not found."
+        })
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    df = pd.DataFrame.from_records(data)
+    print(df)
+    csv_data = df.to_csv(index=False, encoding='utf-8')
+
+    response = Response(csv_data,mimetype='text/csv')
+    response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+
+    return response
 
 
 # ------------------------------------------------------------------------------

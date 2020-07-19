@@ -1,4 +1,8 @@
 /* Use this document to change base app styles */
+body{
+  font: normal medium/1.4 sans-serif;
+}
+
 h1{
   color:blue;
 }

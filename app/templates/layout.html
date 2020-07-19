@@ -3,6 +3,14 @@
   <head>
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tables.css') }}">
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{
+      url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+
+    <script type=text/javascript src="{{url_for('static', filename='tables.js') }}"></script>
+
     <title>{% block title %}{% endblock %} - Open Broadway Data</title>
     {% endblock %}
   </head>

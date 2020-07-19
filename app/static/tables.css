@@ -1,0 +1,20 @@
+/* body            { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;} */
+
+table.dataframe, .dataframe th, .dataframe td {
+  border: none;
+  border-bottom: 1px solid #C8C8C8;
+  border-collapse: collapse;
+  text-align:left;
+  padding: 10px;
+  margin-bottom: 40px;
+  font-size: 0.9em;
+}
+
+
+tr:nth-child(odd)       { background-color:#eee; }
+tr:nth-child(even)  { background-color:#fff; }
+
+/* Highlight rows and columns */
+table#show-data .hover {
+  background: rgba(248, 241, 132, .35);
+}
