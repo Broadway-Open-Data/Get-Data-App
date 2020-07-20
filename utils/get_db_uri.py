@@ -7,11 +7,17 @@ import sys
 sys.path.append(".")
 
 # ------------------------------------------------------------------------------
+
 # get the credentials
-with open("secret/RSD_CREDENTIALS.json", "r") as f:
-    creds = json.load(f)
-    username = creds.get("RDS_USERNAME")
-    password = creds.get("RDS_PASSWORD")
+if os.environ["RDS_USERNAME"] and os.environ["RDS_PASSWORD"]:
+    username = os.environ["RDS_USERNAME"]
+    password = os.environ["RDS_PASSWORD"]
+
+else:
+    with open("secret/RSD_CREDENTIALS.json", "r") as f:
+        creds = json.load(f)
+        username = creds.get("RDS_USERNAME")
+        password = creds.get("RDS_PASSWORD")
 
 
 # Access the path and stuff
