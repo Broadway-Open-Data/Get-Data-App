@@ -9,7 +9,10 @@
   {{ summary|safe }}
   <br>
   <h2>Data:</h2>
+  <input type="search" id="search" placeholder="Filter by Title"><br>
   <a href="/download-data/"><button>Download as CSV</button></a><br>
-  {{ data|safe }}
 
+  <div class="table-container">
+  {{ data|safe }}
+  </div>
 {% endblock %}

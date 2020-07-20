@@ -15,4 +15,21 @@ document.addEventListener("DOMContentLoaded", function() {
       allCells.removeClass("hover");
     });
 
+  });
+
+// Allow searching through the table
+document.addEventListener('DOMContentLoaded', function() {
+  // Quick Table Search
+  $('#search').keyup(function() {
+    var regex = new RegExp($('#search').val(), "i");
+    var rows = $('#show-data > tbody > tr');
+    rows.each(function (index) {
+      title = $(this).find("td").eq(2).html()
+      if (title.search(regex) != -1) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
 });

@@ -6,10 +6,23 @@ table.dataframe, .dataframe th, .dataframe td {
   border-collapse: collapse;
   text-align:left;
   padding: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   font-size: 0.9em;
 }
 
+.table-container{ */
+  display: inline-block;
+  max-height:500px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+ }
+
+/* table#show-data >tbody{
+  display: inline-block;
+  max-height:500px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+} */
 
 tr:nth-child(odd)       { background-color:#eee; }
 tr:nth-child(even)  { background-color:#fff; }
