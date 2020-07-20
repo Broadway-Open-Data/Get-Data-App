@@ -6,10 +6,45 @@
 {% endblock %}
 {% block content %}
 
-  <h1>Open Broadway Data – Data Endpoint</h1>
+  <!-- Section -->
+  <div class="section">
+  <h1>Open Broadway Data – MVP</h1>
   <h2>Welcome to this API!</h2>
+  <p>This API will allow you to access the data for
+    every Broadway show since 1738.
+  </p>
 
-  <p class="important">If you want to submit your data manually, do so through the button below.</p>
+  <p><b>
+    Data can be accessed in one of two ways:
+    </b></p>
+    <ol>
+      <li>
+        <b>Manual Access:</b><br>
+        Fill out a form and receive data on the web page.
+      </li><br>
+      <li>
+        <b>Programmatic Access:</b><br>
+          Advanced users can use our REST endpoint to write SQL directly
+          to the database.
+      </li
+    </ol>
+  </div>
+
+  <!-- Section -->
+  <div class="section">
+  <h2>1. Acesss Data Manually</h2>
+  <p>
+    Get started by submitting what data you'd want.
+  </p>
   <a href="/submit-data/"><button>Submit Data</button></a><br>
+  </div>
 
+  <!-- Section -->
+  <div class="section">
+  <h2>2. Acesss Data Programmatically</h2>
+  <p>
+    Send an SQL query to our endpoint to recieve data.
+  </p>
+  <a href="/"><button>Placeholder</button></a><br>
+  </div>
 {% endblock %}

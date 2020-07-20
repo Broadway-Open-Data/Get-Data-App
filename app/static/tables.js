@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   });
 
+
 // Allow searching through the table
 document.addEventListener('DOMContentLoaded', function() {
   // Quick Table Search

@@ -1,8 +1,13 @@
 /* Use this document to change base app styles */
 body{
   font: normal medium/1.4 sans-serif;
+  padding: 0 15px 0 15px;
 }
 
 h1{
   color:blue;
+}
+
+.section{
+  padding:0 0 50px 0;
 }

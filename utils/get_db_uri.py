@@ -2,6 +2,7 @@ import os
 import json
 import sqlalchemy
 import sys
+from pathlib import Path
 
 # set the path to the root
 sys.path.append(".")
@@ -9,15 +10,16 @@ sys.path.append(".")
 # ------------------------------------------------------------------------------
 
 # get the credentials
-if os.environ["RDS_USERNAME"] and os.environ["RDS_PASSWORD"]:
-    username = os.environ["RDS_USERNAME"]
-    password = os.environ["RDS_PASSWORD"]
-
-else:
-    with open("secret/RSD_CREDENTIALS.json", "r") as f:
+creds_path = Path("secret/RSD_CREDENTIALS.json")
+if os.path.isfile(creds_path):
+    with open(creds_path, "r") as f:
         creds = json.load(f)
         username = creds.get("RDS_USERNAME")
         password = creds.get("RDS_PASSWORD")
+else:
+    username = os.environ["RDS_USERNAME"]
+    password = os.environ["RDS_PASSWORD"]
+
 
 
 # Access the path and stuff
