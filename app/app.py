@@ -177,5 +177,9 @@ def download_data():
 
 
 if __name__ == '__main__':
+
+    # Check if AWS...
+    is_aws = True if os.environ.get("AWS_DEFAULT_REGION") else False
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(host="0.0.0.0", debug=False)
+    # Debug locally, but not on aws...
+    app.run(host="0.0.0.0", debug=not is_aws)

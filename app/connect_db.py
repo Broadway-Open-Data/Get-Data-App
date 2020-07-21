@@ -100,12 +100,13 @@ def select_data(my_params={}, theatre_data=True):
         where(shows.c.production_type.in_(query_dict["production_type"]))
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    theatre_data = False
-    if theatre_data:
-        join_obj = shows.join(theatres, shows.c.theatre_id == theatres.c.id)
+    # If theatre info is requested
+    if my_params.get("theatre_info"):
+
+        join_obj = shows.join(theatres, shows.c.theatre_id == theatres.c.id, isouter=True)
 
         # Update the select statement
-        select_st =  select_st.select_from(join_obj)
+        select_st =  select_st.column(theatres).select_from(join_obj)
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
