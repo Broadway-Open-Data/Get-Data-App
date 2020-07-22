@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <h1>Access Data – Advanced</h1>
+  <p class="important">
+    Write an SQL query to the following route:
+  </p>
+  <pre>
+    /get-data-advanced/sql/
+  </pre>
+
+  <h3>Alternatively, you can write your SQL query below:</h3>
+
+  <!-- Create a form -->
+  <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+
+    <div class="form-group all-fields">
+
+    {{ form.allFields() }}
+    {{ form.submit() }}
+
+    </div>
+
+  </form>
+
+
+{% endblock %}

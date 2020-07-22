@@ -5,6 +5,8 @@ Have the ability to utilize API keys -- or use VPN to limit to internal traffic
 """
 import os
 import sys
+import json
+import datetime
 # set the path to the root
 sys.path.append(".")
 
@@ -14,16 +16,17 @@ import requests
 import pandas as pd
 
 
-from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file
+from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_restful import reqparse
 
 # Import forms
-from forms.select_data import dataForm
+from forms.select_data_simple import dataForm
+from forms.select_data_advanced import sqlForm
 
 # Connect to the db
-from connect_db import select_data
+from connect_db import select_data_from_simple, select_data_advanced
 
 # import utils
 from utils.get_db_uri import get_db_uri
@@ -61,8 +64,8 @@ def index():
 # ------------------------------------------------------------------------------
 
 # Allow the user to request specific data from the app
-@app.route('/submit-data/',  methods=['GET', 'POST'])
-def submit_data():
+@app.route('/get-data/',  methods=['GET', 'POST'])
+def get_data_simple():
 
     form = dataForm(request.form)
 
@@ -77,77 +80,100 @@ def submit_data():
 
             cache.set("user_query",my_data)
 
-            return redirect('/submit-data-success/')
+            return redirect('/get-data-success/')
     else:
-        return render_template('submit-data.html', title='Submit Data', form=form)
+        return render_template('get-data.html', title='Submit Data', form=form)
 
 
 # ------------------------------------------------------------------------------
 
 # Submitted query
-@app.route('/submit-data-success/',  methods=['GET'])
-def submit_data_success():
+@app.route('/get-data-success/',  methods=['GET'])
+def return_data():
 
     data = cache.get("user_query")
 
     # Success vs. Failure
     if data:
-        # Omit all empty keys
-        # data = {k:v for k,v in data.items() if v not in ["", None]}
 
-        get_selected = lambda arr: [x for x in arr if data.get(x)]
-        show_type = get_selected(["musicals","plays","other_show_genre"])
-        production_type = get_selected(["originals","revivals","other_production_type"])
+        # Retrieve the data from  user's request
+        df = select_data_from_simple(my_params=data, theatre_data=True)
+        cache.set("my_data", df.to_dict(orient="records"))
 
-        show_title = data.get("title")
-        show_keyword = data.get("keyword")
-        show_id = data.get("showId")
-
-        theatre_name = data.get("theatreName")
-        theatre_id = data.get("theatreId")
-
-        #  *  *  *  *  *  *  *  *  *  *  *  *
-        #  This is where the magic happens
-        #  Make the query here...
-        #  *  *  *  *  *  *  *  *  *  *  *  *
-
-        return render_template('submit-data-success.html', title="Success", data=data)
+        # Return the response in json format
+        return render_template('display-data.html', summary = df.describe().to_html(header="true", table_id="summary-data"),data = df.to_html(header="true", table_id="show-data"), title="Data")
 
     else:
-        return render_template('submit-data-failure.html', title="Failure")
+         return jsonify({
+                    "ERROR": "data not found."
+                })
+
+
+# ------------------------------------------------------------------------------
+
+@app.route('/get-data-advanced/', methods=['GET','POST'])
+def get_data_advanced():
+    """Landing page for advanced queries"""
+
+    form = sqlForm()
+
+    if request.method == 'POST':
+        if form.validate():
+
+            my_data = {k:v for k,v in form.allFields.data.items()}
+
+            # get rid of the csrf token
+            del my_data["csrf_token"]
+
+            return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), download_file=True))
+
+
+
+    return render_template('get-data-advanced.html', form=form, title="Get Data Avanced")
+
 
 
 
 # ------------------------------------------------------------------------------
 
-@app.route('/return-data/', methods=['GET','POST'])
-def return_data():
-    """submit a specific json, returns data"""
+@app.route('/get-data-advanced/sql/', methods=['GET','POST'])
+def get_data_advanced_sql():
+    """submit sql, returns data"""
 
-    # Retrieve the data from  user's request
-    data = cache.get("user_query")
+    API_KEY = request.args.get('API_KEY')
+    query = request.args.get('query')
 
-    if not data:
-        return jsonify({
-            "ERROR": "data not found."
-        })
 
-    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    # parser = reqparse.RequestParser()
+    # parser.add_argument('API_KEY', required=True, help='Your api key')
+    # parser.add_argument('query', required=True, help='Your sql query')
+    # args = parser.parse_args()
 
-    #  *  *  *  *  *  *  *  *  *  *  *  *
-    #  This is where the magic happens
-    df = select_data(my_params=data, theatre_data=True)
-    cache.set("my_data", df.to_dict(orient="records"))
+    # Validate the api key
+    None
 
-    #  *  *  *  *  *  *  *  *  *  *  *  *
+    # make the request
+    data = select_data_advanced(query)
 
-    # Query is made successfully! Now, present the data more beautifully...
+    # return the request
+    result = {
+        "data":data,
+        "orient":"records",
+        "query":query,
+    }
 
-    # Return the response in json format
-    return render_template('return-data.html', summary = df.describe().to_html(header="true", table_id="summary-data"),data = df.to_html(header="true", table_id="show-data"))
+    if request.args.get('download_file'):
+        now = datetime.datetime.today().strftime("%Y-%m-%d %H_%M_%S")
+        return Response(json.dumps(result),
+                mimetype='application/json',
+                headers={'Content-Disposition':f'attachment;filename=open-broadway-data-{now}.json'})
+    else:
+        return jsonify(result)
 
 
 # ------------------------------------------------------------------------------
+
+
 
 @app.route('/download-data/')
 def download_data():
@@ -164,7 +190,7 @@ def download_data():
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     df = pd.DataFrame.from_records(data)
-    print(df)
+
     csv_data = df.to_csv(index=False, encoding='utf-8')
 
     response = Response(csv_data,mimetype='text/csv')

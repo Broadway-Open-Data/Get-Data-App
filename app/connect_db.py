@@ -40,7 +40,7 @@ theatres = metadata.tables['theatres']
 # ------------------------------------------------------------------------------
 
 
-def select_data(my_params={}, theatre_data=True):
+def select_data_from_simple(my_params={}, theatre_data=True):
     """
     Input a dictionary statement in dict format.
     Returns records from db.
@@ -118,9 +118,23 @@ def select_data(my_params={}, theatre_data=True):
 # ------------------------------------------------------------------------------
 
 
-# Make an SQL call – using SQL sematic structure
-# result = engine.execute('SELECT * FROM shows;')
-# print(result.fetchall())
+def select_data_advanced(query=""):
+    """
+    Input an sql query.
+    Returns records from db.
+    """
+
+    # Make an SQL call – using SQL sematic structure
+    # result = engine.execute(query)
+    df = pd.read_sql(query, engine)
+
+    return df.to_json(orient='records')
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+
+
+
 
 
 # ------------------------------------------------------------------------------
