@@ -1,3 +1,39 @@
+"""
+In testing right now...
+"""
+import os
+import sys
+import json
+import datetime
+# set the path to the root
+sys.path.append(".")
+
+import flask
+from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
+from flask_wtf.csrf import CSRFProtect
+
+from flask_login import LoginManager, login_user
+# Read further here https://flask-login.readthedocs.io/en/latest/
+from forms.login_form import LoginForm
+
+from utils.get_db_uri import get_db_uri
+# Import cache
+from common.extensions import cache
+
+
+# ------------------------------------------------------------------------------
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'any secret string'
+csrf = CSRFProtect(app)
+
+# Configure the cache
+cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
+
+
+
 # Config the login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -42,7 +78,7 @@ def login():
     #     # user should be an instance of your `User` class
     #     # login_user(user)
     #
-    #     flash('Logged in successfully.')
+    #     flask.flash('Logged in successfully.')
     #
     #     next = flask.request.args.get('next')
     #     # is_safe_url should check if the url is safe for redirects.
@@ -64,3 +100,13 @@ def login():
 # def logout():
 #     logout_user()
 #     return redirect(somewhere)
+if __name__ == '__main__':
+
+    # Threaded option to enable multiple instances for multiple user access support
+
+    # Check if AWS...
+    my_user = os.environ.get("USER")
+    is_aws = True if "ec2" in my_user else False
+
+    # Debug locally, but not on aws...
+    app.run(host="0.0.0.0", debug=not is_aws)
