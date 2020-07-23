@@ -31,3 +31,9 @@ tr:nth-child(even)  { background-color:#fff; }
 table#show-data .hover {
   background: rgba(248, 241, 132, .35);
 }
+
+
+.download-buttons > *{
+  display: inline-block;
+  margin: 0 0 20px 20px;
+}

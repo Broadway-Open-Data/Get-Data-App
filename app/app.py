@@ -125,7 +125,7 @@ def get_data_advanced():
             # get rid of the csrf token
             del my_data["csrf_token"]
 
-            return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), download_file=True))
+            return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), display_data=True))
 
 
 
@@ -143,41 +143,37 @@ def get_data_advanced_sql():
     API_KEY = request.args.get('API_KEY')
     query = request.args.get('query')
 
-
-    # parser = reqparse.RequestParser()
-    # parser.add_argument('API_KEY', required=True, help='Your api key')
-    # parser.add_argument('query', required=True, help='Your sql query')
-    # args = parser.parse_args()
-
     # Validate the api key
     None
 
     # make the request
-    data = select_data_advanced(query)
+    df = select_data_advanced(query)
 
-    # return the request
-    result = {
-        "data":data,
-        "orient":"records",
-        "query":query,
-    }
 
-    if request.args.get('download_file'):
-        now = datetime.datetime.today().strftime("%Y-%m-%d %H_%M_%S")
-        return Response(json.dumps(result),
-                mimetype='application/json',
-                headers={'Content-Disposition':f'attachment;filename=open-broadway-data-{now}.json'})
+    if request.args.get('display_data'):
+        # Make data available for download
+        cache.set("my_data", df.to_dict(orient="records"))
+
+        # Render the page
+        return render_template('display-data.html', data = df.to_html(header="true", table_id="show-data"), title="Data")
+
     else:
+        # return the request
+        result = {
+            "data":df.to_json(orient='records'),
+            "orient":"records",
+            "query":query,
+        }
+
         return jsonify(result)
 
 
 # ------------------------------------------------------------------------------
 
 
-
-@app.route('/download-data/')
-def download_data():
-    """Download the data to the user as a csv..."""
+@app.route('/download-data/<file_format>')
+def download_data(file_format):
+    """Download the data to the user..."""
 
     # Retrieve the data from  user's request
     data = cache.get("my_data")
@@ -191,10 +187,18 @@ def download_data():
 
     df = pd.DataFrame.from_records(data)
 
-    csv_data = df.to_csv(index=False, encoding='utf-8')
+    if file_format=="csv":
+        data_out = df.to_csv(index=False, encoding='utf-8')
+    elif file_format=="json":
+        data_out = df.to_json(orient='records')
 
-    response = Response(csv_data,mimetype='text/csv')
-    response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+    # Send the data out
+    now = datetime.datetime.today().strftime("%Y-%m-%d")
+
+    response = Response(
+        data_out,
+        mimetype=f"text/{file_format}",
+        headers={"Content-Disposition":f"attachment; filename=open-broadway-data {now}.{file_format}"})
 
     return response
 

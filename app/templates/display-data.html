@@ -9,8 +9,10 @@
   {{ summary|safe }}
   <br>
   <h2>Data:</h2>
-  <input type="search" id="search" placeholder="Filter by Title"><br>
-  <a href="/download-data/"><button>Download as CSV</button></a><br>
+  <div class="download-buttons">
+    <a href="/download-data/csv"><button>Download as CSV</button></a>
+    <a href="/download-data/json"><button>Download as JSON</button></a>
+  </div>
 
   <div class="table-container">
   {{ data|safe }}

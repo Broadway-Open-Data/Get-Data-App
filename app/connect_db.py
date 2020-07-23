@@ -128,7 +128,7 @@ def select_data_advanced(query=""):
     # result = engine.execute(query)
     df = pd.read_sql(query, engine)
 
-    return df.to_json(orient='records')
+    return df
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
