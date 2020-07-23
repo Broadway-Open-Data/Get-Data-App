@@ -16,15 +16,17 @@ import requests
 import pandas as pd
 
 
-from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for
+from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
+import flask
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
+from flask_login import LoginManager, login_user
 
 # Import forms
 from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
-
+from forms.login_form import LoginForm
 # Connect to the db
 from connect_db import select_data_from_simple, select_data_advanced
 
@@ -46,7 +48,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
 
-# Configure the app
+# Configure the cache
 cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
 
 

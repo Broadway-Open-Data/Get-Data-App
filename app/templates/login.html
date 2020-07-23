@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <h1>Login</h1>
+
+  <!-- Create a form -->
+  <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+
+    <div class="form-group all-fields">
+
+    {{ form.userName() }}
+    {{ form.password() }}
+    {{ form.submit() }}
+
+    </div>
+
+  </form>
+{% endblock %}
