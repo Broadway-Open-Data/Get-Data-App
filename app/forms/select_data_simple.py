@@ -12,7 +12,7 @@ class showInfo(FlaskForm):
     showId = IntegerField(label='ShowId')
 
 class showGenre(FlaskForm):
-    musicals = BooleanField(label="Musicals", default=True, render_kw ={'checked':''})
+    musicals = BooleanField(label="Musicals", default=True, render_kw ={'checked': ''})
     plays = BooleanField(label="Plays", default=True, render_kw ={'checked':''})
     other_show_genre = BooleanField(label="Other", default=False, render_kw ={'unchecked':''})
 

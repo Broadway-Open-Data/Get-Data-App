@@ -5,18 +5,19 @@ Have the ability to utilize API keys -- or use VPN to limit to internal traffic
 """
 import os
 import sys
-import json
+# import json
 import datetime
 # set the path to the root
 sys.path.append(".")
 
 
-import subprocess
-import requests
+# import subprocess
+# import requests
 import pandas as pd
 
 
-from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for
+from flask import Flask, Response, request, jsonify, render_template, flash, \
+    redirect, send_file, url_for
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
@@ -47,13 +48,12 @@ app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
 
 # Configure the app
-cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
+cache.init_app(app=app, config={"CACHE_TYPE": "filesystem", 'CACHE_DIR': '/tmp'})
 
 
 # ==============================================================================
 # Build routes
 # ==============================================================================
-
 
 
 # Home
@@ -70,15 +70,15 @@ def get_data_simple():
     form = dataForm(request.form)
 
     if request.method == 'POST':
-        if True: #form.validate():
+        if True:  #form.validate():
             my_data = {}
-            for key, value in form.allFields.data.items():
-                if type(value)==dict:
+            for _, value in form.allFields.data.items():
+                if type(value) == dict:
                     my_data.update(value)
             # get rid of the csrf token
             del my_data["csrf_token"]
 
-            cache.set("user_query",my_data)
+            cache.set("user_query", my_data)
 
             return redirect('/get-data-success/')
     else:
@@ -101,7 +101,10 @@ def return_data():
         cache.set("my_data", df.to_dict(orient="records"))
 
         # Return the response in json format
-        return render_template('display-data.html', summary = df.describe().to_html(header="true", table_id="summary-data"),data = df.to_html(header="true", table_id="show-data"), title="Data")
+        return render_template('display-data.html',
+            summary=df.describe().to_html(header="true", table_id="summary-data"),
+            data=df.to_html(header="true", table_id="show-data"),
+            title="Data")
 
     else:
          return jsonify({
@@ -155,14 +158,15 @@ def get_data_advanced_sql():
         cache.set("my_data", df.to_dict(orient="records"))
 
         # Render the page
-        return render_template('display-data.html', data = df.to_html(header="true", table_id="show-data"), title="Data")
+        return render_template('display-data.html',
+            data=df.to_html(header="true", table_id="show-data"), title="Data")
 
     else:
         # return the request
         result = {
-            "data":df.to_json(orient='records'),
-            "orient":"records",
-            "query":query,
+            "data": df.to_json(orient='records'),
+            "orient": "records",
+            "query": query,
         }
 
         return jsonify(result)
@@ -187,9 +191,9 @@ def download_data(file_format):
 
     df = pd.DataFrame.from_records(data)
 
-    if file_format=="csv":
+    if file_format == "csv":
         data_out = df.to_csv(index=False, encoding='utf-8')
-    elif file_format=="json":
+    elif file_format == "json":
         data_out = df.to_json(orient='records')
 
     # Send the data out
@@ -198,7 +202,7 @@ def download_data(file_format):
     response = Response(
         data_out,
         mimetype=f"text/{file_format}",
-        headers={"Content-Disposition":f"attachment; filename=open-broadway-data {now}.{file_format}"})
+        headers={"Content-Disposition": f"attachment; filename=open-broadway-data {now}.{file_format}"})
 
     return response
 
@@ -206,8 +210,7 @@ def download_data(file_format):
 # ------------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
-
+def main():
     # Threaded option to enable multiple instances for multiple user access support
 
     # Check if AWS...
@@ -216,3 +219,7 @@ if __name__ == '__main__':
 
     # Debug locally, but not on aws...
     app.run(host="0.0.0.0", debug=not is_aws)
+
+
+if __name__ == '__main__':
+    main()
