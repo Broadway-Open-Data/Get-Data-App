@@ -44,9 +44,9 @@ manager.add_command('db', MigrateCommand)
 #     print (f"hello {name}")
 #
 # # Create a create_all function
-# @manager.command
-# def create_all():
-#     db.create_all()
+@manager.command
+def create_all():
+    db.create_all()
 
 
 # ------------------------------------------------------------------------------

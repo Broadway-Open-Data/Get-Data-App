@@ -16,13 +16,34 @@
   </head>
 
   <body>
+    <!-- Create a header for nav -->
+    <div class="navigation">
+
+    <!-- Only if logged in -->
+    {% if current_user.is_authenticated %}
+    <pre>
+      Signed in as "{{ current_user.email}}"
+
+    <a href="/">Home</a>
+    <a href="/settings">Settings</a>
+    <a href="/logout">Logout</a>
+
+    <!-- Route appropriate pages -->
+    {% elif request.endpoint == 'login' %}
+      <a href="/signup">Signup</a>
+    {% elif request.endpoint == 'signup' %}
+      <a href="/login">Login</a>
+
+    {% endif %}
+    </pre>
+    </div>
+
     <!-- Add content -->
     {% block content %}
     {% endblock %}
     <!-- Footer... -->
     <hr>
     <div id="footer">
-      <a href="/">Home</a><br>
       {% block footer %}
       &copy; Copyright 2020 by <a href="https://github.com/Broadway-Open-Data">Open Broadway Data</a>.
       {% endblock %}

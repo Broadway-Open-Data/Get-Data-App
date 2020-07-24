@@ -1,20 +1,28 @@
 {% extends "layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+
+{% for message in get_flashed_messages() %}
+      <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+      </div>
+{% endfor %}
+
+
   <h1>Login</h1>
 
   <!-- Create a form -->
   <form method="POST">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
+  {{ form.hidden_tag() }}
 
-    <div class="form-group all-fields">
+  <div class="form-group all-fields">
 
-    Email: {{ form.email() }}
-    Password: {{ form.password() }}
-    {{ form.submit() }}
+  {{ form.allFields() }}
+  {{ form.submit() }}
 
-    </div>
+  </div>
 
-  </form>
+
 {% endblock %}
