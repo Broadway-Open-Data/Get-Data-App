@@ -1,3 +1,6 @@
+"""
+Broadway Database
+"""
 import os
 import json
 import sqlalchemy
@@ -7,39 +10,48 @@ from pathlib import Path
 # set the path to the root
 sys.path.append(".")
 
-# ------------------------------------------------------------------------------
-
-# get the credentials
-creds_path = Path("secret/RSD_CREDENTIALS.json")
-if os.path.isfile(creds_path):
-    with open(creds_path, "r") as f:
-        creds = json.load(f)
-        username = creds.get("RDS_USERNAME")
-        password = creds.get("RDS_PASSWORD")
-else:
-    username = os.environ["RDS_USERNAME"]
-    password = os.environ["RDS_PASSWORD"]
-
-
-
-# Access the path and stuff
-drivername="mysql+pymysql"
-host = "open-broadway-data.cmftsskrmemn.us-east-1.rds.amazonaws.com"
-port = 3306
-dbname = "broadway"
 
 
 # ------------------------------------------------------------------------------
 # make the url to be used for the sql engine
-connection_string = sqlalchemy.engine.url.URL(
-    drivername=drivername,
-    username=username,
-    password=password,
-    host=host,
-    port=port,
-    database=dbname
-    )
-def get_db_uri():
+
+def get_db_uri(which_db="broadway"):
     """returns the uri for connecting to the db"""
+
+    # get the credentials
+    creds_path = Path(f"secret/{which_db.upper()}_CREDENTIALS.json")
+    if os.path.isfile(creds_path):
+        with open(creds_path, "r") as f:
+            creds = json.load(f)
+            username = creds.get("USERNAME")
+            password = creds.get("PASSWORD")
+    else:
+        username = os.environ[f"{which_db.upper()}_USERNAME"]
+        password = os.environ[f"{which_db.upper()}_PASSWORD"]
+
+    # ------------------------------------------------------------------------------
+
+    if which_db=="broadway":
+        host = "open-broadway-data.cmftsskrmemn.us-east-1.rds.amazonaws.com"
+    elif which_db=="users":
+        host = "mvp-app-users.cmftsskrmemn.us-east-1.rds.amazonaws.com"
+
+    # ------------------------------------------------------------------------------
+
+    # Access the path and stuff
+    drivername="mysql+pymysql"
+    port = 3306
+    dbname = which_db
+
+    # ------------------------------------------------------------------------------
+    connection_string = sqlalchemy.engine.url.URL(
+        drivername=drivername,
+        username=username,
+        password=password,
+        host=host,
+        port=port,
+        database=dbname
+        )
+
     return connection_string
 # ------------------------------------------------------------------------------
