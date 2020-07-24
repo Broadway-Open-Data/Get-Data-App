@@ -33,7 +33,7 @@ def get_db_uri(which_db="broadway"):
 
     if which_db=="broadway":
         host = "open-broadway-data.cmftsskrmemn.us-east-1.rds.amazonaws.com"
-    elif which_db=="app":
+    elif which_db=="users":
         host = "mvp-app-users.cmftsskrmemn.us-east-1.rds.amazonaws.com"
 
     # ------------------------------------------------------------------------------
