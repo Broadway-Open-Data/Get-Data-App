@@ -40,7 +40,7 @@ cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
 
 # Config the login manager
 login_manager = LoginManager()
-login.login_view = 'login'
+login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
@@ -50,7 +50,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.get(email)
 
 
 # ------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
 
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
 
         # if not logged in or password not correct
         if user is None or not user.check_password(form.password.data):

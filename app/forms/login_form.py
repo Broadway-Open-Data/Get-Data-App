@@ -5,6 +5,6 @@ from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
     """All of the fields as one."""
-    userName = StringField(label='user name', default="user_1", validators=[DataRequired()])
+    email = StringField(label='user name', default="user_1", validators=[DataRequired()])
     password = StringField(label='password', default="foo", validators=[DataRequired()])
     submit = SubmitField('Submit')
