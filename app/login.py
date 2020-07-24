@@ -12,9 +12,13 @@ import flask
 from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
 from flask_wtf.csrf import CSRFProtect
 
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, current_user, login_required
+# import models
+from models import User
+
 # Read further here https://flask-login.readthedocs.io/en/latest/
 from forms.login_form import LoginForm
+
 
 from utils.get_db_uri import get_db_uri
 # Import cache
@@ -36,6 +40,7 @@ cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
 
 # Config the login manager
 login_manager = LoginManager()
+login.login_view = 'login'
 login_manager.init_app(app)
 
 
@@ -53,22 +58,27 @@ login_manager.login_view = 'login'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
     # Here we use a class of some kind to represent and validate our
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     form = LoginForm()
     if form.validate_on_submit():
 
-        username = form.data.get('username', 'guest')
-        password = form.data.get('password', '')
-        user = User.objects(name=username,
-                            password=password).first()
+        user = User.query.filter_by(username=form.username.data).first()
 
-        print(user)
-        if user:
-            # login_user(user)
-            # return jsonify(user.to_json())
-            return flask.redirect(next or flask.url_for('index'))
+        # if not logged in or password not correct
+        if user is None or not user.check_password(form.password.data):
+            flask.flash('Invalid username or password')
+            return redirect(url_for('login'))
+
+        # Otherwise, log in the user
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+
     else:
         return flask.render_template('login.html', form=form)
 
@@ -95,11 +105,13 @@ def login():
 # def settings():
 #     pass
 #
-# @app.route("/logout")
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect(somewhere)
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
 
     # Threaded option to enable multiple instances for multiple user access support
