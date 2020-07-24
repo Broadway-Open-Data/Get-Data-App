@@ -28,7 +28,7 @@ from common.extensions import cache
 # ------------------------------------------------------------------------------
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("broadway")
+app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("user")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
