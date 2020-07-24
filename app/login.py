@@ -14,7 +14,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from flask_login import LoginManager, login_user, current_user, login_required
 # import models
-from databases.models import User
+from databases.db import User
 
 # Read further here https://flask-login.readthedocs.io/en/latest/
 from forms.login_form import LoginForm
