@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import datetime
+from pathlib import Path
 # set the path to the root
 sys.path.append(".")
 

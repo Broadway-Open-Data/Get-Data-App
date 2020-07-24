@@ -43,3 +43,4 @@ def get_db_uri():
     """returns the uri for connecting to the db"""
     return connection_string
 # ------------------------------------------------------------------------------
+print(connection_string)
