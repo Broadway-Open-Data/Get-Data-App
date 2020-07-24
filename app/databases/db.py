@@ -1,12 +1,18 @@
+import os
+import enum
+import json
+import datetime
+from uuid import uuid4
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import expression
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from uuid import uuid4
-import datetime
-import enum
-import json
+
+
+
+
 
 db = SQLAlchemy()
 
@@ -26,8 +32,7 @@ class User(db.Model):
             "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
 
             # the basics:
-            "email":self.email,
-            "password":self.password
+            "email":self.email
         })
 
     """
