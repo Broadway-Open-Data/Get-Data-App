@@ -164,8 +164,8 @@ def signup():
         if existing_user is None:
             user = UserModel(
                 email = my_data["email"],
-                website = email.get("website"),
-                instagram = email.get("instagram")
+                website = my_data.get("website"),
+                instagram = my_data.get("instagram")
                 )
             user.set_password(my_data["password"])
 
@@ -178,9 +178,8 @@ def signup():
 
             # Log in as newly created user
             login_user(user)
-
-            # return redirect(url_for('index'))
-            return jsonify({"hi":"you good"})
+            
+            return redirect(url_for('index'))
 
         flash('A user already exists with that email address.')
 

@@ -7,6 +7,7 @@ from uuid import uuid4
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import expression
+from sqlalchemy.schema import Sequence
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -22,7 +23,8 @@ db = SQLAlchemy()
 class UserModel(UserMixin, db.Model):
     """"""
     __tablename__ = "user"
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer,primary_key=True)
     email = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False, unique=False)
     website = db.Column(db.String(200), nullable=True, unique=False)
