@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import app
 
 # Import the app from the app
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 class User(db.Model):
     # id = db.Column(db.Int())
