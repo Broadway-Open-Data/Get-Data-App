@@ -49,7 +49,7 @@ app.config['SECRET_KEY'] = 'any secret string'
 csrf = CSRFProtect(app)
 
 # Configure the cache
-cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': '/tmp'})
+cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
 
 # ==============================================================================
