@@ -17,11 +17,15 @@ sys.path.append(".")
 import pandas as pd
 
 
-from flask import Flask, Blueprint, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
+from flask import Flask, Blueprint, Response, request, jsonify, \
+    render_template, flash, redirect, send_file, url_for, flash
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
-from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_login import LoginManager, login_user, current_user, \
+    login_required, logout_user
+from flask_security import Security, SQLAlchemyUserDatastore, \
+    UserMixin, RoleMixin, login_required
 
 
 # import models
@@ -179,7 +183,7 @@ def signup():
 
             # Log in as newly created user
             login_user(user)
-            
+
             return redirect(url_for('index'))
 
         flash('A user already exists with that email address.')
@@ -203,7 +207,7 @@ def settings():
         'settings.html',
         title='Settings'
     )
- 
+
 
 # ==============================================================================
 # Build routes
