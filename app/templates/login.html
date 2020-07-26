@@ -4,8 +4,10 @@
 
 {% for message in get_flashed_messages() %}
       <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
+        <button class="close" id="close-alert" data-dismiss="alert" onclick="closeDiv()">&times;</button>
+        <pre>
+          {{ message }}
+        </pre>
       </div>
 {% endfor %}
 
