@@ -25,7 +25,7 @@ from flask_login import LoginManager, login_user, current_user, login_required, 
 
 
 # import models
-from databases.db import db, User
+from databases.db import db, User, Role
 
 
 # Import forms
@@ -69,6 +69,7 @@ with app.app_context():
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
 
 
 # ==============================================================================
