@@ -10,7 +10,7 @@ sys.path.append("././")
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from db import db , UserModel
+from db import db
 from utils.get_db_uri import get_db_uri
 
 

@@ -25,7 +25,7 @@ from flask_login import LoginManager, login_user, current_user, login_required, 
 
 
 # import models
-from databases.db import db, UserModel
+from databases.db import db, User
 
 
 # Import forms
@@ -81,7 +81,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     """Check if user is logged-in on every page load."""
     if user_id is not None:
-        return UserModel.query.get(user_id)
+        return User.query.get(user_id)
     return None
 
 @login_manager.unauthorized_handler
@@ -124,7 +124,7 @@ def login():
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
 
         # If the user is in the db
-        user = UserModel.query.filter_by(email=my_data["email"]).first()
+        user = User.query.filter_by(email=my_data["email"]).first()
 
         if user and user.check_password(password=my_data["password"]):
             login_user(user)
@@ -159,11 +159,11 @@ def signup():
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
 
         # If the user is in the db
-        existing_user = UserModel.query.filter_by(email=my_data["email"]).first()
+        existing_user = User.query.filter_by(email=my_data["email"]).first()
 
         # Create new user
         if existing_user is None:
-            user = UserModel(
+            user = User(
                 email = my_data["email"],
                 website = my_data.get("website"),
                 instagram = my_data.get("instagram")
@@ -179,7 +179,7 @@ def signup():
 
             # Log in as newly created user
             login_user(user)
-            
+
             return redirect(url_for('index'))
 
         flash('A user already exists with that email address.')
@@ -203,7 +203,7 @@ def settings():
         'settings.html',
         title='Settings'
     )
- 
+
 
 # ==============================================================================
 # Build routes

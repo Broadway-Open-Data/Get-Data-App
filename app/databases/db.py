@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import expression
 from sqlalchemy.schema import Sequence
 from flask_login import UserMixin
+from flask_security import RoleMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -20,7 +21,22 @@ db = SQLAlchemy()
 # Define your model
 # ------------------------------------------------------------------------------
 
-class UserModel(UserMixin, db.Model):
+# Define models
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = "role"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+
+# ------------------------------------------------------------------------------
+
+class User(UserMixin, db.Model):
     """"""
     __tablename__ = "user"
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -29,8 +45,21 @@ class UserModel(UserMixin, db.Model):
     password = db.Column(db.String(200), nullable=False, unique=False)
     website = db.Column(db.String(200), nullable=True, unique=False)
     instagram = db.Column(db.String(40), nullable=True, unique=False)
-    created_on = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    last_login = db.Column(db.DateTime, nullable=True)
+
+    # Internal stuff
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    confirmed_at = db.Column(db.DateTime)
+
+    current_login_at = db.Column(db.DateTime, nullable=True)
+    current_login_ip = db.Column(db.String(100), nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
+    last_login_ip = db.Column(db.String(100), nullable=True)
+    login_count = db.Column(db.Integer)
+
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
+
+    # ==========================================================================
 
     # Create a password...
     def set_password(self, password):
