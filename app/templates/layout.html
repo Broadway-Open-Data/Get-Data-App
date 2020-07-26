@@ -30,11 +30,27 @@
       </pre>
     <!-- Route appropriate pages -->
     {% elif request.endpoint == 'login' %}
-      <a href="/signup">Signup</a>
+        <a href="/signup">Signup</a>
+        <br><a href="/login/forgot-password">Forgot Password</a>
     {% elif request.endpoint == 'signup' %}
-      <a href="/login">Login</a>
+        <a href="/login">Login</a>
+        <br><a href="/login/forgot-password">Forgot Password</a>
+    {% elif request.endpoint == 'forgot_password' %}
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+
     {% endif %}
     </div>
+
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning">
+            <button class="close" id="close-alert" data-dismiss="alert" onclick="closeDiv()">&times;</button>
+            <pre>
+              {{ message }}
+            </pre>
+          </div>
+    {% endfor %}
+
 
     <!-- Add content -->
     {% block content %}

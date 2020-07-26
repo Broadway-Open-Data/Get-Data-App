@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FormField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, Optional
+from wtforms import StringField, PasswordField, BooleanField, \
+    SubmitField, FormField
+from wtforms.validators import ValidationError, DataRequired, \
+    Email, EqualTo, Length, Optional
 
 # ...
 
@@ -28,6 +30,24 @@ class LoginForm(FlaskForm):
     """All of the fields as one."""
     allFields = FormField(LoginFormFields_)
     submit = SubmitField('Log In')
+
+
+# --------------------------------------------------------------------------------
+
+
+
+
+class ForgotPasswordForm(FlaskForm):
+    """If you forgot your password, reset through email address."""
+
+    class allFields_(FlaskForm):
+        """User Log-in Form."""
+        email = StringField('Email', validators=[Email(message='Enter a valid email.'),DataRequired()])
+
+    allFields = FormField(allFields_)
+    submit = SubmitField('Submit')
+
+
 
 # def validate_username(self, username):
 #     user = User.query.filter_by(username=username.data).first()

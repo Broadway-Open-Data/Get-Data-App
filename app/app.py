@@ -31,7 +31,8 @@ from databases.db import db, User, Role
 # Import forms
 from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
-from forms.registration import LoginForm, SignupForm
+from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
+from forms.settings import ResetPasswordForm, UpdateProfileForm
 
 # Connect to the db
 from connect_broadway_db import select_data_from_simple, select_data_advanced
@@ -138,7 +139,7 @@ def login():
         flash('Invalid username/password combination')
         return redirect(url_for('login'))
     return render_template(
-        'login.html',
+        'login/login.html',
         form=form,
         title='Log in.',
         template='login-page'
@@ -186,11 +187,37 @@ def signup():
         flash('A user already exists with that email address.')
 
     return render_template(
-        'signup.html',
+        'login/signup.html',
         title='Create an Account.',
         form=form,
         template='sign-page',
     )
+
+@app.route("/login/forgot-password", methods=['GET', 'POST'])
+def forgot_password():
+    """
+    Allow a user to recover their password from their email
+    """
+    form = ForgotPasswordForm(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+        email = my_data["email"]
+
+        flash(f"An email has been sent to \"{email}\" to recover the current account\n\n\
+            (Just joking... This is in development and will be in operation soon...)")
+
+    else:
+        for fieldName, errorMessages in form.allFields.errors.items():
+            for err in errorMessages:
+                flash(f"{fieldName}: {err}")
+    # Send the template...
+    return render_template('login/forgot-password.html', title='Forgot Password', form=form)
+
+
 
 
 @app.route("/settings")
@@ -200,22 +227,70 @@ def settings():
     Allow a user to change their password and stuff
     """
 
-    return render_template(
-        'settings.html',
-        title='Settings'
-    )
+    return render_template('settings/settings.html',title='Settings')
 
-@app.route("/settings/reset-password")
+@app.route("/settings/reset-password",  methods=['GET', 'POST'])
 @login_required
 def reset_password():
     """Reset your password"""
-    return render_template('settings/reset-password.html',title='Password Reset')
+    form = ResetPasswordForm(request.form)
 
-@app.route("/settings/update-profile")
+    print(form.allFields.data)
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+
+        # Update the user
+        user = User.find_user_by_id(current_user.id)
+        user.set_password(my_data["new_password"])
+        user.save_to_db()
+
+        # ---------------------------------------
+        del my_data # delete potentially saved pw
+        # ---------------------------------------
+        flash('Password is successfully updated.')
+    else:
+        for fieldName, errorMessages in form.allFields.errors.items():
+            for err in errorMessages:
+                flash(f"{fieldName}: {err}")
+    # Send the template...
+    return render_template('settings/reset-password.html',title='Password Reset', form=form)
+
+
+
+
+@app.route("/settings/update-profile", methods=['GET', 'POST'])
 @login_required
 def update_profile():
     """Update your profile"""
-    return render_template('settings/update-profile.html',title='Update Profile')
+    form = UpdateProfileForm(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+
+        # Update the user
+        user = User.find_user_by_id(current_user.id)
+        user.update_info(my_data)
+        user.save_to_db()
+
+        flash('Profile is successfully updated.')
+
+    # Update the current fields
+    else:
+        for fieldName, errorMessages in form.allFields.errors.items():
+            for err in errorMessages:
+                flash(f"{fieldName}: {err}")
+
+    # Continue here...
+    form.allFields.email.data = current_user.email
+    form.allFields.website.data = current_user.website
+    form.allFields.instagram.data = current_user.instagram
+    return render_template('settings/update-profile.html',title='Update Profile', form=form)
 
 # ==============================================================================
 # Build routes

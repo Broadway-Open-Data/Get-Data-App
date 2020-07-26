@@ -3,16 +3,15 @@
 {% block content %}
 
 
-  <h1>Update your profile</h1>
-  <p>
-    Update your profile...
-  </p>
+  <h1>Login</h1>
 
   <!-- Create a form -->
   <form method="POST">
   {{ form.csrf_token }}
+  {{ form.hidden_tag() }}
 
   <div class="form-group all-fields">
+
   {{ form.allFields() }}
   {{ form.submit() }}
 

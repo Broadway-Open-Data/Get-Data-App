@@ -84,8 +84,11 @@ class User(UserMixin, db.Model):
     def __str__(self):
         return json.dumps({
             "id":self.id,
-            "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
-            "email":self.email
+            "created_at":self.created_at.strftime("%Y-%m-%d %H:%M:%s"),
+            "email":self.email,
+            "website":self.website,
+            "instagram":self.instagram,
+            "login_count":self.login_count,
         })
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -101,6 +104,11 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    # Udate info
+    def update_info(self, update_dict):
+        self.query.filter_by(id=self.id).update(update_dict, synchronize_session=False)
+
 
     # Class method which finds user from DB by email
     @classmethod
