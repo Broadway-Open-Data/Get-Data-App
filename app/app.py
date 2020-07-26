@@ -205,6 +205,17 @@ def settings():
         title='Settings'
     )
 
+@app.route("/settings/reset-password")
+@login_required
+def reset_password():
+    """Reset your password"""
+    return render_template('settings/reset-password.html',title='Password Reset')
+
+@app.route("/settings/update-profile")
+@login_required
+def update_profile():
+    """Update your profile"""
+    return render_template('settings/update-profile.html',title='Update Profile')
 
 # ==============================================================================
 # Build routes
