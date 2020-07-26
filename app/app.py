@@ -71,7 +71,12 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-
+# Configure mail...
+from flask_mail import Mail, Message
+#  Read more here: https://pythonhosted.org/Flask-Mail/
+#  !!! Next step is to configure email settings....
+mail = Mail()
+mail.init_app(app)
 
 # ==============================================================================
 # Build login rules
@@ -301,6 +306,14 @@ def update_profile():
 @app.route('/')
 @login_required
 def index():
+
+    # Send a sample message
+    msg = Message("Hello",
+              sender="yaakovbressler@gmail.com",
+              recipients=["yaakovgs@gmail.com"])
+
+    # mail.send(msg)
+
     return render_template('index.html', title='Home')
 
 # ------------------------------------------------------------------------------
