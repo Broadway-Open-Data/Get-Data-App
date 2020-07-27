@@ -26,7 +26,7 @@ def get_secret_creds(c_type):
             username = creds.get(f"{c_type}_USER")
             password = creds.get(f"{c_type}_PASSWORD")
     else:
-        username = os.environ[f"{c_type}"]
+        username = os.environ[f"{c_type}_USER"]
         password = os.environ[f"{c_type}_PASSWORD"]
 
     # ------------------------------------------------------------------------------
