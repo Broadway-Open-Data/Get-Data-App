@@ -22,7 +22,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
-
+from flask_mail import Mail, Message
 
 # import models
 from databases.db import db, User, Role
@@ -39,6 +39,8 @@ from connect_broadway_db import select_data_from_simple, select_data_advanced
 
 # import utils
 from utils.get_db_uri import get_db_uri
+from utils.get_creds import get_secret_creds
+from utils.get_email_content import get_email_content
 
 # Import cache
 from common.extensions import cache
@@ -59,24 +61,44 @@ csrf = CSRFProtect(app)
 # Configure the cache
 cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Configure the db
 db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Config the login manager
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 # Configure mail...
-from flask_mail import Mail, Message
-#  Read more here: https://pythonhosted.org/Flask-Mail/
-#  !!! Next step is to configure email settings....
+mail_settings = {
+    "MAIL_SERVER": 'smtp.gmail.com',
+    "MAIL_PORT": 465,
+    "MAIL_USE_TLS": False,
+    "MAIL_USE_SSL": True,
+}
+mail_settings["MAIL_USERNAME"],\
+mail_settings["MAIL_PASSWORD"] \
+    = get_secret_creds("EMAIL")
+
+mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
+
+app.config.update(mail_settings)
 mail = Mail()
 mail.init_app(app)
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+
+
 
 # ==============================================================================
 # Build login rules
@@ -211,6 +233,17 @@ def forgot_password():
         # get data
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
         email = my_data["email"]
+
+        with app.app_context():
+            link = "www.google.com"
+            email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
+            msg = Message(
+                recipients = [email],
+                subject = email_content.get("emailSubject"),
+                body = email_content.get("emailBody")
+                )
+            mail.send(msg)
+
 
         flash(f"An email has been sent to \"{email}\" to recover the current account\n\n\
             (Just joking... This is in development and will be in operation soon...)")

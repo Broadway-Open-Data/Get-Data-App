@@ -1,0 +1,7 @@
+{
+  "Forgot Password":{
+    "emailName":"Forgot Password",
+    "emailSubject":"Open Broadway Data – Password Reset Request",
+    "emailBody":"You forgot your password to your Open Broadway Data account.\n\nHere is a link to reset it: {link}"
+  }
+}

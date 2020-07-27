@@ -1,3 +1,6 @@
+import sys
+sys.path.append(".")
+
 import requests
 
 url = "http://0.0.0.0:5000/get-data-advanced/sql"
