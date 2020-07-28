@@ -565,11 +565,7 @@ def main():
     # Threaded option to enable multiple instances for multiple user access support
 
     # Debug locally, but not on aws...
-    if not is_aws():
-        app.run(host="0.0.0.0")
-    else:
-        http_server = WSGIServer(('', 80), app)
-        http_server.serve_forever()
+    app.run(host="0.0.0.0")
 
 
 if __name__ == '__main__':
