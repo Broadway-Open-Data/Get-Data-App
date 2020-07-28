@@ -12,6 +12,13 @@ from pathlib import Path
 # set the path to the root
 sys.path.append(".")
 
+my_path = {"my_path":os.path.dirname(x) for x in sys.path if x.endswith("app")}.get("my_path")
+os.environ['append_path'] = my_path
+
+path = os.environ['append_path']
+if path and path not in sys.path:
+    sys.path.insert(0, path)
+
 
 # import subprocess
 # import requests
@@ -24,6 +31,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from flask_mail import Mail, Message
+
+# import production server
+import waitress
 
 # import models
 from databases.db import db, User, Role
@@ -38,6 +48,7 @@ from forms.settings import ChangePasswordForm, UpdateProfileForm
 from connect_broadway_db import select_data_from_simple, select_data_advanced
 
 # import utils
+# sys.path.append("../utils")
 from utils.core import is_aws
 from utils.get_db_uri import get_db_uri
 from utils.get_creds import get_secret_creds
@@ -563,8 +574,13 @@ def download_data(file_format):
 def main():
     # Threaded option to enable multiple instances for multiple user access support
 
-    # Debug locally, but not on aws...
-    app.run(host="0.0.0.0")
+    # Serve in development server if local
+    if not is_aws():
+        app.run(host="0.0.0.0")
+
+    else:
+        waitress.serve(app, host="0.0.0.0")
+
 
 
 if __name__ == '__main__':

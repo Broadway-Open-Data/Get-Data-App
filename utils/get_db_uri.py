@@ -20,6 +20,9 @@ def get_db_uri(which_db="broadway"):
 
     # get the credentials
     creds_path = Path(f"secret/{which_db.upper()}_CREDENTIALS.json")
+
+    # This allows the file to be called from the nested dir
+
     if os.path.isfile(creds_path):
         with open(creds_path, "r") as f:
             creds = json.load(f)

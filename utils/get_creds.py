@@ -11,7 +11,6 @@ from pathlib import Path
 sys.path.append(".")
 
 
-
 # ------------------------------------------------------------------------------
 # make the url to be used for the sql engine
 
@@ -20,6 +19,9 @@ def get_secret_creds(c_type):
 
     # get the credentials
     creds_path = Path(f"secret/{c_type}_CREDENTIALS.json")
+    # if os.environ['append_path']:
+    #     creds_path = os.path.join("..", creds_path)
+
     if os.path.isfile(creds_path):
         with open(creds_path, "r") as f:
             creds = json.load(f)
