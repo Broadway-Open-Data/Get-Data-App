@@ -38,6 +38,7 @@ from forms.settings import ChangePasswordForm, UpdateProfileForm
 from connect_broadway_db import select_data_from_simple, select_data_advanced
 
 # import utils
+from utils.core import is_aws
 from utils.get_db_uri import get_db_uri
 from utils.get_creds import get_secret_creds
 from utils.get_email_content import get_email_content
@@ -54,8 +55,9 @@ from common.extensions import cache
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if if "ec2" in my_user else "some key"
+os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
+app.config['DEBUG'] = not is_aws()
 csrf = CSRFProtect(app)
 
 
@@ -95,6 +97,9 @@ mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_set
 app.config.update(mail_settings)
 mail = Mail()
 mail.init_app(app)
+# silence the email logger
+app.extensions['mail'].debug = 0
+
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -557,12 +562,8 @@ def download_data(file_format):
 def main():
     # Threaded option to enable multiple instances for multiple user access support
 
-    # Check if AWS...
-    my_user = os.environ.get("USER")
-    is_aws = True if "ec2" in my_user else False
-
     # Debug locally, but not on aws...
-    app.run(host="0.0.0.0", debug=not is_aws)
+    app.run(host="0.0.0.0")
 
 
 if __name__ == '__main__':
