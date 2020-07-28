@@ -58,6 +58,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
+app.config['FLASK_ENV'] = 'production' if is_aws() else 'development'
 csrf = CSRFProtect(app)
 
 
@@ -558,13 +559,17 @@ def download_data(file_format):
 
 # ------------------------------------------------------------------------------
 
+from gevent.pywsgi import WSGIServer
 
 def main():
     # Threaded option to enable multiple instances for multiple user access support
 
     # Debug locally, but not on aws...
-    # port = 80 if is_aws() else 5000
-    app.run(host="0.0.0.0")
+    if not is_aws():
+        app.run(host="0.0.0.0")
+    else:
+        http_server = WSGIServer(('', 80), app)
+        http_server.serve_forever()
 
 
 if __name__ == '__main__':
