@@ -11,11 +11,13 @@ from sqlalchemy.schema import Sequence
 from flask_login import UserMixin
 from flask_security import RoleMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import jwt
 
 db = SQLAlchemy()
 
 
+#  USE THIS NEXT: https://github.com/smonagh/flask-password-reset/tree/master/app
+#  AND THIS: https://exploreflask.com/en/latest/users.html
 
 # ------------------------------------------------------------------------------
 # Define your model
@@ -54,7 +56,9 @@ class User(UserMixin, db.Model):
     current_login_ip = db.Column(db.String(100), nullable=True)
     last_login_at = db.Column(db.DateTime, nullable=True)
     last_login_ip = db.Column(db.String(100), nullable=True)
-    login_count = db.Column(db.Integer)
+
+    login_count = db.Column(db.Integer, default=0)
+    reset_password_count = db.Column(db.Integer, default=0)
 
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
@@ -89,6 +93,7 @@ class User(UserMixin, db.Model):
             "website":self.website,
             "instagram":self.instagram,
             "login_count":self.login_count,
+            "reset_password_count":self.reset_password_count,
         })
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -106,9 +111,23 @@ class User(UserMixin, db.Model):
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     # Udate info
+    def increase_login_count(self):
+        if not self.login_count:
+            self.login_count = 0
+        self.login_count += 1
+        self.save_to_db()
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    def increase_reset_password_count(self):
+        if not self.reset_password_count:
+            self.reset_password_count = 0
+        self.reset_password_count += 1
+        self.save_to_db()
+
+    # Udate info
     def update_info(self, update_dict):
         self.query.filter_by(id=self.id).update(update_dict, synchronize_session=False)
-
+        self.save_to_db()
 
     # Class method which finds user from DB by email
     @classmethod
@@ -120,8 +139,26 @@ class User(UserMixin, db.Model):
     def find_user_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
+    # Allow a user to get a reset token
+    def get_reset_token(self, n_minutes=30):
+        """Expires in n minutes"""
+        reset_token = {'user_email': self.email, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=n_minutes)}
+        encoded_jwt = jwt.encode(reset_token, algorithm='HS256', key=os.getenv('FLASK_SECRET_KEY'))
+        return encoded_jwt
 
+    @classmethod
+    def verify_reset_token(cls, token):
+
+        # Automatically checks if password hasnt expires
+        try:
+            reset_token = jwt.decode(token, algorithm=['HS256'], verify=True, key=os.getenv('FLASK_SECRET_KEY'))
+            return cls.query.filter_by(email=reset_token["user_email"]).first()
+
+        except Exception as e:
+            print(e)
+            return
 
 
 

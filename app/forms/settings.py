@@ -8,7 +8,7 @@ from wtforms.validators import ValidationError, DataRequired, \
 
 
 
-class ResetPasswordForm(FlaskForm):
+class ChangePasswordForm(FlaskForm):
     """All of the fields as one."""
 
     class allFields_(FlaskForm):
@@ -30,3 +30,6 @@ class UpdateProfileForm(FlaskForm):
 
     allFields = FormField(allFields_)
     submit = SubmitField('Submit')
+
+# class ResetPasswordForm(FlaskForm):
+#     """Allow a user to reset their password"""

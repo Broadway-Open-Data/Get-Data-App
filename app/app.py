@@ -5,7 +5,8 @@ Have the ability to utilize API keys -- or use VPN to limit to internal traffic
 """
 import os
 import sys
-# import json
+import json
+import uuid
 import datetime
 from pathlib import Path
 # set the path to the root
@@ -31,7 +32,7 @@ from databases.db import db, User, Role
 from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
 from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
-from forms.settings import ResetPasswordForm, UpdateProfileForm
+from forms.settings import ChangePasswordForm, UpdateProfileForm
 
 # Connect to the db
 from connect_broadway_db import select_data_from_simple, select_data_advanced
@@ -53,7 +54,9 @@ from common.extensions import cache
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'any secret string'
+# os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4())
+os.environ['FLASK_SECRET_KEY'] = "some key"
+app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 csrf = CSRFProtect(app)
 
 
@@ -107,13 +110,9 @@ app.register_blueprint(format.page)
 # =============================================================================
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
-    """Check if user is logged-in on every page load."""
-    if user_id is not None:
-        return User.query.get(user_id)
-    return None
+    return User.query.filter_by(id=user_id).first()
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -158,7 +157,8 @@ def login():
         user = User.query.filter_by(email=my_data["email"]).first()
 
         if user and user.check_password(password=my_data["password"]):
-            login_user(user)
+            login_user(user,remember=True)
+            user.increase_login_count()
             # ---------------------------------------
             del my_data # delete potentially saved pw
             # ---------------------------------------
@@ -211,7 +211,7 @@ def signup():
             user.save_to_db()
 
             # Log in as newly created user
-            login_user(user)
+            login_user(user,remember=True)
 
             return redirect(url_for('index'))
 
@@ -239,20 +239,19 @@ def forgot_password():
 
         # get data
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
-        email = my_data["email"]
+        user = User.find_user_by_email(email = my_data["email"])
+        token = user.get_reset_token()
 
         with app.app_context():
-            link = "www.google.com"
             email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
             msg = Message(
-                recipients = [email],
+                recipients = [user.email],
                 subject = email_content.get("emailSubject"),
-                body = email_content.get("emailBody")
+                html = render_template('emails/reset_password.html', token=token)
                 )
             mail.send(msg)
 
-
-        flash(f"An email has been sent to \"{email}\" to recover the current account\n\n\
+        flash(f"An email has been sent to \"{user.email}\" to recover the current account\n\n\
             (Just joking... This is in development and will be in operation soon...)")
 
     else:
@@ -261,6 +260,45 @@ def forgot_password():
                 flash(f"{fieldName}: {err}")
     # Send the template...
     return render_template('login/forgot-password.html', title='Forgot Password', form=form)
+
+
+
+@app.route("/reset-password/<token>", methods=['GET', 'POST'])
+def reset_password(token):
+    """Password recovery"""
+
+    # Does the user exist?
+    user = User.verify_reset_token(token=token)
+
+
+    if not user:
+        return jsonify({"Error":"Reset link isn't valid"})
+
+    # Get the data
+    form = ChangePasswordForm(request.form)
+
+    if form.validate_on_submit():
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+
+        # Update the user
+        user.set_password(my_data["new_password"])
+        user.increase_reset_password_count()
+        user.save_to_db()
+
+        # ---------------------------------------
+        del my_data # delete potentially saved pw
+        # ---------------------------------------
+
+        # Log in as newly created user
+        login_user(user,remember=True)
+
+
+        return redirect(url_for('index'))
+
+
+    return render_template('login/reset-password.html',title='Reset Your Password', form=form)
+
 
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -278,13 +316,12 @@ def settings():
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
-@app.route("/settings/reset-password",  methods=['GET', 'POST'])
+@app.route("/settings/change-password",  methods=['GET', 'POST'])
 @login_required
-def reset_password():
-    """Reset your password"""
-    form = ResetPasswordForm(request.form)
+def change_password():
+    """Change your password"""
+    form = ChangePasswordForm(request.form)
 
-    print(form.allFields.data)
     # Validate sign up attempt
     if form.validate_on_submit():
 
@@ -305,7 +342,7 @@ def reset_password():
             for err in errorMessages:
                 flash(f"{fieldName}: {err}")
     # Send the template...
-    return render_template('settings/reset-password.html',title='Password Reset', form=form)
+    return render_template('settings/change-password.html',title='Change Password', form=form)
 
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
