@@ -576,10 +576,10 @@ def main():
 
     # Serve in development server if local
     if not is_aws():
-        app.run(host="0.0.0.0")
+        app.run(host="0.0.0.0", port=5000)
 
     else:
-        waitress.serve(app, host="0.0.0.0")
+        waitress.serve(app, host="0.0.0.0", port=5000)
 
 
 
