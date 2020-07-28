@@ -579,7 +579,7 @@ def main():
         app.run(host="0.0.0.0", port=5000)
 
     else:
-        waitress.serve(app, host="0.0.0.0", port=5000, listen=”*:5000)
+        waitress.serve(app, host="0.0.0.0", port=5000, listen="*:5000")
 
 
 
