@@ -17,7 +17,7 @@ sys.path.append(".")
 import pandas as pd
 
 
-from flask import Flask, Blueprint, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
+from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import reqparse
@@ -26,7 +26,6 @@ from flask_mail import Mail, Message
 
 # import models
 from databases.db import db, User, Role
-
 
 # Import forms
 from forms.select_data_simple import dataForm
@@ -97,7 +96,10 @@ mail.init_app(app)
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-
+# Register blueprints
+from routes import format
+# Unsucessful in changing the app architecture / layout of dirs
+app.register_blueprint(format.page)
 
 
 # ==============================================================================
@@ -164,13 +166,15 @@ def login():
 
         # Otherwise
         flash('Invalid username/password combination')
-        return redirect(url_for('login'))
+        return redirect(url_for('/login'))
     return render_template(
         'login/login.html',
         form=form,
         title='Log in.',
         template='login-page'
         )
+
+# ------------------------------------------------------------------------------
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -220,6 +224,9 @@ def signup():
         template='sign-page',
     )
 
+
+# ------------------------------------------------------------------------------
+
 @app.route("/login/forgot-password", methods=['GET', 'POST'])
 def forgot_password():
     """
@@ -256,6 +263,7 @@ def forgot_password():
     return render_template('login/forgot-password.html', title='Forgot Password', form=form)
 
 
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
 @app.route("/settings")
@@ -266,6 +274,9 @@ def settings():
     """
 
     return render_template('settings/settings.html',title='Settings')
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 
 @app.route("/settings/reset-password",  methods=['GET', 'POST'])
 @login_required
@@ -297,7 +308,7 @@ def reset_password():
     return render_template('settings/reset-password.html',title='Password Reset', form=form)
 
 
-
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 @app.route("/settings/update-profile", methods=['GET', 'POST'])
 @login_required
@@ -329,6 +340,10 @@ def update_profile():
     form.allFields.website.data = current_user.website
     form.allFields.instagram.data = current_user.instagram
     return render_template('settings/update-profile.html',title='Update Profile', form=form)
+
+
+
+
 
 # ==============================================================================
 # Build routes
