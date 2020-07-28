@@ -54,8 +54,7 @@ from common.extensions import cache
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4())
-os.environ['FLASK_SECRET_KEY'] = "some key"
+os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if if "ec2" in my_user else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 csrf = CSRFProtect(app)
 
