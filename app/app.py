@@ -559,7 +559,6 @@ def download_data(file_format):
 
 # ------------------------------------------------------------------------------
 
-from gevent.pywsgi import WSGIServer
 
 def main():
     # Threaded option to enable multiple instances for multiple user access support
