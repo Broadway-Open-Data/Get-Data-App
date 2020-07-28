@@ -563,8 +563,7 @@ def main():
     # Threaded option to enable multiple instances for multiple user access support
 
     # Debug locally, but not on aws...
-    port = 80 if is_aws() else 5000
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=800)
 
 
 if __name__ == '__main__':
