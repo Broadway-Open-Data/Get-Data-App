@@ -49,7 +49,14 @@ def summarize_broadway_shows(df):
     cat = "Production Info"
     iter_cols = ["show_type_simple","production_type"]
     for col in iter_cols:
-        for idx, n in df[col].value_counts().sort_index(ascending=True).items():
+        # Only get the top 4
+        val_counts = df[col].value_counts()
+        if len(val_counts)>4:
+            val_counts = val_counts[:4]
+        # Sort alphabetically
+        val_counts = val_counts.sort_index(ascending=True)
+
+        for idx, n in .items():
             my_vals.append(
                 {"Category":cat, "Key":f"N {idx}s", "Val": n}
             )
