@@ -71,8 +71,7 @@ os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
 os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
-# if is_aws():
-#     app.config['SERVER_NAME'] = "www.openbroadwaydata.com"
+
 
 csrf = CSRFProtect(app)
 
@@ -555,6 +554,7 @@ def verify_account(token):
 @app.route('/')
 @login_required
 def index():
+    print(url_for('admin', _external=True))
 
     # Don't allow non-approved users
     if not current_user.approved:
