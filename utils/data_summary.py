@@ -51,8 +51,8 @@ def summarize_broadway_shows(df):
     for col in iter_cols:
         # Only get the top 4
         val_counts = df[col].value_counts()
-        if len(val_counts)>4:
-            val_counts = val_counts[:4]
+        if len(val_counts)>3:
+            val_counts = val_counts[:3]
         # Sort alphabetically
         val_counts = val_counts.sort_index(ascending=True)
 
