@@ -71,6 +71,8 @@ os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
 os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
+if is_aws():
+    app.config['SERVER_NAME'] = "www.openbroadwaydata.com"
 csrf = CSRFProtect(app)
 
 
@@ -537,7 +539,7 @@ def verify_account(token):
     user.login_counter()
     flash("SUCCESS:\t\tYou have verified your account!")
 
-    return redirect(url_for('index'))
+    return redirect('/')
 
 
 
