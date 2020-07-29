@@ -43,6 +43,7 @@ from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
 from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
 from forms.settings import ChangePasswordForm, UpdateProfileForm
+from forms.admin import AuthenticateUsersForm
 
 # Connect to the db
 from connect_broadway_db import select_data_from_simple, select_data_advanced
@@ -69,7 +70,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
-app.config['FLASK_ENV'] = 'production' if is_aws() else 'development'
+os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
 csrf = CSRFProtect(app)
 
 
@@ -174,7 +175,7 @@ def login():
 
         if user and user.check_password(password=my_data["password"]):
             login_user(user,remember=True)
-            user.increase_login_count()
+            user.login_counter()
             # ---------------------------------------
             del my_data # delete potentially saved pw
             # ---------------------------------------
@@ -256,7 +257,7 @@ def forgot_password():
         # get data
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
         user = User.find_user_by_email(email = my_data["email"])
-        token = user.get_reset_token()
+        token = user.get_secret_token(30)
 
         with app.app_context():
             email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
@@ -265,8 +266,10 @@ def forgot_password():
                 subject = email_content.get("emailSubject"),
                 html = render_template('emails/reset_password.html', token=token)
                 )
+            # Send the email
             mail.send(msg)
-
+        # Increase the count for password reset
+        user.request_pw_reset_counter()
         flash(f"An email has been sent to \"{user.email}\" to recover the current account\n\n\
             (Just joking... This is in development and will be in operation soon...)")
 
@@ -284,7 +287,7 @@ def reset_password(token):
     """Password recovery"""
 
     # Does the user exist?
-    user = User.verify_reset_token(token=token)
+    user = User.verify_secret_token(token=token)
 
 
     if not user:
@@ -299,8 +302,8 @@ def reset_password(token):
 
         # Update the user
         user.set_password(my_data["new_password"])
-        user.increase_reset_password_count()
         user.save_to_db()
+        user.login_counter()
 
         # ---------------------------------------
         del my_data # delete potentially saved pw
@@ -393,6 +396,164 @@ def update_profile():
     form.allFields.website.data = current_user.website
     form.allFields.instagram.data = current_user.instagram
     return render_template('settings/update-profile.html',title='Update Profile', form=form)
+
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+# Use https://pythonhosted.org/Flask-Principal/
+@app.route("/admin")
+@login_required
+def admin():
+    """Only allow admin users"""
+    if not current_user.is_admin():
+        return redirect("/")
+    # Otherwise, proceed
+    return render_template('admin/admin.html',title='Admin')
+
+
+
+@app.route("/admin/approve-users", methods=['GET', 'POST'])
+@login_required
+def approve_users():
+    """
+    Authenticate users
+    ---
+    Only proceed if the user exists.
+        – Try to approve user
+        – If user is already approved, will not try to re-approve
+            – Sends an email with confirmation link
+        – If user is already unapproved, will not re-unapprove
+            – Sends an email with notification
+    """
+    if not current_user.is_admin():
+        return redirect("/")
+    # Otherwise, proceed
+
+
+    form = AuthenticateUsersForm(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+
+        # Update the user
+        user = User.find_user_by_email(my_data["userEmail"])
+        if user:
+            if my_data["approve"]:
+                _approved_state = user.approve()
+
+                if _approved_state:
+                    flash('APPROVED:\t\t{} is successfully APPROVED.'.format(my_data["userEmail"]))
+
+                    # Send an email to verify their account
+                    token = user.get_secret_token(60*24)
+                    email_content = get_email_content("Approved")
+                    msg = Message(
+                        recipients = [user.email],
+                        subject = email_content.get("emailSubject"),
+                        html = render_template('emails/approved.html', token=token)
+                        )
+                    mail.send(msg)
+                else:
+                    flash('OOPSIES:\t{} is already approved.'.format(my_data["userEmail"]))
+
+            else:
+                _approved_state= user.unapprove()
+                if _approved_state:
+                    flash('UNAPPROVED:\t{} is successfully UNAPPROVED.'.format(my_data["userEmail"]))
+                else:
+                    flash('OOPSIES:\t{} is already unapproved.'.format(my_data["userEmail"]))
+        else:
+            flash('{} is not a user. Verify that this is the user\'s actual email address.'.format(my_data["userEmail"]))
+    # Update the current fields
+    else:
+        for fieldName, errorMessages in form.allFields.errors.items():
+            for err in errorMessages:
+                flash(f"{fieldName}: {err}")
+
+
+
+    select_st = User.query.filter_by(approved=False).all()
+    if len(select_st)>1:
+        raw_data = [x.__data__() for x in select_st]
+
+        # format
+        df = pd.DataFrame.from_records(raw_data)
+        data = df.sort_values(by=["created_at"], ascending=[True])\
+                .to_html(header="true", table_id="show-data")
+    else:
+        data = "<pre>No data available.</pre>"
+        flash("All users are approved!")
+    # Continue here...
+    return render_template('admin/approve-users.html',title='Approve Users', form=form, data=data)
+
+
+@app.route("/admin/inspect-users", methods=['GET', 'POST'])
+@login_required
+def inspect_users():
+    """
+    Authenticate users
+    ---
+    Only proceed if the user exists.
+        – Try to approve user
+        – If user is already approved, will not try to re-approve
+            – Sends an email with confirmation link
+        – If user is already unapproved, will not re-unapprove
+            – Sends an email with notification
+    """
+    if not current_user.is_admin():
+        return redirect("/")
+    # Otherwise, proceed
+    select_st = User.query.limit(100).all()
+
+    raw_data = [x.__data__() for x in select_st]
+
+    # format
+    df = pd.DataFrame.from_records(raw_data)
+    data = df.sort_values(by=["created_at"], ascending=[True])\
+            .to_html(header="true", table_id="show-data")
+
+    return render_template('admin/inspect-users.html',title='Inspect Users', data=data)
+
+
+@app.route("/verify-account/<token>", methods=['GET', 'POST'])
+def verify_account(token):
+    """Verify your account"""
+
+    # Does the user exist?
+    user = User.verify_secret_token(token=token)
+
+
+    if not user:
+        return jsonify({"Error":"Link isn't valid"})
+
+    # Get the data
+    form = ChangePasswordForm(request.form)
+
+    if form.validate_on_submit():
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+
+        # Update the user
+        user.set_password(my_data["new_password"])
+        user.save_to_db()
+        user.authenticate()
+        user.login_counter()
+
+        # ---------------------------------------
+        del my_data # delete potentially saved pw
+        # ---------------------------------------
+
+        # Log in as newly created user
+        login_user(user,remember=True)
+
+
+        return redirect(url_for('index'))
+
+
+    return render_template('login/reset-password.html',title='Reset Your Password', form=form)
 
 
 

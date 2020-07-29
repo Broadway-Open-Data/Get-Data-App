@@ -25,5 +25,4 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 print("*****\nDONE! All data is living in the database.\n*****")

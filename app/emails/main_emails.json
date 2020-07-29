@@ -8,5 +8,10 @@
     "emailName":"Welcome",
     "emailSubject":"Welcome to Open Broadway Data – Confirm your account",
     "emailBody":"Welcome. We need you to confirm your account.\n{link}"
+  },
+  "Approved":{
+    "emailName":"Approved",
+    "emailSubject":"Congratulations! You are Approved",
+    "emailBody":"Welcome. We need you to confirm your account.\n{link}"
   }
 }

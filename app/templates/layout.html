@@ -24,6 +24,12 @@
     {% if current_user.is_authenticated %}
       <a href="/">Home</a>
       <a href="/settings">Settings</a>
+
+      <!--  Only allow admin users -->
+      {% if current_user.is_admin() %}
+          <a href="/admin">Admin</a>
+      {% endif %}
+
       <a href="/logout">Logout</a>
       <pre>
         Signed in as "{{ current_user.email}}"

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+    <h3>Admin Tools</h3>
+      <a href="#" onClick="history.go(-1)">Back</a>
+
+  <h1>{{ title }}</h1>
+
+  <p>
+    Admin settings. (COOL!)
+  </p>
+
+  <h2>Here are <i>all</i> the users</h2>
+  <!-- It goes here -->
+    <div class="table-container">
+    {{ data|safe }}
+    </div>
+
+{% endblock %}

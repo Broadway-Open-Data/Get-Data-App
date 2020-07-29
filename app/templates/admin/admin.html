@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ title }}</h1>
+  <p>
+    Admin settings. (COOL!)
+  </p>
+  <ul>
+      <li><a href="admin/approve-users">Approve Users</a></li>
+      <li><a href="admin/inspect-users">Inspect Users</a></li>
+  </ul>
+{% endblock %}
