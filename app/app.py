@@ -54,7 +54,7 @@ from utils.core import is_aws
 from utils.get_db_uri import get_db_uri
 from utils.get_creds import get_secret_creds
 from utils.get_email_content import get_email_content
-
+from utils import data_summary
 # Import cache
 from common.extensions import cache
 
@@ -617,9 +617,10 @@ def return_data():
         df = select_data_from_simple(my_params=data, theatre_data=True)
         cache.set("my_data", df.to_dict(orient="records"))
 
+        summary = data_summary.summarize_broadway_shows(df)
+
         # Return the response in json format
-        return render_template('display-data.html',
-            summary=df.describe().to_html(header="true", table_id="summary-data"),
+        return render_template('display-data.html', summary=summary,
             data=df.to_html(header="true", table_id="show-data"),
             title="Data")
 
@@ -686,8 +687,10 @@ def get_data_advanced_sql():
         # Make data available for download
         cache.set("my_data", df.to_dict(orient="records"))
 
+        summary = data_summary.summarize_broadway_shows(df)
+
         # Render the page
-        return render_template('display-data.html',
+        return render_template('display-data.html', summary=summary,
             data=df.to_html(header="true", table_id="show-data"), title="Data")
 
     else:
