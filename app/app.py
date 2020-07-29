@@ -463,7 +463,7 @@ def approve_users():
                 else:
                     flash('OOPSIES:\t{} is already approved.'.format(my_data["userEmail"]))
 
-            else:
+            elif my_data["un_approve"]:
                 _approved_state= user.unapprove()
                 if _approved_state:
                     flash('UNAPPROVED:\t{} is successfully UNAPPROVED.'.format(my_data["userEmail"]))
@@ -478,7 +478,7 @@ def approve_users():
                 flash(f"{fieldName}: {err}")
 
 
-
+    # Format the data for the page...
     select_st = User.query.filter_by(approved=False).all()
     if len(select_st)>=1:
         raw_data = [x.__data__() for x in select_st]
@@ -488,8 +488,7 @@ def approve_users():
         data = df.sort_values(by=["created_at"], ascending=[True])\
                 .to_html(header="true", table_id="show-data")
     else:
-        data = "<pre>No data available.</pre>"
-        flash("All users are approved!")
+        data = "<pre>No data available.<br>All users are approved!</pre>"
     # Continue here...
     return render_template('admin/approve-users.html',title='Approve Users', form=form, data=data)
 
@@ -533,31 +532,12 @@ def verify_account(token):
     if not user:
         return jsonify({"Error":"Link isn't valid"})
 
-    # Get the data
-    form = ChangePasswordForm(request.form)
+    user.authenticate()
+    login_user(user,remember=True)
+    user.login_counter()
+    flash("SUCCESS:\t\tYou have verified your account!")
 
-    if form.validate_on_submit():
-        # get data
-        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
-
-        # Update the user
-        user.set_password(my_data["new_password"])
-        user.save_to_db()
-        user.authenticate()
-        user.login_counter()
-
-        # ---------------------------------------
-        del my_data # delete potentially saved pw
-        # ---------------------------------------
-
-        # Log in as newly created user
-        login_user(user,remember=True)
-
-
-        return redirect(url_for('index'))
-
-
-    return render_template('login/reset-password.html',title='Reset Your Password', form=form)
+    return redirect(url_for('index'))
 
 
 

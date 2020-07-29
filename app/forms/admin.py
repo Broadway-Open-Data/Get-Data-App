@@ -6,6 +6,10 @@ from wtforms import StringField, PasswordField, BooleanField, \
 from wtforms.validators import ValidationError, DataRequired, \
     Email, EqualTo, Length, Optional
 
+import sys
+sys.path.append(".")
+# Import as if you're one directory up
+from forms.custom_validator import NotEqualTo
 
 
 class AuthenticateUsersForm(FlaskForm):
@@ -13,7 +17,8 @@ class AuthenticateUsersForm(FlaskForm):
 
     class allFields_(FlaskForm):
         userEmail = StringField('Email', validators=[Length(min=6), Email(message='Enter a valid email.'),DataRequired()])
-        approve = BooleanField('Authenticate')
+        approve = BooleanField('Approve', validators=[NotEqualTo('un_approve')])
+        un_approve = BooleanField('Unapprove', validators=[NotEqualTo('approve')])
 
     allFields = FormField(allFields_)
     submit = SubmitField('Submit')

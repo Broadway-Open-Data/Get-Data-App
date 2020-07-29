@@ -36,7 +36,6 @@ class LoginForm(FlaskForm):
 
 
 
-
 class ForgotPasswordForm(FlaskForm):
     """If you forgot your password, reset through email address."""
 
@@ -46,6 +45,23 @@ class ForgotPasswordForm(FlaskForm):
 
     allFields = FormField(allFields_)
     submit = SubmitField('Submit')
+
+
+
+ # --------------------------------------------------------------------------------
+
+
+# 
+# class VerifyForm(FlaskForm):
+#     """If you forgot your password, reset through email address."""
+#
+#     class allFields_(FlaskForm):
+#         """User Log-in Form."""
+#         email = StringField('Email', validators=[Email(message='Enter a valid email.'),DataRequired()])
+#
+#     allFields = FormField(allFields_)
+#     submit = SubmitField('Submit')
+
 
 
 
