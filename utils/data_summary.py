@@ -1,29 +1,9 @@
 """
-Things we want to improve:
-
-On the first "count" row, a lot of the data seems to be not useful or accurate - I think that show count, number of performances (seems to be inaccurate in "count" row), limited_run (also confused at this value in the "count" row), and maybe intermissions is helpful info, but the rest seems unnecessary and kind of muddies up the chart
-I think it would be interesting to have a summary section listing how many plays vs. musicals vs. other there were and how many originals vs. revivals there were
-I like the chart structure overall but would likely recommend blanking out the unnecessary info
-Is there any significance to the show or theatre IDs?
-The info in the "show_never_opened" column is pretty difficult to understand since such a small number of shows didn't open - I think just listing how many shows didn't open (under given specifications) would be a better way to look at that data
-
-
-What we definitely want:
-– N shows
-– Date range
-– N Years
-
-– N plays
-– N Musicals
-– N Originals
-– N Revivals
-– N Unique Theaters
-– Avg intermissions
-
+Generate a pretty (and simple) table with a summary of the data
 """
-
 import pandas as pd
-import numpy as np
+
+
 def diff(s):
     """Gets the diff for a pd series"""
     return s.max() - s.min()
