@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+{{ super() }}
+
+{% endblock %}
+{% block content %}
+
+  <!-- Section -->
+  <div class="section">
+  <h1>Open Broadway Data – MVP</h1>
+  <p>This API will allow you to access the data for
+    every Broadway show since 1738.
+  </p>
+
+  <h2>{{ title }}</h2>
+
+  <pre>
+    You aren't approved to view the app yet. Please give us up to 24 hours to
+    respond to your request for access. If you don't hear from us then, send
+    an email to us at <i>yaakovbressler [at] gmail [dot] com</i>.
+
+    Meanwhile, keep an eye on your inbox – we'll be sending you an
+    email once you're approved.
+  </pre>
+
+{% endblock %}

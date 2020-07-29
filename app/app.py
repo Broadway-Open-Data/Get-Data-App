@@ -145,6 +145,10 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+# I'd love to extend this to wrapper....
+# def is_user_approved():
+#     if not current_user.approved:
+#         return redirect("/not-yet-approved")
 
 # ==============================================================================
 # Build login routes
@@ -476,7 +480,7 @@ def approve_users():
 
 
     select_st = User.query.filter_by(approved=False).all()
-    if len(select_st)>1:
+    if len(select_st)>=1:
         raw_data = [x.__data__() for x in select_st]
 
         # format
@@ -569,14 +573,17 @@ def verify_account(token):
 @login_required
 def index():
 
-    # Send a sample message
-    msg = Message("Hello",
-              sender="yaakovbressler@gmail.com",
-              recipients=["yaakovgs@gmail.com"])
-
-    # mail.send(msg)
+    # Don't allow non-approved users
+    if not current_user.approved:
+        return redirect("/not-yet-approved")
 
     return render_template('index.html', title='Home')
+
+
+@app.route('/not-yet-approved')
+@login_required
+def not_yet_approved():
+    return render_template('not-yet-approved.html', title='Not Yet Approved')
 
 # ------------------------------------------------------------------------------
 
@@ -584,6 +591,10 @@ def index():
 @app.route('/get-data/',  methods=['GET', 'POST'])
 @login_required
 def get_data_simple():
+
+    # Don't allow non-approved users
+    if not current_user.approved:
+        return redirect("/not-yet-approved")
 
     form = dataForm(request.form)
 
@@ -609,6 +620,10 @@ def get_data_simple():
 @app.route('/get-data-success/',  methods=['GET'])
 @login_required
 def return_data():
+
+    # Don't allow non-approved users
+    if not current_user.approved:
+        return redirect("/not-yet-approved")
 
     data = cache.get("user_query")
 
@@ -638,6 +653,11 @@ def return_data():
 def get_data_advanced():
     """Landing page for advanced queries"""
 
+    # Don't allow non-approved users
+    if not current_user.approved:
+        return redirect("/not-yet-approved")
+
+
     form = sqlForm()
 
     if request.method == 'POST':
@@ -663,6 +683,11 @@ def get_data_advanced():
 @login_required
 def get_data_advanced_sql():
     """submit sql, returns data"""
+
+    # Don't allow non-approved users
+    if not current_user.approved:
+        return redirect("/not-yet-approved")
+
 
     API_KEY = request.args.get('API_KEY')
     query = request.args.get('query')
