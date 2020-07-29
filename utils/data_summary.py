@@ -56,7 +56,7 @@ def summarize_broadway_shows(df):
         # Sort alphabetically
         val_counts = val_counts.sort_index(ascending=True)
 
-        for idx, n in .items():
+        for idx, n in val_counts.items():
             my_vals.append(
                 {"Category":cat, "Key":f"N {idx}s", "Val": n}
             )
