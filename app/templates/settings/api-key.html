@@ -5,11 +5,15 @@
 
   {% if current_user.api_key %}
 
-    <h1>Your Api Key</h1>
+
     <pre>
-      Your api key is:
+      <h3>Your Api Key:</h3>
       {{ current_user.api_key }}
+
+  <h3>Reset my API Key:</h3>
+  You may request to reset your key below.
     </pre>
+  </pre>
   {% else %}
     <pre>
       <h3>You do not have an API key.</h3>
@@ -17,14 +21,16 @@
 
     <h3>Request an API Key:</h3>
     </pre>
-    <!-- Create a form -->
-    <form method="POST">
-    {{ form.csrf_token }}
-
-    <div class="form-group all-fields">
-    {{ form.submit() }}
 
   {% endif %}
+  <!-- Create a form -->
+  <form method="POST">
+  {{ form.csrf_token }}
+
+  <div class="form-group all-fields">
+  {{ form.submit() }}
+
+
 
   </div>
 

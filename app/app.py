@@ -69,11 +69,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # This is otherwise done through the bash profile
-if not os.environ['FLASK_SECRET_KEY']:
-    os.environ['FLASK_SECRET_KEY'] = "thisIsNotVerySecure"
-# os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
-# need a way of persisting this....
-# os.environ['FLASK_SECRET_KEY'] = "thisIsNotVerySecure"
+if not os.environ.get("FLASK_SECRET_KEY"):
+    os.environ['FLASK_SECRET_KEY'] = "some key"
+
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
 os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
@@ -424,14 +422,9 @@ def api_key():
     # Validate sign up attempt
     if form.validate_on_submit():
         user = User.find_user_by_id(current_user.id)
-        if user.api_key:
-            # reset the api key
-            flash("reset the api key")
-        else:
-            # generate a new api key
-            api_key = user.generate_api_key()
-            print(len(api_key))
-            flash(f"SUCCESS:\tYour api key is: {api_key}")
+
+        api_key = user.generate_api_key()
+        flash("SUCCESS:\tYour api key is registered.")
 
     # finally
     return render_template('settings/api-key.html',title='Api Key', form=form)
@@ -685,6 +678,7 @@ def get_data_advanced():
             # get rid of the csrf token
             del my_data["csrf_token"]
 
+
             return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), display_data=True))
 
 
@@ -710,8 +704,14 @@ def get_data_advanced_sql():
     query = request.args.get('query')
 
     # Validate the api key
-    None
+    decoded = User.validate_api_key(API_KEY)
 
+    if not decoded:
+        result = {
+            "error": "Your api key was not accepted. Register for one or reset yours under settings."
+        }
+        return jsonify(result)
+    # If it was accep
     # make the request
     df = select_data_advanced(query)
 

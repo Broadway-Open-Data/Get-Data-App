@@ -62,7 +62,7 @@ class User(UserMixin, db.Model):
     authenticated_at = db.Column(db.DateTime)
 
     # Allow api keys
-    api_key = db.Column(db.String(400), nullable=False, unique=False)
+    api_key = db.Column(db.String(2400), nullable=True, unique=False)
 
     current_login_at = db.Column(db.DateTime, nullable=True)
     current_login_ip = db.Column(db.String(100), nullable=True)
@@ -73,6 +73,7 @@ class User(UserMixin, db.Model):
     login_count = db.Column(db.Integer, default=0)
     request_pw_reset_count = db.Column(db.Integer, default=0)
     api_key_count = db.Column(db.Integer, default=0)
+    n_api_requests = db.Column(db.Integer, default=0)
 
     # Additional
     roles = db.relationship('Role', secondary=roles_users,
@@ -101,6 +102,7 @@ class User(UserMixin, db.Model):
             "login_count":self.login_count,
             "request_pw_reset_count":self.request_pw_reset_count,
             "api_key_count":self.request_pw_reset_count,
+            "n_api_requests":self.n_api_requests,
         })
 
     # Get data for adding to df
@@ -119,6 +121,7 @@ class User(UserMixin, db.Model):
             "login_count":self.login_count,
             "request_pw_reset_count":self.request_pw_reset_count,
             "api_key_count":self.request_pw_reset_count,
+            "n_api_requests":self.n_api_requests,
         }
 
 
@@ -192,6 +195,12 @@ class User(UserMixin, db.Model):
         self.api_key_count += 1
         self.save_to_db()
 
+    def used_api_counter(self):
+        if not self.n_api_requests:
+            self.n_api_requests = 0
+        self.n_api_requests += 1
+        self.save_to_db()
+        
     # --------------------------------------------------------------------------
     # GENERATE SECRET TOKEN
 
@@ -217,27 +226,30 @@ class User(UserMixin, db.Model):
     # Allow a user to get an api key
     def generate_api_key(self):
         """Expires in n minutes"""
+
         token = {'user_email': self.email, 'user_hashed_pw':self.password}
         encoded_jwt = jwt.encode(token, algorithm='HS256', key=os.getenv('FLASK_SECRET_KEY'))
+
+        # Update the db values
+        self.api_key_counter()
+        self.api_key = encoded_jwt
+        self.save_to_db()
         return encoded_jwt
 
     # Allow a user to get an api key
-    def validate_api_key(self, api_key):
+    @classmethod
+    def validate_api_key(self, token):
         """Unpacks the token -> then decodes it"""
         try:
-            token = jwt.decode(api_key, algorithm=['HS256'], verify=True, key=os.getenv('FLASK_SECRET_KEY'))
-            return self.find_user_by_email(token["user_email"]).first()\
-                .check_password(token["user_hashed_pw"])
+            token = jwt.decode(token, algorithm=['HS256'], verify=True, key=os.getenv('FLASK_SECRET_KEY'))
+            _user = self.find_user_by_email(token["user_email"])
+            if _user.password == token["user_hashed_pw"]:
+                _user.used_api_counter()
+                return True
 
         except Exception as e:
             print(e)
             return
-
-
-        token = {'user_email': self.email, 'user_hashed_pw':self.password}
-        encoded_jwt = jwt.encode(token, algorithm='HS256', key=os.getenv('FLASK_SECRET_KEY'))
-        return encoded_jwt
-
 
     # --------------------------------------------------------------------------
     # ADMIN ROLES
