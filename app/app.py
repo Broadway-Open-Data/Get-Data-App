@@ -42,7 +42,7 @@ from databases.db import db, User, Role
 from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
 from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
-from forms.settings import ChangePasswordForm, UpdateProfileForm
+from forms.settings import ChangePasswordForm, UpdateProfileForm, RequestApiKey, ResetApiKey
 from forms.admin import AuthenticateUsersForm
 
 # Connect to the db
@@ -67,7 +67,13 @@ from common.extensions import cache
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
+
+# This is otherwise done through the bash profile
+if not os.environ['FLASK_SECRET_KEY']:
+    os.environ['FLASK_SECRET_KEY'] = "thisIsNotVerySecure"
+# os.environ['FLASK_SECRET_KEY'] = str(uuid.uuid4()) if is_aws() else "some key"
+# need a way of persisting this....
+# os.environ['FLASK_SECRET_KEY'] = "thisIsNotVerySecure"
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['DEBUG'] = not is_aws()
 os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
@@ -402,6 +408,33 @@ def update_profile():
     form.allFields.website.data = current_user.website
     form.allFields.instagram.data = current_user.instagram
     return render_template('settings/update-profile.html',title='Update Profile', form=form)
+
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+@app.route("/settings/api-key", methods=['GET', 'POST'])
+@login_required
+def api_key():
+    """Allow a user to generate an api key"""
+    if current_user.api_key:
+        form = ResetApiKey(request.form)
+    else:
+        form = RequestApiKey(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+        user = User.find_user_by_id(current_user.id)
+        if user.api_key:
+            # reset the api key
+            flash("reset the api key")
+        else:
+            # generate a new api key
+            api_key = user.generate_api_key()
+            print(len(api_key))
+            flash(f"SUCCESS:\tYour api key is: {api_key}")
+
+    # finally
+    return render_template('settings/api-key.html',title='Api Key', form=form)
 
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -

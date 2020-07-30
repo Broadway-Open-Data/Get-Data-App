@@ -31,5 +31,14 @@ class UpdateProfileForm(FlaskForm):
     allFields = FormField(allFields_)
     submit = SubmitField('Submit')
 
+
+class RequestApiKey(FlaskForm):
+    """All of the fields as one."""
+    submit = SubmitField('Request an API Key')
+
+class ResetApiKey(FlaskForm):
+    """All of the fields as one."""
+    submit = SubmitField('Reset my API Key')
+
 # class ResetPasswordForm(FlaskForm):
 #     """Allow a user to reset their password"""
