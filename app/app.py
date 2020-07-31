@@ -682,6 +682,9 @@ def get_data_advanced():
             return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), display_data=True))
 
 
+    # Update the form
+    form.allFields.query.data = "select * from shows where show_type='musical' and year >2000;"
+    form.allFields.API_KEY.data = current_user.api_key
 
     return render_template('get-data-advanced.html', form=form, title="Get Data Avanced")
 

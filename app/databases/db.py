@@ -200,7 +200,7 @@ class User(UserMixin, db.Model):
             self.n_api_requests = 0
         self.n_api_requests += 1
         self.save_to_db()
-        
+
     # --------------------------------------------------------------------------
     # GENERATE SECRET TOKEN
 
@@ -225,9 +225,14 @@ class User(UserMixin, db.Model):
 
     # Allow a user to get an api key
     def generate_api_key(self):
-        """Expires in n minutes"""
+        """Expires in 180 days"""
 
-        token = {'user_email': self.email, 'user_hashed_pw':self.password}
+        token = {
+            'user_email': self.email,
+            'iat':datetime.datetime.utcnow(),
+            'user_hashed_pw':self.password,
+            'exp':datetime.datetime.utcnow() + datetime.timedelta(days=180)
+            }
         encoded_jwt = jwt.encode(token, algorithm='HS256', key=os.getenv('FLASK_SECRET_KEY'))
 
         # Update the db values
