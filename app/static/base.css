@@ -141,6 +141,7 @@ button:hover, input[type="submit"]:hover{
 }
 
 /* Form fields */
-.form-group.all-fields.wide > td, input{
+/* For some reason, I can't get this to be wide only for advanced sql page... */
+/* .wide-fields > td, input{
   width:65vw;
-}
+} */
