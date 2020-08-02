@@ -43,7 +43,7 @@ from forms.select_data_simple import dataForm
 from forms.select_data_advanced import sqlForm
 from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
 from forms.settings import ChangePasswordForm, UpdateProfileForm, RequestApiKey, ResetApiKey
-from forms.admin import AuthenticateUsersForm
+from forms.admin import AuthenticateUsersForm, CreateRoles, AssignRoles
 
 # Connect to the db
 from connect_broadway_db import select_data_from_simple, select_data_advanced
@@ -529,81 +529,55 @@ def approve_users():
 
 
 
-# @app.route("/admin/manage-roles", methods=['GET', 'POST'])
-# @login_required
-# def approve_users():
-#     """
-#     Authenticate users
-#     ---
-#     Only proceed if the user exists.
-#         – Try to approve user
-#         – If user is already approved, will not try to re-approve
-#             – Sends an email with confirmation link
-#         – If user is already unapproved, will not re-unapprove
-#             – Sends an email with notification
-#     """
-#     if not current_user.is_admin():
-#         return redirect("/")
-#     # Otherwise, proceed
-#
-#
-#     form = AuthenticateUsersForm(request.form)
-#
-#     # Validate sign up attempt
-#     if form.validate_on_submit():
-#
-#         # get data
-#         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
-#
-#         # Update the user
-#         user = User.find_user_by_email(my_data["userEmail"])
-#         if user:
-#             if my_data["approve"]:
-#                 _approved_state = user.approve()
-#
-#                 if _approved_state:
-#                     flash('APPROVED:\t\t{} is successfully APPROVED.'.format(my_data["userEmail"]))
-#
-#                     # Send an email to verify their account
-#                     token = user.get_secret_token(60*24*3) #Allow token to expire in 3 days
-#                     email_content = get_email_content("Approved")
-#                     msg = Message(
-#                         recipients = [user.email],
-#                         subject = email_content.get("emailSubject"),
-#                         html = render_template('emails/approved.html', token=token)
-#                         )
-#                     mail.send(msg)
-#                 else:
-#                     flash('OOPSIES:\t{} is already approved.'.format(my_data["userEmail"]))
-#
-#             elif my_data["un_approve"]:
-#                 _approved_state= user.unapprove()
-#                 if _approved_state:
-#                     flash('UNAPPROVED:\t{} is successfully UNAPPROVED.'.format(my_data["userEmail"]))
-#                 else:
-#                     flash('OOPSIES:\t{} is already unapproved.'.format(my_data["userEmail"]))
-#         else:
-#             flash('{} is not a user. Verify that this is the user\'s actual email address.'.format(my_data["userEmail"]))
-#     # Update the current fields
-#     else:
-#         for fieldName, errorMessages in form.allFields.errors.items():
-#             for err in errorMessages:
-#                 flash(f"{fieldName}: {err}")
-#
-#
-#     # Format the data for the page...
-#     select_st = User.query.filter_by(approved=False).all()
-#     if len(select_st)>=1:
-#         raw_data = [x.__data__() for x in select_st]
-#
-#         # format
-#         df = pd.DataFrame.from_records(raw_data)
-#         data = df.sort_values(by=["created_at"], ascending=[True])\
-#                 .to_html(header="true", table_id="show-data")
-#     else:
-#         data = "<pre>No data available.<br>All users are approved!</pre>"
-#     # Continue here...
-#     return render_template('admin/approve-users.html',title='Approve Users', form=form, data=data)
+@app.route("/admin/create-roles", methods=['GET', 'POST'])
+@login_required
+def create_roles():
+    """
+    Assigne and manage roles
+    ---
+    """
+    if not current_user.is_admin():
+        return redirect("/")
+    # Otherwise, proceed
+
+
+    form = CreateRoles(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+        print(my_data)
+        flash('Your data is: {}'.format(my_data))
+
+    return render_template('admin/create-roles.html',title='Create Roles', form=form)
+
+
+@app.route("/admin/assign-roles", methods=['GET', 'POST'])
+@login_required
+def assignroles():
+    """
+    Assigne and manage roles
+    ---
+    """
+    if not current_user.is_admin():
+        return redirect("/")
+    # Otherwise, proceed
+
+
+    form = AssignRoles(request.form)
+
+    # Validate sign up attempt
+    if form.validate_on_submit():
+
+        # get data
+        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+        print(my_data)
+        flash('Your data is: {}'.format(my_data))
+
+    return render_template('admin/assign-roles.html',title='Assign Roles', form=form)
+
 
 
 

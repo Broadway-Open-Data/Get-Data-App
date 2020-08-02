@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+  <h1>{{ title }}</h1>
+
+  <h3>Current Roles</h3>
+  <!-- It goes here -->
+    <div class="table-container">
+    {{ data|safe }}
+    </div>
+
+  <br>
+  <hr>
+
+  <h2>Create Roles:</h2>
+
+  <!-- Create a form -->
+  <form method="POST">
+  {{ form.csrf_token }}
+
+  <div class="form-group all-fields">
+  {{ form.allFields() }}
+  {{ form.submit() }}
+
+  </div>
+
+{% endblock %}
