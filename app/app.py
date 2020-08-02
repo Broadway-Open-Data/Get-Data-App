@@ -19,9 +19,9 @@ path = os.environ['append_path']
 if path and path not in sys.path:
     sys.path.insert(0, path)
 
+# Use this to open a browser if app is local
+import subprocess
 
-# import subprocess
-# import requests
 import pandas as pd
 
 
@@ -778,12 +778,17 @@ def download_data(file_format):
 
 # ------------------------------------------------------------------------------
 
+import webbrowser
 
 def main():
     # Threaded option to enable multiple instances for multiple user access support
 
     # Serve in development server if local
     if not is_aws():
+        # The reloader has not yet run - open the browser
+        if not os.environ.get("WERKZEUG_RUN_MAIN"):
+            webbrowser.open_new('http://0.0.0.0:5010/')
+        # Otherwise, continue as normal
         app.run(host="0.0.0.0", port=5010)
 
     else:
