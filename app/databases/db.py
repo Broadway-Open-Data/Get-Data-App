@@ -225,7 +225,11 @@ class User(UserMixin, db.Model):
 
     # Allow a user to get an api key
     def generate_api_key(self):
-        """Expires in 180 days"""
+        """
+        Expires in 180 days
+
+        Look into this tool as a way of tightening security: https://gist.github.com/jpf/1e860e5ea70c0a70fd5e
+        """
 
         token = {
             'user_email': self.email,
