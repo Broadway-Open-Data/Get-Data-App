@@ -154,7 +154,7 @@ def logout():
 # I'd love to extend this to wrapper....
 # def is_user_approved():
 #     if not current_user.approved:
-#         return redirect("/not-yet-approved")
+#         return redirect("/")
 
 # ==============================================================================
 # Build login routes
@@ -578,21 +578,21 @@ def verify_account(token):
 
 # Home
 @app.route('/')
-@login_required
+# @login_required # Not including -- the page is formatted on its own
 def index():
-    print(url_for('admin', _external=True))
 
     # Don't allow non-approved users
-    if not current_user.approved:
-        return redirect("/not-yet-approved")
+    # if not current_user.approved:
+    #     return redirect("/not-yet-approved")
 
     return render_template('index.html', title='Home')
 
 
-@app.route('/not-yet-approved')
-@login_required
-def not_yet_approved():
-    return render_template('not-yet-approved.html', title='Not Yet Approved')
+# @app.route('/not-yet-approved')
+# @login_required
+# def not_yet_approved():
+#     """Won't be using this"""
+#     return render_template('not-yet-approved.html', title='Not Yet Approved')
 
 # ------------------------------------------------------------------------------
 
@@ -603,7 +603,7 @@ def get_data_simple():
 
     # Don't allow non-approved users
     if not current_user.approved:
-        return redirect("/not-yet-approved")
+        return redirect("/")
 
     form = dataForm(request.form)
 
@@ -632,7 +632,7 @@ def return_data():
 
     # Don't allow non-approved users
     if not current_user.approved:
-        return redirect("/not-yet-approved")
+        return redirect("/")
 
     user_query = cache.get("user_query")
 
@@ -669,7 +669,7 @@ def get_data_advanced():
 
     # Don't allow non-approved users
     if not current_user.approved:
-        return redirect("/not-yet-approved")
+        return redirect("/")
 
 
     form = sqlForm()
@@ -702,7 +702,7 @@ def get_data_advanced_sql():
 
     # Don't allow non-approved users
     if not current_user.approved:
-        return redirect("/not-yet-approved")
+        return redirect("/")
 
 
     API_KEY = request.args.get('API_KEY')

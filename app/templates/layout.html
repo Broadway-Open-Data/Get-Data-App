@@ -20,27 +20,43 @@
   <body>
     <!-- Create a header for nav -->
     <div class="navigation">
+
     <!-- Only if logged in -->
     {% if current_user.is_authenticated %}
-      <a href="/">Home</a>
-      <a href="/settings">Settings</a>
+          <a href="/">Home</a>
+          <a href="/settings">Settings</a>
 
-      <!--  Only allow admin users -->
-      {% if current_user.is_admin() %}
-          <a href="/admin">Admin</a>
-      {% endif %}
+              <!--  Only allow admin users -->
+              {% if current_user.is_admin() %}
+                  <a href="/admin">Admin</a>
+              {% endif %}
 
-      <a href="/logout">Logout</a>
-      <pre>
-        Signed in as "{{ current_user.email}}"
-      </pre>
+          <a href="/logout">Logout</a>
+          <pre>
+            Signed in as "{{ current_user.email}}"
+          </pre>
+          
+    <!-- If not logged in -->
+    {% else %}
+        {% if request.endpoint == 'index' %}
+            <a href="/signup">Signup</a>
+            <a href="/login">Login</a>
+            <br><a href="/login/forgot-password">Forgot Password</a>
+        {% else %}
+            <a href="/">Home</a>
+        {% endif %}
+    {% endif %}
+
+
     <!-- Route appropriate pages -->
-    {% elif request.endpoint == 'login' %}
+    {% if request.endpoint == 'login' %}
         <a href="/signup">Signup</a>
         <br><a href="/login/forgot-password">Forgot Password</a>
+
     {% elif request.endpoint == 'signup' %}
         <a href="/login">Login</a>
         <br><a href="/login/forgot-password">Forgot Password</a>
+
     {% elif request.endpoint == 'forgot_password' %}
         <a href="/login">Login</a>
         <a href="/signup">Signup</a>
