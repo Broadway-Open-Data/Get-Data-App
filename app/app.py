@@ -20,7 +20,7 @@ if path and path not in sys.path:
     sys.path.insert(0, path)
 
 # Use this to open a browser if app is local
-import subprocess
+import webbrowser
 
 import pandas as pd
 
@@ -778,7 +778,6 @@ def download_data(file_format):
 
 # ------------------------------------------------------------------------------
 
-import webbrowser
 
 def main():
     # Threaded option to enable multiple instances for multiple user access support
