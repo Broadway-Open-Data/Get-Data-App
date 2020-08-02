@@ -28,7 +28,7 @@ import pandas as pd
 from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import reqparse
+# from flask_restful import reqparse # Is this module needed??
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from flask_mail import Mail, Message
 
@@ -634,16 +634,20 @@ def return_data():
     if not current_user.approved:
         return redirect("/not-yet-approved")
 
-    data = cache.get("user_query")
+    user_query = cache.get("user_query")
 
     # Success vs. Failure
-    if data:
+    if user_query:
+
+        # Get the detail level
+        detail_level = user_query.pop("detail_level")
+        detail_level = int(detail_level) # must be an int
 
         # Retrieve the data from  user's request
-        df = select_data_from_simple(my_params=data, theatre_data=True)
+        df = select_data_from_simple(my_params=user_query, theatre_data=True)
         cache.set("my_data", df.to_dict(orient="records"))
 
-        summary = data_summary.summarize_broadway_shows(df)
+        summary = data_summary.summarize_broadway_shows(df, detail_level)
 
         # Return the response in json format
         return render_template('display-data.html', summary=summary,
@@ -671,16 +675,14 @@ def get_data_advanced():
     form = sqlForm()
 
     if request.method == 'POST':
-        if form.validate():
 
+        if form.validate():
             my_data = {k:v for k,v in form.allFields.data.items()}
 
             # get rid of the csrf token
             del my_data["csrf_token"]
 
-
-            return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), display_data=True))
-
+            return redirect(url_for('get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), detail_level=my_data.get("detail_level"),display_data=True))
 
     # Update the form
     form.allFields.query.data = "select * from shows where show_type='musical' and year >2000;"
@@ -705,6 +707,10 @@ def get_data_advanced_sql():
 
     API_KEY = request.args.get('API_KEY')
     query = request.args.get('query')
+    # Get the detail level
+    detail_level = request.args.get("detail_level")
+    detail_level = int(detail_level) # must be an int
+
 
     # Validate the api key
     decoded = User.validate_api_key(API_KEY)
@@ -714,16 +720,15 @@ def get_data_advanced_sql():
             "error": "Your api key was not accepted. Register for one or reset yours under settings."
         }
         return jsonify(result)
-    # If it was accep
-    # make the request
-    df = select_data_advanced(query)
 
+    # If it was accepted, make the request
+    df = select_data_advanced(query)
 
     if request.args.get('display_data'):
         # Make data available for download
         cache.set("my_data", df.to_dict(orient="records"))
 
-        summary = data_summary.summarize_broadway_shows(df)
+        summary = data_summary.summarize_broadway_shows(df, detail_level)
 
         # Render the page
         return render_template('display-data.html', summary=summary,

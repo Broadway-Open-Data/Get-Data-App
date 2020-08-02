@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateField, BooleanField, IntegerField, SubmitField
+from wtforms import StringField, DateField, BooleanField, IntegerField, SelectField, SubmitField
 from wtforms.fields import FormField, FieldList
-from wtforms.validators import DataRequired
+from wtforms.validators import  DataRequired
 
 import datetime
+import re
 
 # Make a form
 class showInfo(FlaskForm):
@@ -32,13 +33,20 @@ class dateRange(FlaskForm):
     startYear = IntegerField(label="Start Year", default=1990, validators=[DataRequired()])
     endYear = IntegerField(label="End Year",default=2020, validators=[DataRequired()])
 
+class metaFields(FlaskForm):
+    """Some description."""
+    detail_level = SelectField(label='Detail Level', choices=[(x, x) for x in range(1,4)], default=2)
+
 class summarizedFields(FlaskForm):
     """Some description."""
     # showInfoSum = FormField(showInfo, label="Show Info", description="hey", separator="-")
     showGenreSum = FormField(showGenre, label="Show Genre", description="hey")
     productionTypeSum = FormField(productionType, label="Production Type", description="hey")
-    theatreInfoSum = FormField(theatreInfo, label="Choose by Theatre Info",)
-    dateRangeSum = FormField(dateRange, label="Choose by Date Range",)
+    theatreInfoSum = FormField(theatreInfo, label="Theatre Info",)
+    dateRangeSum = FormField(dateRange, label="Date Range")
+    metaFieldsSum = FormField(metaFields, "Data Summary")
+
+
 
 
 # The acrtual form!
