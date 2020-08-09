@@ -42,6 +42,44 @@ class Role(db.Model, RoleMixin):
 
 
 # ------------------------------------------------------------------------------
+class FormMessage(UserMixin, db.Model):
+    """"""
+    __tablename__ = "message"
+    # Core
+    id = db.Column(db.Integer,primary_key=True)
+    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    message = db.Column(db.String(400), nullable=False, unique=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    # Let the user see themselves
+    def __repr__(self):
+        return '<User {}>'.format(self.email)
+
+    # Define string method
+    def __str__(self):
+        return json.dumps({
+            "id":self.id,
+            "user_id":self.user_id,
+            "message":seld.message,
+            "created_at":format_dt(self.created_at),
+            })
+
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+
+    # Class method which finds user from DB by id
+    @classmethod
+    def get_form_message(self, user_id):
+        """
+        Gets the message the user made when signing up
+        """
+        return self.query.filter_by(user_id=user_id).first()
+
+
+# ==============================================================================
 
 class User(UserMixin, db.Model):
     """"""
@@ -137,7 +175,6 @@ class User(UserMixin, db.Model):
     @classmethod
     def find_user_by_id(self, _id):
         return self.query.filter_by(id=_id).first()
-
 
     # --------------------------------------------------------------------------
     # PASSWORD METHODS
