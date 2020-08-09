@@ -222,30 +222,31 @@ def signup():
     # Validate sign up attempt
     if form.validate_on_submit(): #request.method == 'POST'
 
-        # get data
-        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+        # get data & remove the token
+        my_data = form.data
+        del my_data["csrf_token"]
 
         # If the user is in the db
         existing_user = User.query.filter_by(email=my_data["email"]).first()
 
         # Create new user
         if existing_user is None:
-            user = User(
-                email = my_data["email"],
-                website = my_data.get("website"),
-                instagram = my_data.get("instagram")
-                )
-            user.set_password(my_data["password"])
-
-            # ---------------------------------------
-            del my_data # delete potentially saved pw
-            # ---------------------------------------
-
-            # Add to db
-            user.save_to_db()
-
-            # Log in as newly created user
-            login_user(user,remember=True)
+            # user = User(
+            #     email = my_data["email"],
+            #     website = my_data.get("website"),
+            #     instagram = my_data.get("instagram")
+            #     )
+            # user.set_password(my_data["password"])
+            #
+            # # ---------------------------------------
+            # del my_data # delete potentially saved pw
+            # # ---------------------------------------
+            #
+            # # Add to db
+            # user.save_to_db()
+            #
+            # # Log in as newly created user
+            # login_user(user,remember=True)
 
             return redirect(url_for('index'))
 
