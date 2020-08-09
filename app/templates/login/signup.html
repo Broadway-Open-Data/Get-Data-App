@@ -6,16 +6,20 @@
   <h1>Sign Up</h1>
 
 
-    <!-- Create a form -->
+  <!-- Create a form -->
+  {% from "login/_formhelpers.html" import render_field %}
+  <div class="container">
     <form method="POST">
     {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
 
-    <div class="form-group all-fields">
-
-    {{ form.allFields() }}
-    {{ form.submit() }}
-
+      {{ render_field(form.email) }}
+      {{ render_field(form.password) }}
+      {{ render_field(form.confirm) }}
+      {{ render_field(form.website) }}
+      {{ render_field(form.instagram) }}
+      {{ render_field(form.message, type="textarea") }}
+      {{ render_field(form.submit, class="submit") }}
+      </form>
     </div>
 
   <div class="login-signup">

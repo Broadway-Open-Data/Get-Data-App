@@ -1,0 +1,24 @@
+{% macro render_field(field) %}
+
+  <div class=row>
+    {% if field.name == "submit" %}
+      <div class ="submit">
+        {{ field(placeholder=field.description)|safe }}
+        </div>
+    {% else %}
+
+    <!-- Show the label and input -->
+    {{ field.label }}
+    {{ field(**kwargs)|safe }}
+
+    <!-- Show errors -->
+    {% if field.errors %}
+      <ul class=errors>
+      {% for error in field.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+  </div>
+{% endmacro %}

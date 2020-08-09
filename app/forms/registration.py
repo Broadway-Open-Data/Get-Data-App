@@ -1,23 +1,26 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, \
-    SubmitField, FormField
+    SubmitField, FormField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, \
     Email, EqualTo, Length, Optional
 
 # ...
 
-class SignupFormFields_(FlaskForm):
-    email = StringField('Email', validators=[Length(min=6), Email(message='Enter a valid email.'),DataRequired()])
+class SignupForm(FlaskForm):
+    email = StringField('Email', validators=[Length(min=6), Email(message='Enter a valid email.'),DataRequired()], render_kw={"placeholder": "Alexander@Hamilton.com"})
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, message='Select a stronger password.')])
     confirm = PasswordField('Confirm Your Password', validators=[DataRequired(), EqualTo('password')])
-    website = StringField('Website',validators=[Optional()])
-    instagram = StringField('Instagram Handle', validators=[Optional()])
-
-
-class SignupForm(FlaskForm):
-    """All of the fields as one."""
-    allFields = FormField(SignupFormFields_)
+    website = StringField('Website',validators=[Optional()],render_kw={"placeholder": "www.Hamilton.com"})
+    instagram = StringField('Instagram Handle', validators=[Optional()], render_kw={"placeholder": "@Boss_Hamilton"})
+    message = TextAreaField('Why do you want access to Open Broadway Data?',
+        validators=[DataRequired(), Length(min=10, message='Please provide an answer > 50 characters.')],
+        render_kw={"placeholder": "Please provide an answer > 50 characters..."})
     submit = SubmitField('Register')
+
+# class SignupForm(FlaskForm):
+#     """All of the fields as one."""
+#     allFields = FormField(SignupFormFields_)
+#     submit = SubmitField('Register')
 
 # --------------------------------------------------------------------------------
 
@@ -51,7 +54,7 @@ class ForgotPasswordForm(FlaskForm):
  # --------------------------------------------------------------------------------
 
 
-# 
+#
 # class VerifyForm(FlaskForm):
 #     """If you forgot your password, reset through email address."""
 #

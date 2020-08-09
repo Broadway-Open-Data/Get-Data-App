@@ -47,7 +47,7 @@ class FormMessage(UserMixin, db.Model):
     __tablename__ = "message"
     # Core
     id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id'))
     message = db.Column(db.String(400), nullable=False, unique=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 

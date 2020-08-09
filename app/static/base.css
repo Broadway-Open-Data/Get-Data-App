@@ -139,9 +139,3 @@ button:hover, input[type="submit"]:hover{
 .alert > button.close:hover {
   opacity: 1;
 }
-
-/* Form fields */
-/* For some reason, I can't get this to be wide only for advanced sql page... */
-/* .wide-fields > td, input{
-  width:65vw;
-} */

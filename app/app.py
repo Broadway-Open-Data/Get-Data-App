@@ -251,6 +251,11 @@ def signup():
 
         flash('A user already exists with that email address.')
 
+    elif form.errors.items():
+        for fieldName, errorMessages in form.errors.items():
+            for err in errorMessages:
+                flash(err)
+
     return render_template(
         'login/signup.html',
         title='Create an Account.',

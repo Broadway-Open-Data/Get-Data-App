@@ -3,6 +3,7 @@
   <head>
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='tables.css') }}">
 
     <!-- Load JQuery -->
@@ -35,7 +36,7 @@
           <pre>
             Signed in as "{{ current_user.email}}"
           </pre>
-          
+
     <!-- If not logged in -->
     {% else %}
         {% if request.endpoint == 'index' %}
