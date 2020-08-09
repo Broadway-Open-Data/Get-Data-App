@@ -47,7 +47,7 @@ class FormMessage(UserMixin, db.Model):
     __tablename__ = "message"
     # Core
     id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
     message = db.Column(db.String(400), nullable=False, unique=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
@@ -188,6 +188,22 @@ class User(UserMixin, db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
 
+    # --------------------------------------------------------------------------
+
+    # Signup message
+    def save_signup_message(self, message):
+        """Set the message in the db."""
+        message = FormMessage(
+            user_id = self.id,
+            message = message
+        )
+        db.session.add(message)
+        db.session.commit()
+
+    # On signup
+    def get_signup_message(self):
+        """Access the message from the db."""
+        return FormMessage.query.filter_by(user_id=self.id).first()
 
     # --------------------------------------------------------------------------
     # UPDATE METHODS

@@ -36,7 +36,7 @@ from flask_mail import Mail, Message
 import waitress
 
 # import models
-from databases.db import db, User, Role
+from databases.db import db, User, Role, FormMessage
 
 # Import forms
 from forms.select_data_simple import dataForm
@@ -231,22 +231,23 @@ def signup():
 
         # Create new user
         if existing_user is None:
-            # user = User(
-            #     email = my_data["email"],
-            #     website = my_data.get("website"),
-            #     instagram = my_data.get("instagram")
-            #     )
-            # user.set_password(my_data["password"])
-            #
-            # # ---------------------------------------
-            # del my_data # delete potentially saved pw
-            # # ---------------------------------------
-            #
-            # # Add to db
-            # user.save_to_db()
-            #
-            # # Log in as newly created user
-            # login_user(user,remember=True)
+            user = User(
+                email = my_data["email"],
+                website = my_data.get("website"),
+                instagram = my_data.get("instagram")
+                )
+            user.set_password(my_data["password"])
+            user.save_to_db()
+
+            # Now create the signup messag
+            user.save_signup_message(my_data["message"])
+
+            # ---------------------------------------
+            del my_data # delete potentially saved pw
+            # ---------------------------------------
+
+            # Log in as newly created user
+            login_user(user,remember=True)
 
             return redirect(url_for('index'))
 
