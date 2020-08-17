@@ -521,17 +521,23 @@ def approve_users():
 
 
     # Format the data for the page...
-    select_st = User.query.filter_by(approved=False).all()
-    if len(select_st)>=1:
-        raw_data = [x.__data__() for x in select_st]
+    select_st = """
+        SELECT user.id, email, user.created_at, approved, approved_at, website, instagram, message
+        FROM user
+        INNER JOIN
+        message
+        ON user.id = message.user_id
+        WHERE
+        user.created_at <= CURRENT_TIMESTAMP -30
+        OR
+        user.approved='false'
+        ;
+        """
+    df = pd.read_sql(select_st, db.engine)
+    data = df.sort_values(by=["created_at"], ascending=[True])\
+            .to_html(header="true", table_id="show-data")
 
-        # format
-        df = pd.DataFrame.from_records(raw_data)
-        data = df.sort_values(by=["created_at"], ascending=[True])\
-                .to_html(header="true", table_id="show-data")
-    else:
-        data = "<pre>No data available.<br>All users are approved!</pre>"
-    # Continue here...
+
     return render_template('admin/approve-users.html',title='Approve Users', form=form, data=data)
 
 
@@ -604,12 +610,23 @@ def inspect_users():
     if not current_user.is_admin():
         return redirect("/")
     # Otherwise, proceed
-    select_st = User.query.limit(100).all()
+    select_st = """
+        SELECT user.id, email, user.created_at, approved, approved_at,
+            website, instagram, message,
+            unapproved_at, authenticated, authenticated_at,
+            login_count, request_pw_reset_count, api_key_count, n_api_requests
+        FROM user
+        INNER JOIN
+        message
+        ON user.id = message.user_id
+        WHERE
+        user.created_at <= CURRENT_TIMESTAMP -30
+        OR
+        user.approved='false'
+        ;
+        """
+    df = pd.read_sql(select_st, db.engine)
 
-    raw_data = [x.__data__() for x in select_st]
-
-    # format
-    df = pd.DataFrame.from_records(raw_data)
     data = df.sort_values(by=["created_at"], ascending=[True])\
             .to_html(header="true", table_id="show-data")
 

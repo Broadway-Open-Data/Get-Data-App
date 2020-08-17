@@ -55,14 +55,14 @@ class FormMessage(UserMixin, db.Model):
 
     # Let the user see themselves
     def __repr__(self):
-        return '<User {}>'.format(self.email)
+        return '<User {}>'.format(self.id)
 
     # Define string method
     def __str__(self):
         return json.dumps({
             "id":self.id,
             "user_id":self.user_id,
-            "message":seld.message,
+            "message":self.message,
             "created_at":format_dt(self.created_at),
             })
 
