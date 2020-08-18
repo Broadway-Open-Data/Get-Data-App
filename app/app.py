@@ -530,7 +530,7 @@ def approve_users():
         WHERE
         user.created_at <= CURRENT_TIMESTAMP -30
         OR
-        user.approved='false'
+        approved=0
         ;
         """
     df = pd.read_sql(select_st, db.engine)
