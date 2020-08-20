@@ -867,41 +867,19 @@ def download_data(file_format):
 
 # ------------------------------------------------------------------------------
 # Allow dash
-# Continue on this another time...
-# import dash
-# from werkzeug.serving import run_simple
-# from werkzeug.middleware.dispatcher import DispatcherMiddleware
-# import dash_html_components as html
-# # from dashapp1.layout import layout
-# # from dashapp1.callbacks import register_callbacks
-#
-# dashapp1 = dash.Dash(
-#     __name__,
-#     server=app,
-#     routes_pathname_prefix='/dash/'
-# )
-# dashapp1.layout = html.layout("Hello Dash app")
-# #
-# total_app = DispatcherMiddleware(app, {
-#     '/dash1': dash_app1.server,
-#     '/dash2': dash_app2.server
-# })
 
-# meta_viewport = {"name": "viewport", "content": "width=device-width, initial-scale=1, shrink-to-fit=no"}
+from dashapp1.app1 import create_dashboard
 
-# with app.app_context():
-#     dashapp1.title = 'Dashapp 1'
-#     dashapp1.layout = layout
-#     register_callbacks(dashapp1)
+# Create the dash app
+create_dashboard(app)
 
-#
-# @app_flask.route('/dash/')
-# def render_dashboard():
-#     return flask.redirect('/dash')
+
+
+
 
 
 # ------------------------------------------------------------------------------
-
+from werkzeug.serving import run_simple
 
 def main():
     # Threaded option to enable multiple instances for multiple user access support
@@ -911,9 +889,10 @@ def main():
         # The reloader has not yet run - open the browser
         if not os.environ.get("WERKZEUG_RUN_MAIN"):
             webbrowser.open_new('http://0.0.0.0:5010/')
+
         # Otherwise, continue as normal
-        # run_simple(host="0.0.0.0", port=5010, application=total_app)
-        app.run(host="0.0.0.0", port=5010)
+        run_simple(hostname="0.0.0.0", port=5010, application=app)
+        
 
     else:
         waitress.serve(app, host="0.0.0.0", port=5010)
