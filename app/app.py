@@ -64,95 +64,112 @@ from common.extensions import cache
 # ==============================================================================
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# This is otherwise done through the bash profile
-if not os.environ.get("FLASK_SECRET_KEY"):
-    os.environ['FLASK_SECRET_KEY'] = "some key"
+    # This is otherwise done through the bash profile
+    if not os.environ.get("FLASK_SECRET_KEY"):
+        os.environ['FLASK_SECRET_KEY'] = "some key"
 
-app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
-app.config['DEBUG'] = not is_aws()
-os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
-
-
-csrf = CSRFProtect(app)
+    app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
+    app.config['DEBUG'] = not is_aws()
+    os.environ['FLASK_ENV'] = 'production' if is_aws() else 'development'
 
 
-# Configure the cache
-cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
+    csrf = CSRFProtect(app)
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-# Configure the db
-db.init_app(app)
-with app.app_context():
-    db.create_all()
+    # Configure the cache
+    cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
 
-# from flask_security import SQLAlchemyUserDatastore, Security, roles_required
-# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-# security = Security(app, user_datastore)
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    # Configure the db
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-# Config the login manager
-login_manager = LoginManager()
-login_manager.login_view = 'login'
-login_manager.init_app(app)
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-# Configure mail...
-mail_settings = {
-    "MAIL_SERVER": 'smtp.gmail.com',
-    "MAIL_PORT": 465,
-    "MAIL_USE_TLS": False,
-    "MAIL_USE_SSL": True,
-}
-mail_settings["MAIL_USERNAME"],\
-mail_settings["MAIL_PASSWORD"] \
-    = get_secret_creds("EMAIL")
+    # Configure mail...
+    mail_settings = {
+        "MAIL_SERVER": 'smtp.gmail.com',
+        "MAIL_PORT": 465,
+        "MAIL_USE_TLS": False,
+        "MAIL_USE_SSL": True,
+    }
+    mail_settings["MAIL_USERNAME"],\
+    mail_settings["MAIL_PASSWORD"] \
+        = get_secret_creds("EMAIL")
 
-mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
+    mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
 
-app.config.update(mail_settings)
-mail = Mail()
-mail.init_app(app)
-# silence the email logger
-app.extensions['mail'].debug = 0
+    app.config.update(mail_settings)
+    mail = Mail()
+    mail.init_app(app)
+    # silence the email logger
+    app.extensions['mail'].debug = 0
 
+    return app
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-# Register blueprints
-from routes import format
-# Unsucessful in changing the app architecture / layout of dirs
-app.register_blueprint(format.page)
-
-
-# ==============================================================================
-# Build login rules
 # =============================================================================
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
-
-@login_manager.unauthorized_handler
-def unauthorized():
-    """Redirect unauthorized users to Login page."""
-    flash('You must be logged in to view that page.')
-    return redirect(url_for('login'))
+def register_login_manager(app):
+    # Config the login manager
+    login_manager = LoginManager()
+    login_manager.login_view = 'login'
 
 
-# @login_manager.user_loader
-# has_role
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.filter_by(id=user_id).first()
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        """Redirect unauthorized users to Login page."""
+        flash('You must be logged in to view that page.')
+        return redirect(url_for('login'))
+
+    # @login_manager.user_loader
+    # has_role
+    login_manager.init_app(app)
+
+
+# ------------------------------------------------------------------------------
+
+def register_my_blueprints(app):
+    from routes import format
+    from routes.admin import index
+    from routes.admin import inspect_users
+
+    my_pages = [
+        format.page,
+        index.page,
+        inspect_users.page
+        ]
+
+    for page in my_pages:
+        app.register_blueprint(page)
+
+
+# ------------------------------------------------------------------------------
+# The actual stuff...
+app = create_app()
+register_login_manager(app)
+register_my_blueprints(app)
+
+
+# ------------------------------------------------------------------------------
+
+
 
 @app.route("/logout")
 @login_required
@@ -461,15 +478,8 @@ def api_key():
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Use https://pythonhosted.org/Flask-Principal/
-@app.route("/admin")
-@login_required
-def admin():
-    """Only allow admin users"""
-    if not current_user.is_admin():
-        return redirect("/")
-    # Otherwise, proceed
-    return render_template('admin/admin.html',title='Admin')
-
+# from routes.admin import inspect_users
+# inspect_users.create_this(app)
 
 
 @app.route("/admin/approve-users", methods=['GET', 'POST'])
@@ -616,63 +626,7 @@ def assignroles():
 
 
 
-@app.route("/admin/inspect-users", methods=['GET', 'POST'])
-@login_required
-def inspect_users():
-    """
-    Authenticate users
-    ---
-    Only proceed if the user exists.
-        – Try to approve user
-        – If user is already approved, will not try to re-approve
-            – Sends an email with confirmation link
-        – If user is already unapproved, will not re-unapprove
-            – Sends an email with notification
-    """
-    if not current_user.is_admin():
-        return redirect("/")
 
-    # It'll be better to use the ORM instead of raw sql...
-    # Otherwise, proceed
-    select_st = """
-        SELECT
-            user.id as id,
-            email,
-            role.name as role,
-            user.created_at,
-            approved,
-            approved_at,
-            website,
-            instagram,
-            message,
-            unapproved_at,
-            authenticated,
-            authenticated_at,
-            login_count,
-            request_pw_reset_count,
-            api_key_count,
-            n_api_requests
-        FROM
-            user
-        LEFT JOIN
-            message ON user.id = message.user_id
-        LEFT JOIN
-            roles_users ON user.id = roles_users.user_id
-        LEFT JOIN
-            role ON roles_users.role_id = role.id
-        WHERE
-            user.created_at <= CURRENT_TIMESTAMP -14
-            OR
-            user.approved='false'
-        ;
-        """
-
-    df = pd.read_sql(select_st, db.engine)
-
-    data = df.sort_values(by=["created_at"], ascending=[True])\
-            .to_html(header="true", table_id="show-data")
-
-    return render_template('admin/inspect-users.html',title='Inspect Users', data=data)
 
 
 @app.route("/verify-account/<token>", methods=['GET', 'POST'])
