@@ -147,11 +147,12 @@ def register_login_manager(app):
 
 def register_my_blueprints(app):
     from routes import format
-    from routes.admin import index
-    from routes.admin import inspect_users
+    from routes.auth import login
+    from routes.admin import index, inspect_users
 
     my_pages = [
         format.page,
+        login.page,
         index.page,
         inspect_users.page
         ]
@@ -171,26 +172,7 @@ register_my_blueprints(app)
 
 
 
-@app.route("/logout")
-@login_required
-def logout():
-    """Log out"""
-    logout_user()
-    return redirect(url_for('login'))
 
-# I'd love to extend this to wrapper....
-# def is_user_approved():
-#     if not current_user.approved:
-#         return redirect("/")
-
-# Create a decorator...
-def role_required(function):
-    """Does the user have this role?"""
-    def wrapper(**args):
-        # Bypass if user is logged in
-        for role in args:
-            if current_user.roles==role:
-                return redirect(url_for('index'))
 
 # ==============================================================================
 # Build login routes
