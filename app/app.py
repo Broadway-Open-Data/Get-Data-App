@@ -163,11 +163,20 @@ def register_my_blueprints(app):
 
 
 # ------------------------------------------------------------------------------
+
+def register_dash(app):
+    from dashapp1.app1 import create_dashboard
+    # Create the dash app
+    create_dashboard(app)
+
+
+# ------------------------------------------------------------------------------
+
 # The actual stuff...
 app = create_app()
 register_login_manager(app)
 register_my_blueprints(app)
-
+register_dash(app)
 
 
 
@@ -377,12 +386,6 @@ def download_data(file_format):
 
 
 # ------------------------------------------------------------------------------
-# Allow dash
-
-from dashapp1.app1 import create_dashboard
-
-# Create the dash app
-create_dashboard(app)
 
 
 
