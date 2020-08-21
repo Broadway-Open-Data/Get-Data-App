@@ -178,44 +178,44 @@ register_my_blueprints(app)
 # Build login routes
 # =============================================================================
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """
-    Log-in page for registered users.
-    GET requests serve Log-in page.
-    POST requests validate and redirect user to dashboard.
-    """
-
-
-    # continue
-    form = LoginForm(request.form)
-
-    # Validate login attempt
-    if form.validate_on_submit():
-
-        # Get data
-        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
-
-        # If the user is in the db
-        user = User.query.filter_by(email=my_data["email"]).first()
-
-        if user and user.check_password(password=my_data["password"]):
-            login_user(user,remember=True)
-            user.login_counter()
-            # ---------------------------------------
-            del my_data # delete potentially saved pw
-            # ---------------------------------------
-            return redirect(url_for('index'))
-
-        # Otherwise
-        flash('Invalid username/password combination')
-        return redirect(url_for('/login'))
-    return render_template(
-        'login/login.html',
-        form=form,
-        title='Log in.',
-        template='login-page'
-        )
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     """
+#     Log-in page for registered users.
+#     GET requests serve Log-in page.
+#     POST requests validate and redirect user to dashboard.
+#     """
+#
+#
+#     # continue
+#     form = LoginForm(request.form)
+#
+#     # Validate login attempt
+#     if form.validate_on_submit():
+#
+#         # Get data
+#         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+#
+#         # If the user is in the db
+#         user = User.query.filter_by(email=my_data["email"]).first()
+#
+#         if user and user.check_password(password=my_data["password"]):
+#             login_user(user,remember=True)
+#             user.login_counter()
+#             # ---------------------------------------
+#             del my_data # delete potentially saved pw
+#             # ---------------------------------------
+#             return redirect(url_for('index'))
+#
+#         # Otherwise
+#         flash('Invalid username/password combination')
+#         return redirect(url_for('/login'))
+#     return render_template(
+#         'login/login.html',
+#         form=form,
+#         title='Log in.',
+#         template='login-page'
+#         )
 
 # ------------------------------------------------------------------------------
 
