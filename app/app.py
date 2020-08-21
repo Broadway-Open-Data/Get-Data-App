@@ -30,7 +30,6 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 # from flask_restful import reqparse # Is this module needed??
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
-from flask_security import SQLAlchemyUserDatastore, Security, roles_required
 from flask_mail import Mail, Message
 
 # import production server
@@ -93,6 +92,7 @@ with app.app_context():
     db.create_all()
 
 
+# from flask_security import SQLAlchemyUserDatastore, Security, roles_required
 # user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 # security = Security(app, user_datastore)
 

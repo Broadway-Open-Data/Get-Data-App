@@ -24,7 +24,7 @@ db = SQLAlchemy()
 # Define your model
 # ------------------------------------------------------------------------------
 
-class dbTable(RoleMixin):
+class dbTable():
     """
     Base class for all objects in a table
     """
@@ -63,7 +63,7 @@ roles_users = db.Table('roles_users',
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
-class Role(db.Model, dbTable):
+class Role(db.Model, RoleMixin, dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
@@ -104,7 +104,7 @@ class FormMessage(db.Model, dbTable):
 
 # ==============================================================================
 
-class User(db.Model, dbTable):
+class User(db.Model, UserMixin, dbTable):
     """"""
     __tablename__ = "user"
     # Core
