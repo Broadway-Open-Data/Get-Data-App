@@ -90,6 +90,11 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    return app
+
+# =============================================================================
+
+def register_mail(app):
     # Configure mail...
     mail_settings = {
         "MAIL_SERVER": 'smtp.gmail.com',
@@ -104,15 +109,13 @@ def create_app():
     mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
 
     app.config.update(mail_settings)
-    mail = Mail()
-    mail.init_app(app)
+    mail = Mail(app)
+    # mail.init_app(app)
     # silence the email logger
     app.extensions['mail'].debug = 0
-
-    return app
+    return mail
 
 # =============================================================================
-
 
 def register_login_manager(app):
     # Config the login manager
@@ -174,6 +177,7 @@ def register_dash(app):
 
 # The actual stuff...
 app = create_app()
+mail = register_mail(app)
 register_login_manager(app)
 register_my_blueprints(app)
 register_dash(app)

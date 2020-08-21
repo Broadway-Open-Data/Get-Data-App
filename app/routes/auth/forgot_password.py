@@ -1,6 +1,7 @@
 from flask import send_from_directory, Blueprint, redirect, url_for, \
     flash, render_template, request, jsonify
 from flask_login import login_required, logout_user, login_user
+from flask_mail import Message
 
 from databases.db import User, Role
 from utils.get_email_content import get_email_content
@@ -28,15 +29,19 @@ def forgot_password():
         user = User.find_user_by_email(email = my_data["email"])
         token = user.get_secret_token(30)
 
-        with app.app_context():
-            email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
-            msg = Message(
-                recipients = [user.email],
-                subject = email_content.get("emailSubject"),
-                html = render_template('emails/reset_password.html', token=token)
-                )
-            # Send the email
-            mail.send(msg)
+        # import app
+        from app import mail
+
+        # with page.app_context():
+        email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
+        msg = Message(
+            recipients = [user.email],
+            subject = email_content.get("emailSubject"),
+            html = render_template('emails/reset_password.html', token=token)
+            )
+
+        # Send the email
+        mail.send(msg)
         # Increase the count for password reset
         user.request_pw_reset_counter()
         flash(f"An email has been sent to \"{user.email}\" to recover the current account\n\n\
