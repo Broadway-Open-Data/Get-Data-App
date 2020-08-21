@@ -247,7 +247,7 @@ def signup():
                 instagram = my_data.get("instagram")
                 )
             user.set_password(my_data["password"])
-            
+
             # Set the default role
             default_role = Role.get_by_name(name='general')
             user.roles.append(default_role)
@@ -536,15 +536,23 @@ def approve_users():
 
     # Format the data for the page...
     select_st = """
-        SELECT user.id, email, user.created_at, approved, approved_at, website, instagram, message
-        FROM user
-        INNER JOIN
-        message
-        ON user.id = message.user_id
+        SELECT
+            user.id as id,
+            email,
+            user.created_at,
+            approved,
+            approved_at,
+            website,
+            instagram,
+            message
+        FROM
+            user
+        LEFT JOIN
+            message ON user.id = message.user_id
         WHERE
-        user.created_at <= CURRENT_TIMESTAMP -30
-        OR
-        approved=0
+            user.created_at <= CURRENT_TIMESTAMP -30
+            OR
+            approved=0
         ;
         """
     df = pd.read_sql(select_st, db.engine)
@@ -623,22 +631,42 @@ def inspect_users():
     """
     if not current_user.is_admin():
         return redirect("/")
+
+    # It'll be better to use the ORM instead of raw sql...
     # Otherwise, proceed
     select_st = """
-        SELECT user.id, email, user.created_at, approved, approved_at,
-            website, instagram, message,
-            unapproved_at, authenticated, authenticated_at,
-            login_count, request_pw_reset_count, api_key_count, n_api_requests
-        FROM user
-        INNER JOIN
-        message
-        ON user.id = message.user_id
+        SELECT
+            user.id as id,
+            email,
+            role.name as role,
+            user.created_at,
+            approved,
+            approved_at,
+            website,
+            instagram,
+            message,
+            unapproved_at,
+            authenticated,
+            authenticated_at,
+            login_count,
+            request_pw_reset_count,
+            api_key_count,
+            n_api_requests
+        FROM
+            user
+        LEFT JOIN
+            message ON user.id = message.user_id
+        LEFT JOIN
+            roles_users ON user.id = roles_users.user_id
+        LEFT JOIN
+            role ON roles_users.role_id = role.id
         WHERE
-        user.created_at <= CURRENT_TIMESTAMP -30
-        OR
-        user.approved='false'
+            user.created_at <= CURRENT_TIMESTAMP -14
+            OR
+            user.approved='false'
         ;
         """
+
     df = pd.read_sql(select_st, db.engine)
 
     data = df.sort_values(by=["created_at"], ascending=[True])\
