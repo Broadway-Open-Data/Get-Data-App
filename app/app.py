@@ -30,6 +30,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 # from flask_restful import reqparse # Is this module needed??
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_security import SQLAlchemyUserDatastore, Security, roles_required
 from flask_mail import Mail, Message
 
 # import production server
@@ -83,12 +84,18 @@ csrf = CSRFProtect(app)
 # Configure the cache
 cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
+
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Configure the db
 db.init_app(app)
 with app.app_context():
     db.create_all()
+
+
+# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+# security = Security(app, user_datastore)
+
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -143,6 +150,9 @@ def unauthorized():
     flash('You must be logged in to view that page.')
     return redirect(url_for('login'))
 
+
+# @login_manager.user_loader
+# has_role
 
 @app.route("/logout")
 @login_required
@@ -237,6 +247,14 @@ def signup():
                 instagram = my_data.get("instagram")
                 )
             user.set_password(my_data["password"])
+            default_role = Role.get_by_name(name='general')
+            user.roles.append(default_role)
+            user.save_to_db()
+
+
+            # Set the default role
+            default_role = Role.query.filter_by(name='general').first()
+            user.role.append(default_role)
             user.save_to_db()
 
             # Now create the signup messag
@@ -892,7 +910,7 @@ def main():
 
         # Otherwise, continue as normal
         run_simple(hostname="0.0.0.0", port=5010, application=app)
-        
+
 
     else:
         waitress.serve(app, host="0.0.0.0", port=5010)

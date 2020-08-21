@@ -14,10 +14,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
 
-def format_dt(x):
-    if isinstance(x, datetime.date):
-        return x.strftime("%Y-%m-%d %H:%M:%S")
-
 db = SQLAlchemy()
 
 
@@ -28,21 +24,59 @@ db = SQLAlchemy()
 # Define your model
 # ------------------------------------------------------------------------------
 
+class dbTable(RoleMixin):
+    """
+    Base class for all objects in a table
+    """
+
+    # Method to save role to DB
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    # Method to remove role from DB
+    def remove_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    # Udate info
+    def update_info(self, update_dict):
+        self.query.filter_by(id=self.id).update(update_dict, synchronize_session=False)
+        self.save_to_db()
+
+
+    # Define string methods...
+    def __data__(self):
+        data = {x: getattr(self, x) for x in self.__mapper__.columns.keys()}
+        # data = {x: str(getattr(self, x)) for x in self.__mapper__.columns.keys()}
+        return data
+
+    def __str__(self):
+        data = self.__data__()
+        return json.dumps(data, default=str)
+
+# --------------------------------------------------------------------------
+
 # Define models
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
-class Role(db.Model, RoleMixin):
+class Role(db.Model, dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
 
+    @classmethod
+    def get_by_name(self, name):
+        return self.query.filter_by(name=name).first()
+
+
 # ------------------------------------------------------------------------------
-class FormMessage(UserMixin, db.Model):
+class FormMessage(db.Model, dbTable):
     """"""
     __tablename__ = "message"
     # Core
@@ -57,18 +91,7 @@ class FormMessage(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.id)
 
-    # Define string method
-    def __str__(self):
-        return json.dumps({
-            "id":self.id,
-            "user_id":self.user_id,
-            "message":self.message,
-            "created_at":format_dt(self.created_at),
-            })
-
-
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
 
     # Class method which finds user from DB by id
     @classmethod
@@ -81,7 +104,7 @@ class FormMessage(UserMixin, db.Model):
 
 # ==============================================================================
 
-class User(UserMixin, db.Model):
+class User(db.Model, dbTable):
     """"""
     __tablename__ = "user"
     # Core
@@ -117,6 +140,7 @@ class User(UserMixin, db.Model):
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
+    messages = db.relationship('FormMessage', backref='users', lazy=True)
     # --------------------------------------------------------------------------
     # STRING METHODS
 
@@ -125,42 +149,42 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.email)
 
     # Define string method
-    def __str__(self):
-        return json.dumps({
-            "id":self.id,
-            "created_at":format_dt(self.created_at),
-            "email":self.email,
-            "website":self.website,
-            "instagram":self.instagram,
-            "approved":self.approved,
-            "approved_at":format_dt(self.approved_at),
-            "unapproved_at":format_dt(self.unapproved_at),
-            "authenticated":self.authenticated,
-            "authenticated_at":format_dt(self.authenticated_at),
-            "login_count":self.login_count,
-            "request_pw_reset_count":self.request_pw_reset_count,
-            "api_key_count":self.request_pw_reset_count,
-            "n_api_requests":self.n_api_requests,
-        })
-
-    # Get data for adding to df
-    def __data__(self):
-        return {
-            "id":self.id,
-            "created_at":self.created_at,
-            "email":self.email,
-            "website":self.website,
-            "instagram":self.instagram,
-            "approved":self.approved,
-            "approved_at":self.approved_at,
-            "unapproved_at":self.unapproved_at,
-            "authenticated":self.authenticated,
-            "authenticated_at":self.authenticated_at,
-            "login_count":self.login_count,
-            "request_pw_reset_count":self.request_pw_reset_count,
-            "api_key_count":self.request_pw_reset_count,
-            "n_api_requests":self.n_api_requests,
-        }
+    # def __str__(self):
+    #     return json.dumps({
+    #         "id":self.id,
+    #         "created_at":format_dt(self.created_at),
+    #         "email":self.email,
+    #         "website":self.website,
+    #         "instagram":self.instagram,
+    #         "approved":self.approved,
+    #         "approved_at":format_dt(self.approved_at),
+    #         "unapproved_at":format_dt(self.unapproved_at),
+    #         "authenticated":self.authenticated,
+    #         "authenticated_at":format_dt(self.authenticated_at),
+    #         "login_count":self.login_count,
+    #         "request_pw_reset_count":self.request_pw_reset_count,
+    #         "api_key_count":self.request_pw_reset_count,
+    #         "n_api_requests":self.n_api_requests,
+    #     })
+    #
+    # # Get data for adding to df
+    # def __data__(self):
+    #     return {
+    #         "id":self.id,
+    #         "created_at":self.created_at,
+    #         "email":self.email,
+    #         "website":self.website,
+    #         "instagram":self.instagram,
+    #         "approved":self.approved,
+    #         "approved_at":self.approved_at,
+    #         "unapproved_at":self.unapproved_at,
+    #         "authenticated":self.authenticated,
+    #         "authenticated_at":self.authenticated_at,
+    #         "login_count":self.login_count,
+    #         "request_pw_reset_count":self.request_pw_reset_count,
+    #         "api_key_count":self.request_pw_reset_count,
+    #         "n_api_requests":self.n_api_requests,
+    #     }
 
 
     # --------------------------------------------------------------------------
@@ -204,25 +228,6 @@ class User(UserMixin, db.Model):
     def get_signup_message(self):
         """Access the message from the db."""
         return FormMessage.query.filter_by(user_id=self.id).first()
-
-    # --------------------------------------------------------------------------
-    # UPDATE METHODS
-
-    # Method to save user to DB
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
-
-    # Method to remove user from DB
-    def remove_from_db(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    # Udate info
-    def update_info(self, update_dict):
-        self.query.filter_by(id=self.id).update(update_dict, synchronize_session=False)
-        self.save_to_db()
-
 
     # --------------------------------------------------------------------------
     # INCREASE COUNTERS
