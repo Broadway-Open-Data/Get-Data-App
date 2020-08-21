@@ -247,14 +247,10 @@ def signup():
                 instagram = my_data.get("instagram")
                 )
             user.set_password(my_data["password"])
+            
+            # Set the default role
             default_role = Role.get_by_name(name='general')
             user.roles.append(default_role)
-            user.save_to_db()
-
-
-            # Set the default role
-            default_role = Role.query.filter_by(name='general').first()
-            user.role.append(default_role)
             user.save_to_db()
 
             # Now create the signup messag
