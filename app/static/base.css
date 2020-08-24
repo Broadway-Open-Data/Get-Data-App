@@ -2,7 +2,6 @@
 body{
   font: normal medium/1.4 sans-serif;
   padding: 0 15px 0 15px;
-  background-color: #c4ffc4;
 }
 
 /* Main styles */
@@ -10,6 +9,7 @@ body{
   font-family: Arial;
   line-height: 1.25;
   margin:20px;
+  background-color: #c4ffc4;
 }
 
 /*  Style the navigation */
@@ -51,6 +51,10 @@ h3{
 
 .section{
   padding:0 0 50px 0;
+  background-color: white;
+  border-radius: 65px;
+  display: flex;
+  flex-direction: column;
 }
 
 
