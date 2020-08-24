@@ -8,12 +8,13 @@
 
   <!-- Section -->
   <div class="section">
-  <h1>Open Broadway Data – MVP</h1>
-  <h2>Welcome to this API!</h2>
-  <p>This API will allow you to access the data for
-    every Broadway show since 1738.
-  </p>
-
+    <div class="section-text">
+      <h1>Open Broadway Data</h1>
+      <h2>Welcome to this API!</h2>
+      <p>This API will allow you to access the data for
+         every Broadway show since 1738.
+      </p>
+    </div>
 
 {% if current_user.approved %}
 <!-- Only show the following to those who are authenticated -->
@@ -71,9 +72,10 @@
           You aren't signed in. Login or create an account to gain access to
           the app.
         </pre>
-
-        <a href="/login"><button>Login</button></a><br>
-        <a href="/signup"><button>Signup</button></a><br>
+        <div class="section-button">
+          <a href="/login"><button>Login</button></a><br>
+          <a href="/signup"><button>Signup</button></a><br>
+        </div>
 
   {% endif %}
 
