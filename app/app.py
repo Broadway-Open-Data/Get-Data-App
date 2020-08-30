@@ -66,7 +66,6 @@ from common.extensions import cache
 
 def create_app():
     app = Flask(__name__)
-    app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
