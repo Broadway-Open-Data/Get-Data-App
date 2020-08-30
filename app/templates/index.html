@@ -6,6 +6,8 @@
 {% endblock %}
 {% block content %}
 
+<div class="bg-image"></div>
+
   <!-- Floating Module -->
 <div class="floating-module">
     <div class="info">
@@ -15,6 +17,7 @@
            every Broadway show since 1738.
         </p>
     </div>
+
 
 {% if current_user.approved %}
 <!-- Only show the following to those who are authenticated -->
@@ -78,5 +81,4 @@
 
 {% endif %}
 </div>
-
 {% endblock %}

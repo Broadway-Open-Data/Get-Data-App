@@ -1,18 +1,51 @@
 /* Use this document to change base app styles */
 
+:root {
+  --blur-effect: blur(10px);
+  --theater-image:url('images/keo-oran-theater-unsplash.jpg');
+}
+
+body, html {
+  height: 100%;
+}
+
 /* Main styles */
 body{
   font-family: Arial;
   line-height: 1.25;
   margin:20px;
   padding: 0 15px 0;
-  background-color: #c4ffc4;
-
+  /* background-color: #c4ffc4; */
   /* font: normal medium/1.4 sans-serif; */
 }
 
-/* Want to create an opaque + blurred background... */
+.bg-image {
+  /* The image used */
+  background-image: var(--theater-image);
+  z-index: -1;
+  display: block;
+  position: absolute;
+  top:0;
+  bottom:0;
+  left: 0;
+  right: 0;
 
+  /* Set a specific height */
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+
+  /* Create the blur */
+  -webkit-filter: var(--blur-effect);
+  -moz-filter: var(--blur-effect);
+  -o-filter: var(--blur-effect);
+  -ms-filter: var(--blur-effect);
+  filter: var(--blur-effect);
+}
 
 /*  Style the navigation */
 .navigation{
@@ -52,10 +85,11 @@ h3{
 
 /* Create a floating module */
 .floating-module{
+  z-index: 1;
   width:90%;
   margin: 20px auto;
   padding:20px;
-  background-color: white;
+  background-color:rgba(255, 255, 255, 0.65);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
