@@ -6,20 +6,23 @@
 {% endblock %}
 {% block content %}
 
-  <!-- Section -->
-  <div class="section">
-  <h1>Open Broadway Data – MVP</h1>
-  <h2>Welcome to this API!</h2>
-  <p>This API will allow you to access the data for
-    every Broadway show since 1738.
-  </p>
+<div class="bg-image"></div>
+
+  <!-- Floating Module -->
+<div class="floating-module">
+    <div class="info">
+        <h1>Open Broadway Data</h1>
+        <h2>Welcome to this API!</h2>
+        <p>This API will allow you to access the data for
+           every Broadway show since 1738.
+        </p>
+    </div>
 
 
 {% if current_user.approved %}
 <!-- Only show the following to those who are authenticated -->
-      <p><b>
-        Data can be accessed in one of two ways:
-        </b></p>
+    <div class="info">
+        <h3>Data can be accessed in one of two ways:</h3>
         <ol>
           <li>
             <b>Manual Access:</b><br>
@@ -31,50 +34,51 @@
               to the database.
           </li
         </ol>
-      </div>
+    </div>
 
-      <!-- Section -->
-      <div class="section">
-      <h2>1. Acesss Data Manually</h2>
-      <p>
-        Get started by submitting what data you'd want.
-      </p>
-      <a href="/get-data/"><button>Get Data</button></a><br>
-      </div>
+    <!-- Floating module -->
+    <div class="section">
+        <h2>1. Acesss Data Manually</h2>
+        <p>
+          Get started by submitting what data you'd want.
+        </p>
+        <a href="/get-data/"><button>Get Data</button></a><br>
+        </div>
 
-      <!-- Section -->
-      <div class="section">
-      <h2>2. Acesss Data Programmatically</h2>
-      <p>
-        Send an SQL query to our endpoint to receive data.
-      </p>
-      <a href="/get-data-advanced/"><button>Get Data Advanced</button></a><br>
-      </div>
-
-
-    {% elif current_user.id %}
-    <!--Show to users who aren't approved yet (but are signed in)-->
-
-        <pre>
-          You aren't approved to view the app yet. Please give us up to 24 hours to
-          respond to your request for access. If you don't hear from us then, send
-          an email to us at <i>yaakovbressler [at] gmail [dot] com</i>.
-
-          Meanwhile, keep an eye on your inbox – we'll be sending you an
-          email once you're approved.
-        </pre>
+        <!-- Section -->
+        <div class="section">
+        <h2>2. Acesss Data Programmatically</h2>
+        <p>
+          Send an SQL query to our endpoint to receive data.
+        </p>
+        <a href="/get-data-advanced/"><button>Get Data Advanced</button></a><br>
+    </div>
 
 
-    {% else %}
-    <!--Show this to everyone else... -->
-        <pre>
-          You aren't signed in. Login or create an account to gain access to
-          the app.
-        </pre>
+{% elif current_user.id %}
+<!--Show to users who aren't approved yet (but are signed in)-->
 
-        <a href="/login"><button>Login</button></a><br>
-        <a href="/signup"><button>Signup</button></a><br>
+    <div class="message">
+      You aren't approved to view the app yet. Please give us up to 24 hours to
+      respond to your request for access. If you don't hear from us then, send
+      an email to us at <i>yaakovbressler [at] gmail [dot] com</i>.
 
-  {% endif %}
+      Meanwhile, keep an eye on your inbox – we'll be sending you an
+      email once you're approved.
+    </div>
 
+
+{% else %}
+<!--Show this to everyone else... -->
+    <div class="message">
+      You aren't signed in. Login or create an account to gain access to
+      the app.
+    </div>
+    <div class="section-button">
+      <a href="/login"><button>Login</button></a><br>
+      <a href="/signup"><button>Signup</button></a><br>
+    </div>
+
+{% endif %}
+</div>
 {% endblock %}

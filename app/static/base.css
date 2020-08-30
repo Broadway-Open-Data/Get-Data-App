@@ -1,7 +1,12 @@
 /* Use this document to change base app styles */
-body{
-  font: normal medium/1.4 sans-serif;
-  padding: 0 15px 0 15px;
+
+:root {
+  --blur-effect: blur(10px);
+  --theater-image:url('images/keo-oran-theater-unsplash.jpg');
+}
+
+body, html {
+  height: 100%;
 }
 
 /* Main styles */
@@ -9,6 +14,37 @@ body{
   font-family: Arial;
   line-height: 1.25;
   margin:20px;
+  padding: 0 15px 0;
+  /* background-color: #c4ffc4; */
+  /* font: normal medium/1.4 sans-serif; */
+}
+
+.bg-image {
+  /* The image used */
+  background-image: var(--theater-image);
+  z-index: -1;
+  display: block;
+  position: absolute;
+  top:0;
+  bottom:0;
+  left: 0;
+  right: 0;
+
+  /* Set a specific height */
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+
+  /* Create the blur */
+  -webkit-filter: var(--blur-effect);
+  -moz-filter: var(--blur-effect);
+  -o-filter: var(--blur-effect);
+  -ms-filter: var(--blur-effect);
+  filter: var(--blur-effect);
 }
 
 /*  Style the navigation */
@@ -20,7 +56,6 @@ body{
 
 h1{
   font-weight: 400;
-  color:blue;
   margin: 10px 0;
   font-size: 42px;
   letter-spacing: 1px;
@@ -48,16 +83,55 @@ h3{
   color: #336699;
 }
 
-.section{
-  padding:0 0 50px 0;
+/* Create a floating module */
+.floating-module{
+  z-index: 1;
+  width:90%;
+  margin: 20px auto;
+  padding:20px;
+  background-color:rgba(255, 255, 255, 0.65);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
+/* Begin Non-loggedIn User Homepage styles */
+.floating-module .info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-module h1{
+  font-weight:bold;
+}
+
+.floating-module h2{
+  margin-bottom: 0px;
+  color:darkgreen;
+}
+.floating-module p{
+  margin-top: 0px;
+}
+
+.floating-module .message{
+  font-family:Consolas, "courier new";
+  font-size: 12px;
+  line-height:22.5px;
+  margin:10px 0 20px;
+}
+/* End Non-loggedIn User Homepage styles */
 
 
 /*  The footer  */
 #footer{
   font-size: 10px;
-  margin-left:2vw;
+  margin:20px 0 10px 2vw;
 }
+
 
 /* Style your buttons */
 button, input[type="submit"]{
@@ -74,7 +148,7 @@ button, input[type="submit"]{
   user-select: none;
   margin-bottom: 16px!important;
   color: #FFFFFF;
-  background-color: #4CAF50;
+  background-color: #09790d;
 }
 
 button.download{
@@ -100,7 +174,8 @@ button.download{
 
 button:hover, input[type="submit"]:hover{
   color: #FFFFFF;
-  background-color: #3e8e41;
+  background-color: #0575ff;
+  transform: scale(1.1);
 }
 
 /* Formatting Stuff */
