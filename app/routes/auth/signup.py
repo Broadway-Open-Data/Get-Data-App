@@ -1,8 +1,7 @@
 from flask import send_from_directory, Blueprint, redirect, url_for, \
     flash, render_template, request
 from flask_login import login_required, logout_user, login_user
-from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
-
+from forms.registration import SignupForm
 from databases.db import User, Role
 
 
@@ -64,5 +63,5 @@ def signup():
         'login/signup.html',
         title='Create an Account.',
         form=form,
-        template='sign-page',
+        template='signup-page',
     )
