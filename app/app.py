@@ -24,7 +24,6 @@ import webbrowser
 
 import pandas as pd
 
-
 from flask import Flask, Response, request, jsonify, render_template, flash, redirect, send_file, url_for, flash
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
@@ -65,6 +64,7 @@ from common.extensions import cache
 
 
 def create_app():
+    # initialize
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri("users")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -80,7 +80,6 @@ def create_app():
 
     csrf = CSRFProtect(app)
 
-
     # Configure the cache
     cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
@@ -92,9 +91,11 @@ def create_app():
 
     return app
 
+
 # =============================================================================
 
-def register_mail(app):
+
+def create_mail(app):
     # Configure mail...
     mail_settings = {
         "MAIL_SERVER": 'smtp.gmail.com',
@@ -107,13 +108,12 @@ def register_mail(app):
         = get_secret_creds("EMAIL")
 
     mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
-
-    app.config.update(mail_settings)
     mail = Mail(app)
-    # mail.init_app(app)
-    # silence the email logger
+    app.config.update(mail_settings)
     app.extensions['mail'].debug = 0
     return mail
+
+
 
 # =============================================================================
 
@@ -176,14 +176,18 @@ def register_dash(app):
 # ------------------------------------------------------------------------------
 
 # The actual stuff...
-app = create_app()
-mail = register_mail(app)
-register_login_manager(app)
-register_my_blueprints(app)
-register_dash(app)
+class myApp:
+    app = create_app()
+    mail = create_mail(app)
+
+    def register_things(self):
+        register_login_manager(self.app)
+        register_my_blueprints(self.app)
+        register_dash(self.app)
 
 
-
+my_app = myApp()
+my_app.register_things()
 
 # ==============================================================================
 # Build routes
@@ -191,7 +195,7 @@ register_dash(app)
 
 
 # Home
-@app.route('/')
+@my_app.app.route('/')
 # @login_required # Not including -- the page is formatted on its own
 def index():
 
@@ -205,7 +209,7 @@ def index():
 # ------------------------------------------------------------------------------
 
 # Allow the user to request specific data from the app
-@app.route('/get-data/',  methods=['GET', 'POST'])
+@my_app.app.route('/get-data/',  methods=['GET', 'POST'])
 @login_required
 def get_data_simple():
 
@@ -234,7 +238,7 @@ def get_data_simple():
 # ------------------------------------------------------------------------------
 
 # Submitted query
-@app.route('/get-data-success/',  methods=['GET'])
+@my_app.app.route('/get-data-success/',  methods=['GET'])
 @login_required
 def return_data():
 
@@ -270,7 +274,7 @@ def return_data():
 
 # ------------------------------------------------------------------------------
 
-@app.route('/get-data-advanced/', methods=['GET','POST'])
+@my_app.app.route('/get-data-advanced/', methods=['GET','POST'])
 @login_required
 def get_data_advanced():
     """Landing page for advanced queries"""
@@ -303,7 +307,7 @@ def get_data_advanced():
 
 # ------------------------------------------------------------------------------
 
-@app.route('/get-data-advanced/sql/', methods=['GET','POST'])
+@my_app.app.route('/get-data-advanced/sql/', methods=['GET','POST'])
 @login_required
 def get_data_advanced_sql():
     """submit sql, returns data"""
@@ -356,7 +360,7 @@ def get_data_advanced_sql():
 # ------------------------------------------------------------------------------
 
 
-@app.route('/download-data/<file_format>')
+@my_app.app.route('/download-data/<file_format>')
 @login_required
 def download_data(file_format):
     """Download the data to the user..."""
@@ -409,11 +413,11 @@ def main():
             webbrowser.open_new('http://0.0.0.0:5010/')
 
         # Otherwise, continue as normal
-        run_simple(hostname="0.0.0.0", port=5010, application=app)
+        run_simple(hostname="0.0.0.0", port=5010, application=my_app.app)
 
 
     else:
-        waitress.serve(app, host="0.0.0.0", port=5010)
+        waitress.serve(my_app.app, host="0.0.0.0", port=5010)
 
 
 
