@@ -46,7 +46,7 @@ def login():
 
         # Otherwise
         flash('Invalid username/password combination')
-        return redirect(url_for('/login'))
+
     return render_template(
         'login/login.html',
         form=form,
