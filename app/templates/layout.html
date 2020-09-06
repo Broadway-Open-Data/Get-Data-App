@@ -33,9 +33,9 @@
               {% endif %}
 
           <a href="/logout">Logout</a>
-          <pre>
+          <div class="signed-in-status">
             Signed in as "{{ current_user.email}}"
-          </pre>
+          </div>
 
     <!-- If not logged in -->
     {% else %}
