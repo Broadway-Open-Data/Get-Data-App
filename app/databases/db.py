@@ -81,7 +81,7 @@ class FormMessage(db.Model, dbTable):
     __tablename__ = "message"
     # Core
     id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column('user_id',db.Integer(), db.ForeignKey('user.id'))
     message = db.Column(db.String(400), nullable=False, unique=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
@@ -135,6 +135,9 @@ class User(db.Model, UserMixin, dbTable):
     request_pw_reset_count = db.Column(db.Integer, default=0)
     api_key_count = db.Column(db.Integer, default=0)
     n_api_requests = db.Column(db.Integer, default=0)
+
+    # Developer mode, toggle on or off
+    developer_mode = db.Column(db.Boolean, unique=False, default=False)
 
     # Additional
     roles = db.relationship('Role', secondary=roles_users,
@@ -258,6 +261,12 @@ class User(db.Model, UserMixin, dbTable):
             self.n_api_requests = 0
         self.n_api_requests += 1
         self.save_to_db()
+
+
+    def toggle_developer_mode(self, val):
+        self.developer_mode = val
+        self.save_to_db()
+
 
     # --------------------------------------------------------------------------
     # GENERATE SECRET TOKEN
