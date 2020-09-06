@@ -69,6 +69,12 @@ body{
   font-size: 11px;
   text-align: right;
 }
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%
+}
 
 h1{
   font-weight: 400;
