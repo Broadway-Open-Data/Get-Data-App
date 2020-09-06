@@ -16,6 +16,9 @@ body{
   margin:0;
   font: normal medium/1.4 sans-serif;
 }
+.page-content{
+  padding: 20px;
+}
 
 .bg-image {
   /* The image used */

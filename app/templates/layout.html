@@ -19,6 +19,7 @@
   </head>
 
   <body>
+    {% block background_image %}{% endblock %}
     <!-- Create a header for nav -->
     <div class="navigation" id="myHeader">
 
@@ -76,8 +77,10 @@
 
 
     <!-- Add content -->
-    {% block content %}
-    {% endblock %}
+    <div class="page-content">
+      {% block content %}
+      {% endblock %}
+    </div>
     <!-- Footer... -->
     <div id="footer">
       {% block footer %}
