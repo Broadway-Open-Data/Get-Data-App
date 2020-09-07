@@ -65,13 +65,50 @@ body{
 .navigation a:hover{
     color:darkgreen;
 }
-.navigation .signed-in-status{
+.navigation .meta *{
   padding-right:20px;
   color:rgb(204, 204, 204);
   font-family: monospace;
   font-size: 11px;
   text-align: right;
 }
+
+/* Hover text */
+.navigation .dev-mode .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background: rgb(255, 255, 255, 0.90);
+  color: black;
+  text-align: center;
+  padding: 5px;
+  margin:0;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  top: 85px;
+  right: 100px;
+
+}
+
+.navigation .dev-mode:hover .tooltiptext {
+  visibility: visible;
+}
+
+.navigation .dev-mode .tooltiptext:after {
+  content: " ";
+  position: absolute;
+  bottom: 100%; /* At the bottom of the tooltip */
+  left: 90%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgb(255, 255, 255, 0.90); transparent;
+}
+
+
+
+
 /* The sticky class is added to the header with JS when it reaches its scroll position */
 .sticky {
   position: fixed;

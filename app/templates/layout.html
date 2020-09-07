@@ -26,17 +26,35 @@
 
     <!-- Only if logged in -->
     {% if current_user.is_authenticated %}
-          <a href="/">Home</a>
-          <a href="/settings">Settings</a>
+          <div class="home">
+            <a href="/">Home</a>
+          </div>
+          <div class="menu">
+            <a href="/settings">Settings</a>
 
               <!--  Only allow admin users -->
               {% if current_user.is_admin() %}
                   <a href="/admin">Admin</a>
               {% endif %}
 
-          <a href="/logout">Logout</a>
-          <div class="signed-in-status">
-            Signed in as "{{ current_user.email}}"
+              <a href="/logout">Logout</a>
+          </div>
+          <div class="meta">
+            <div class="signed-in-status">
+              Signed in as "{{ current_user.email}}"
+            </div>
+            <div class="dev-mode">
+              {% if current_user.developer_mode %}
+              Developer
+              {% else %}
+              Analyze
+              {% endif %}
+              mode
+              <span class="tooltiptext">
+                Switch between view modes in Settings.
+              </span>
+            </div>
+
           </div>
 
     <!-- If not logged in -->
