@@ -14,7 +14,7 @@ def settings():
     current_status = user_interactions.curr_dev_mode()
     if not current_status:
         current_status = False
-        
+
     return render_template('settings/settings.html',title='Settings', current_status=current_status)
 
 
@@ -22,9 +22,9 @@ def settings():
 def toggled_status():
     current_status = request.args.get('status')
 
-    if current_status == 'ON':
+    if current_status == 'Developer Mode':
         user_interactions.toggle_dev_mode(False)
-        return 'OFF'
+        return 'Analyst Mode'
     else:
         user_interactions.toggle_dev_mode(True)
-        return 'ON'
+        return 'Developer Mode'
