@@ -5,8 +5,8 @@ from forms.registration import SignupForm
 from databases.db import User, Role
 
 
-
-page = Blueprint('signup', __name__, template_folder='templates')
+from . import page
+# page = Blueprint('signup', __name__, template_folder='templates')
 @page.route('/signup', methods=['GET', 'POST'])
 def signup():
     """

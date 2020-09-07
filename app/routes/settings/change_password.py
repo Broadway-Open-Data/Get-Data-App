@@ -1,13 +1,13 @@
-from flask import Blueprint, render_template, flash, request
+from flask import render_template, flash, request
 from flask_login import login_required, current_user
 
 from databases.db import User
 
 from forms.settings import ChangePasswordForm
 
-page = Blueprint('change_password', __name__, template_folder='templates')
+from . import page
 
-@page.route("/settings/change-password",  methods=['GET', 'POST'])
+@page.route("/change-password",  methods=['GET', 'POST'])
 @login_required
 def change_password():
     """Change your password"""

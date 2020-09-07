@@ -1,20 +1,21 @@
-from flask import send_from_directory, Blueprint, flash, redirect, request, current_app
+from flask import send_from_directory, flash, redirect, request, current_app
 from flask_login import current_user, login_required
 from flask import render_template
 from flask_mail import Mail, Message
 
 from forms.admin import AuthenticateUsersForm
 from databases.db import db, User
-from utils.get_email_content import get_email_content
+from utils import get_email_content
 
-from app import send_email
+from common import send_email
 import pandas as pd
 
-page = Blueprint('manage-users', __name__, template_folder='templates')
+
+from . import page
 
 
 
-@page.route("/admin/approve-users", methods=['GET', 'POST'])
+@page.route("/approve-users", methods=['GET', 'POST'])
 @login_required
 
 def approve_users():
@@ -107,7 +108,7 @@ def approve_users():
 
 # -------------------------------------------------------------------------------
 
-@page.route("/admin/inspect-users", methods=['GET', 'POST'])
+@page.route("/inspect-users", methods=['GET', 'POST'])
 @login_required
 def inspect_users():
     """

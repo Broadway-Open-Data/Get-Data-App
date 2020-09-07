@@ -22,39 +22,68 @@
 
 
 {% if current_user.approved %}
+
 <!-- Only show the following to those who are authenticated -->
+
+
+{% if not current_user.developer_mode %}                                        <!-- Analyst Mode -->
     <div class="info">
         <h3>Data can be accessed in one of two ways:</h3>
         <ol>
           <li>
-            <b>Manual Access:</b><br>
-            Fill out a form and receive data on the web page.
+            <b>Analyze:</b><br>
+            Request directly from the OBD database.
           </li><br>
           <li>
-            <b>Programmatic Access:</b><br>
-              Advanced users can use our REST endpoint to write SQL directly
-              to the database.
+            <b>Explore:</b><br>
+              Explore prepoluated interactive dashboards, made by our volunteer editing team.
           </li
         </ol>
     </div>
 
-    <!-- Floating module -->
     <div class="section">
-        <h2>1. Acesss Data Manually</h2>
-        <p>
-          Get started by submitting what data you'd want.
-        </p>
-        <a href="/get-data/"><button>Get Data</button></a><br>
-        </div>
+          <h2>Analyze</h2>
+          <p>
+            Request directly from the OBD database.
+          </p>
+          <a href="/analyze/get-data/"><button>Get Data</button></a><br>
+          <h2>Explore</h2>
+          <p>
+            Explore prepoluated interactive dashboards, made by our volunteer editing team.
+          </p>
+          <a href="/analyze/explore/"><button>Explore</button></a><br>
+    </div>
 
-        <!-- Section -->
-        <div class="section">
-        <h2>2. Acesss Data Programmatically</h2>
+{% else %}                                                                      <!-- Developer Mode -->
+
+  <div class="info">
+      <h3>Data can be accessed in one of two ways:</h3>
+      <ol>
+        <li>
+          <b>REST API:</b><br>
+          Make request directly from your application.
+        </li><br>
+        <li>
+          <b>SQL-like Query:</b><br>
+          Write SQL like queries directly to the OBD database here on our site.
+        </li
+      </ol>
+  </div>
+
+  <div class="section">
+        <h2>REST API</h2>
+        <p>
+          Read the docs
+        </p>
+        <a href="/api/docs"><button>Get Data Advanced</button></a><br>
+        <h2>SQL-like Query</h2>
         <p>
           Send an SQL query to our endpoint to receive data.
         </p>
-        <a href="/get-data-advanced/"><button>Get Data Advanced</button></a><br>
-    </div>
+        <a href="/get-data-advanced/"><button>Get Data</button></a><br>
+  </div>
+
+{% endif %}
 
 
 {% elif current_user.id %}

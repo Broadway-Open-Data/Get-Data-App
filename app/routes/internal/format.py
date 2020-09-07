@@ -1,7 +1,8 @@
 import os
-from flask import send_from_directory, Blueprint
+from flask import send_from_directory
 
-page = Blueprint('page_format', __name__, template_folder='templates')
+from . import page
+
 @page.route('/favicon.ico')
 def favicon():
     parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

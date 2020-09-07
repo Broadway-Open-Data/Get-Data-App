@@ -1,4 +1,4 @@
-from flask import send_from_directory, Blueprint, redirect, url_for, \
+from flask import send_from_directory, redirect, url_for, \
     flash, render_template, request, jsonify
 from flask_login import login_required, logout_user, login_user
 from flask_mail import Message
@@ -9,10 +9,10 @@ from utils.get_email_content import get_email_content
 from forms.registration import ForgotPasswordForm
 from forms.settings import ChangePasswordForm
 
+from common import send_email
 
-
-page = Blueprint('forgot-password', __name__, template_folder='templates')
-
+#  Import the blueprint page
+from . import page
 
 @page.route("/login/forgot-password", methods=['GET', 'POST'])
 def forgot_password():
@@ -29,19 +29,14 @@ def forgot_password():
         user = User.find_user_by_email(email = my_data["email"])
         token = user.get_secret_token(30)
 
-        # import app
-        from app import mail
-
         # with page.app_context():
         email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
-        msg = Message(
+        send_email(
             recipients = [user.email],
             subject = email_content.get("emailSubject"),
             html = render_template('emails/reset_password.html', token=token)
-            )
+        )
 
-        # Send the email
-        mail.send(msg)
         # Increase the count for password reset
         user.request_pw_reset_counter()
         flash(f"An email has been sent to \"{user.email}\" to recover the current account\n\n\

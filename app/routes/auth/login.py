@@ -5,13 +5,14 @@ from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
 
 from databases.db import User
 
-page = Blueprint('login', __name__, template_folder='templates')
+from . import page
+# page = Blueprint('login', __name__, template_folder='templates')
 @page.route("/logout")
 @login_required
 def logout():
     """Log out"""
     logout_user()
-    return redirect(url_for('login.login'))
+    return redirect(url_for('auth.login'))
 
 
 

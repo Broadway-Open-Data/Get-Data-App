@@ -1,8 +1,8 @@
-from flask import Blueprint, jsonify, flash, redirect
+from flask import jsonify, flash, redirect
 from flask_login import login_required, login_user
 from databases.db import User
 
-page = Blueprint('verify_account', __name__, template_folder='templates')
+from . import page
 
 @page.route("/verify-account/<token>", methods=['GET', 'POST'])
 def verify_account(token):
@@ -18,7 +18,7 @@ def verify_account(token):
     user.authenticate()
     login_user(user,remember=True)
     user.login_counter()
-    
+
     flash("SUCCESS:\t\tYou have verified your account!")
 
     return redirect('/')

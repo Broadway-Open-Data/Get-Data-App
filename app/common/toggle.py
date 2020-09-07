@@ -1,5 +1,4 @@
 from flask_login import current_user
-import sys
 
 from databases.db import User
 

@@ -1,4 +1,4 @@
-from flask import send_from_directory, Blueprint, flash, redirect, render_template
+from flask import send_from_directory, flash, redirect, render_template, request
 from flask_login import current_user, login_required
 from flask_mail import Mail, Message
 
@@ -7,10 +7,10 @@ from databases.db import db, User
 
 import pandas as pd
 
-page = Blueprint('manage-roles', __name__, template_folder='templates')
+from . import page
 
 
-@page.route("/admin/create-roles", methods=['GET', 'POST'])
+@page.route("/create-roles", methods=['GET', 'POST'])
 @login_required
 def create_roles():
     """
@@ -34,7 +34,7 @@ def create_roles():
     return render_template('admin/create-roles.html',title='Create Roles', form=form)
 
 
-@page.route("/admin/assign-roles", methods=['GET', 'POST'])
+@page.route("/assign-roles", methods=['GET', 'POST'])
 @login_required
 def assignroles():
     """
