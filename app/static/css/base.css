@@ -2,7 +2,7 @@
 
 :root {
   --blur-effect: blur(10px);
-  --theater-image:url('images/keo-oran-theater-unsplash.jpg');
+  --theater-image:url('../images/keo-oran-theater-unsplash.jpg');
 }
 
 body, html {
