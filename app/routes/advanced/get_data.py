@@ -15,7 +15,6 @@ import utils
 from . import page
 
 
-
 @page.route('/get-data', methods=['GET','POST'])
 @login_required
 def get_data_advanced():
@@ -36,7 +35,12 @@ def get_data_advanced():
             # get rid of the csrf token
             del my_data["csrf_token"]
 
-            return redirect(url_for('advanced.get_data_advanced_sql',API_KEY=my_data.get("API_KEY"), query=my_data.get("query"), detail_level=my_data.get("detail_level"),display_data=True))
+            return redirect(url_for('advanced.get_data_advanced_sql',
+                API_KEY=my_data.get("API_KEY"),
+                query=my_data.get("query"),
+                detail_level=my_data.get("detail_level"),
+                display_data=True)
+                )
 
     # Update the form
     form.allFields.query.data = "select * from shows where show_type='musical' and year >2000;"
