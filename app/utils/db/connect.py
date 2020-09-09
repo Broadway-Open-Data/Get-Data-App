@@ -4,8 +4,6 @@ import sys
 import datetime
 import uuid
 
-# Correct the path
-sys.path.append(".")
 
 import pandas as pd
 import sqlalchemy
@@ -13,9 +11,8 @@ from sqlalchemy import MetaData, Table, select, and_, or_, not_
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 # import utils
-from utils.data_manipulation import flatten_to_string
-from utils.get_db_uri import get_db_uri
-
+from ..data_manipulation import flatten_to_string
+from ..get_db_uri import get_db_uri
 
 # ------------------------------------------------------------------------------
 

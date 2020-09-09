@@ -7,7 +7,8 @@ import pandas as pd
 # flasks stuff
 from forms.select_data_simple import dataForm
 from common.extensions import cache
-from utils import data_summary
+import utils
+
 # ------------------------------------------------------------------------------
 
 from . import page
@@ -60,10 +61,10 @@ def return_data():
         detail_level = int(detail_level) # must be an int
 
         # Retrieve the data from  user's request
-        df = select_data_from_simple(my_params=user_query, theatre_data=True)
+        df = utils.select_data_from_simple(my_params=user_query, theatre_data=True)
         cache.set("my_data", df.to_dict(orient="records"))
 
-        summary = data_summary.summarize_broadway_shows(df, detail_level)
+        summary = utils.summarize_broadway_shows(df, detail_level)
 
         # Return the response in json format
         return render_template('analyze/display-data.html', summary=summary,

@@ -46,9 +46,6 @@ from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
 from forms.settings import ChangePasswordForm, UpdateProfileForm, RequestApiKey, ResetApiKey
 from forms.admin import AuthenticateUsersForm, CreateRoles, AssignRoles
 
-# Connect to the db
-from connect_broadway_db import select_data_from_simple, select_data_advanced
-
 # Import cache
 from common import cache
 import utils
@@ -208,16 +205,16 @@ def get_data_advanced_sql():
         return jsonify(result)
 
     # If it was accepted, make the request
-    df = select_data_advanced(query)
+    df = utils.select_data_advanced(query)
 
     if request.args.get('display_data'):
         # Make data available for download
         cache.set("my_data", df.to_dict(orient="records"))
 
-        summary = utils.data_summary.summarize_broadway_shows(df, detail_level)
+        summary = utils.summarize_broadway_shows(df, detail_level)
 
         # Render the page
-        return render_template('display-data.html', summary=summary,
+        return render_template('analyze/display-data.html', summary=summary,
             data=df.to_html(header="true", table_id="show-data"), title="Data")
 
     else:
