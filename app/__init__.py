@@ -46,8 +46,8 @@ def register_blueprint(app):
 
     # I wish there was a better way to do this...
     my_pages = [
-        routes.analyze.page,
         routes.admin.page,
+        routes.advanced.page,
         routes.analyze.page,
         routes.api.page,
         routes.auth.page,
