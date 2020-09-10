@@ -44,7 +44,9 @@ def register_blueprint(app):
     Register the blueprints for the app
     """
 
+    # I wish there was a better way to do this...
     my_pages = [
+        routes.analyze.page,
         routes.admin.page,
         routes.analyze.page,
         routes.api.page,
