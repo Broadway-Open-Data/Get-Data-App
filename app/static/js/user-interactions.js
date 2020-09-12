@@ -4,7 +4,7 @@ $(document).ready(function() {
    $('.toggle').change(function(e) {
      let current_status
     //  var current_status = $('.status').text();
-
+    console.log("ID", e.target.id)
      switch (e.target.id) {
       case 'develop':
         current_status = 'Developer Mode';
@@ -19,7 +19,8 @@ $(document).ready(function() {
        type: "get",
         data: {status: current_status},
         success: function(response) {
-        //  $(".status").html(response);
+          console.log("RES", response)
+         $(".status").html(response);
          $(".dev-mode").html(response);
         },
         error: function(xhr) {
