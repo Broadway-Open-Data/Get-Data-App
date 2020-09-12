@@ -54,6 +54,8 @@ body{
   background: rgb(0, 0, 0, 0.5);
   padding:20px;
   line-height: 1.0;
+  display:flex;
+  justify-content: flex-end;
 }
 .navigation a{
     padding:0 10px;
