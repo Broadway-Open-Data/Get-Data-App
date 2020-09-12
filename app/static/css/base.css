@@ -54,13 +54,24 @@ body{
   background: rgb(0, 0, 0, 0.5);
   padding:20px;
   line-height: 1.0;
-  display:flex;
+  /* display:flex;
+  flex-direction: column;
  justify-content: flex-end;
- align-items: center;
+ align-items: flex-end; */
+ display: flex;
+ justify-content: space-between;
 }
-.navigation .home{
+
+.navgroup{
+  display:flex;
+  flex-direction: column;
+ align-items: flex-end;
+}
+/* .navigation .home{
  margin-right: auto;
-}
+  display: flex;
+ justify-content: flex-start;
+} */
 .navigation a{
     padding:0 10px;
     color:white;
@@ -72,14 +83,15 @@ body{
     color:darkgreen;
 }
 .navigation .meta *{
-  margin-left: 20px;
-  padding-right:20px;
+  /* margin-left: 20px; */
+  margin-top: 5px;
+  padding-right:10px;
   color:rgb(204, 204, 204);
   font-family: monospace;
   font-size: 11px;
   text-align: right;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 /* Hover text */
