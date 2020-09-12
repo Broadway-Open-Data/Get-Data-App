@@ -72,11 +72,14 @@ body{
     color:darkgreen;
 }
 .navigation .meta *{
+  margin-left: 20px;
   padding-right:20px;
   color:rgb(204, 204, 204);
   font-family: monospace;
   font-size: 11px;
   text-align: right;
+  display: flex;
+  justify-content: flex-start;
 }
 
 /* Hover text */
