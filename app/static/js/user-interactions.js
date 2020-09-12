@@ -1,7 +1,8 @@
 
 // Activate the toggle switch
 $(document).ready(function() {
-   $('.toggle').click(function() {
+   $('.toggle').change(function(e) {
+    //  console.log("TTTTTTTTTAAAAAAAAAARRRRRRRRRRRRGGGGGGGGGGGGEEEEEEEEEETTTTTTTT", e.target.value)
       var current_status = $('.status').text();
 
       // Update the toggle value
