@@ -10,8 +10,12 @@
 
 
   <div id="toggle-views">
-    <label>Toggle between analyze mode and developer mode here!</label>
-    <input type="checkbox" class='toggle' data-toggle="toggle" {% if current_status %}checked{% endif %}>
+    <p>Toggle between analyze mode and developer mode here!</p>
+    <input type="radio" id="develop" name="modes" class= "toggle">
+    <label for="develop">Developer Mode</label>
+    <input type="radio" id="analyst" name="modes"  class= "toggle" >
+    <label for="analyst">Analyst Mode</label>
+    <!-- <input type="checkbox" class='toggle' data-toggle="toggle" {% if current_status %}checked{% endif %}> -->
       {% if current_status %}
       <div class='status'>Developer Mode</div>
       {% else %}
