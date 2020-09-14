@@ -3,7 +3,6 @@
 $(document).ready(function() {
    $('.toggle').change(function(e) {
      let current_status
-    //  var current_status = $('.status').text();
     console.log("ID", e.target.id)
      switch (e.target.id) {
       case 'develop':
