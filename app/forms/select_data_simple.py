@@ -33,9 +33,6 @@ class dateRange(FlaskForm):
     startYear = IntegerField(label="Start Year", default=1990, validators=[DataRequired()])
     endYear = IntegerField(label="End Year",default=2020, validators=[DataRequired()])
 
-class metaFields(FlaskForm):
-    """Some description."""
-    detail_level = SelectField(label='Detail Level', choices=[(x, x) for x in range(1,4)], default=2)
 
 class summarizedFields(FlaskForm):
     """Some description."""
@@ -44,8 +41,6 @@ class summarizedFields(FlaskForm):
     productionTypeSum = FormField(productionType, label="Production Type", description="hey")
     theatreInfoSum = FormField(theatreInfo, label="Theatre Info",)
     dateRangeSum = FormField(dateRange, label="Date Range")
-    metaFieldsSum = FormField(metaFields, "Data Summary")
-
 
 
 

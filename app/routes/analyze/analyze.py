@@ -56,9 +56,8 @@ def return_data():
     # Success vs. Failure
     if user_query:
 
-        # Get the detail level
-        detail_level = user_query.pop("detail_level")
-        detail_level = int(detail_level) # must be an int
+        # Start off with detail level 2
+        detail_level = 2
 
         # Retrieve the data from  user's request
         df = utils.select_data_from_simple(my_params=user_query, theatre_data=True)

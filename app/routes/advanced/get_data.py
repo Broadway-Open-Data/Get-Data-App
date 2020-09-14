@@ -38,7 +38,7 @@ def get_data_advanced():
             return redirect(url_for('advanced.get_data_advanced_sql',
                 API_KEY=my_data.get("API_KEY"),
                 query=my_data.get("query"),
-                detail_level=my_data.get("detail_level"),
+                detail_level=2,
                 display_data=True)
                 )
 
