@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/widgets.css') }}">
+
 
     <!-- Load JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -13,6 +15,7 @@
 
     <script type=text/javascript src="{{url_for('static', filename='js/extensions.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/user-interactions.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/widgets.js') }}"></script>
     <!-- <script type=text/javascript src="{{url_for('static', filename='js/tables.js') }}"></script> -->
 
     <title>{% block title %}{% endblock %} - Open Broadway Data</title>

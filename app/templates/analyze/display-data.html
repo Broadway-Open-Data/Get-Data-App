@@ -5,9 +5,20 @@
   <h1 style="color:green;">Success!</h1>
 
   <br>
-  <h2>Summary:</h2>
-  {{ summary|safe }}
-  <br>
+  <div id="data-summary">
+    <h2>Data Summary:</h2>
+
+    <p>Choose the level of detail for your data summary</p>
+      <input type="range" min="1" max="4" value="2" class="slider" id="detail-level-slider" name="detail-level">
+      <label for="detail-level">Detail Level</label>
+      <em id="detail-level-text"></em>
+
+      <div id="data-summary-table">
+          {{ summary|safe }}
+      </div>
+
+  </div>
+
   <h2>Data:</h2>
   <div class="download-buttons">
     <a href="/download-data/csv"><button class="download">Download as CSV</button></a>

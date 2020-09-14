@@ -1,0 +1,16 @@
+
+#data-summary p{
+  margin:0 0 0;
+}
+
+#detail-level-text{
+  font-style: normal;
+  font-weight: bold;
+}
+.slider{
+  margin: 10px 10px 10px 20px;
+}
+
+#data-summary-table{
+  margin: 20px 0 20px;
+}
