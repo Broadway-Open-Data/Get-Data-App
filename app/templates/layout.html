@@ -29,39 +29,43 @@
           <div class="home">
             <a href="/">Home</a>
           </div>
-          <div class="menu">
-            <a href="/settings">Settings</a>
+          <div class="navgroup">
+            <div class="menu">
+              <a href="/settings">Settings</a>
 
-              <!--  Only allow admin users -->
-              {% if current_user.is_admin() %}
-                  <a href="/admin">Admin</a>
-              {% endif %}
+                <!--  Only allow admin users -->
+                {% if current_user.is_admin() %}
+                    <a href="/admin">Admin</a>
+                {% endif %}
 
-              <a href="/logout">Logout</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="meta">
+              <div class="signed-in-status">
+                Signed in as "{{ current_user.email}}"
+              </div>
+              <div class="dev-mode">
+                {% if current_user.developer_mode %}
+                Current Mode: Developer
+                {% else %}
+                Current Mode: Analyst
+                {% endif %}
+                <span class="tooltiptext">
+                  Switch between view modes in Settings.
+                </span>
+              </div>
           </div>
-          <div class="meta">
-            <div class="signed-in-status">
-              Signed in as "{{ current_user.email}}"
-            </div>
-            <div class="dev-mode">
-              {% if current_user.developer_mode %}
-              Developer Mode
-              {% else %}
-              Analyst Mode
-              {% endif %}
-              <span class="tooltiptext">
-                Switch between view modes in Settings.
-              </span>
-            </div>
 
           </div>
 
     <!-- If not logged in -->
     {% else %}
         {% if request.endpoint == 'index' %}
+        <div class="notLoggedin">
             <a href="/signup">Signup</a>
             <a href="/login">Login</a>
-            <br><a href="/login/forgot-password">Forgot Password</a>
+            <a href="/login/forgot-password">Forgot Password</a>
+          </div>
         {% else %}
             <a href="/">Home</a>
         {% endif %}
@@ -70,17 +74,21 @@
 
     <!-- Route appropriate pages -->
     {% if request.endpoint == 'login' %}
-        <a href="/signup">Signup</a>
-        <br><a href="/login/forgot-password">Forgot Password</a>
+    <div class="navLogin">
+      <a href="/signup">Signup</a>
+      <a href="/login/forgot-password">Forgot Password</a
+    </div>
 
     {% elif request.endpoint == 'signup' %}
-        <a href="/login">Login</a>
-        <br><a href="/login/forgot-password">Forgot Password</a>
-
+    <div class="navSignup">
+      <a href="/login">Login</a>
+      <a href="/login/forgot-password">Forgot Password</a>
+    </div>
     {% elif request.endpoint == 'forgot_password' %}
-        <a href="/login">Login</a>
-        <a href="/signup">Signup</a>
-
+    <div class="navPassword">
+      <a href="/login">Login</a>
+      <a href="/signup">Signup</a>
+    </div>
     {% endif %}
     </div>
 
