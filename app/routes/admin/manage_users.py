@@ -54,7 +54,7 @@ def approve_users():
                     # Send an email to verify their account
                     token = user.get_secret_token(60*24*3) #Allow token to expire in 3 days
                     email_content = get_email_content("Approved")
-                    
+
                     send_email(
                         recipients = [user.email],
                         subject = email_content.get("emailSubject"),
@@ -64,11 +64,15 @@ def approve_users():
                     flash('OOPSIES:\t{} is already approved.'.format(my_data["userEmail"]))
 
             elif my_data["un_approve"]:
-                _approved_state= user.unapprove()
+                _approved_state = user.unapprove()
                 if _approved_state:
                     flash('UNAPPROVED:\t{} is successfully UNAPPROVED.'.format(my_data["userEmail"]))
                 else:
                     flash('OOPSIES:\t{} is already unapproved.'.format(my_data["userEmail"]))
+
+            elif my_data["delete"]:
+                user.delete_from_db()
+                flash('Deleting:\t{}!'.format(my_data["userEmail"]))
         else:
             flash('{} is not a user. Verify that this is the user\'s actual email address.'.format(my_data["userEmail"]))
     # Update the current fields

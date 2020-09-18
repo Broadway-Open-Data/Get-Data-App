@@ -17,8 +17,9 @@ class AuthenticateUsersForm(FlaskForm):
 
     class allFields_(FlaskForm):
         userEmail = StringField('Email', validators=[Length(min=6), Email(message='Enter a valid email.'),DataRequired()])
-        approve = BooleanField('Approve', validators=[NotEqualTo('un_approve')])
-        un_approve = BooleanField('Unapprove', validators=[NotEqualTo('approve')])
+        approve = BooleanField('Approve')
+        un_approve = BooleanField('Unapprove')
+        delete = BooleanField('Delete')
 
     allFields = FormField(allFields_)
     submit = SubmitField('Submit')

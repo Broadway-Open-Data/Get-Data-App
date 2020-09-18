@@ -5,6 +5,7 @@ import datetime
 from uuid import uuid4
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import join
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import expression
 from sqlalchemy.schema import Sequence
@@ -58,6 +59,7 @@ class dbTable():
 # --------------------------------------------------------------------------
 
 # Define models
+# class RoleUsers(db.Table):
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
@@ -372,11 +374,18 @@ class User(db.Model, UserMixin, dbTable):
             self.save_to_db()
 
 
+    def delete_from_db(self):
+        db.engine.execute(f"DELETE FROM roles_users WHERE user_id={self.id}")
+        db.engine.execute(f"DELETE FROM message WHERE user_id={self.id}")
+        db.engine.execute(f"DELETE FROM user WHERE id={self.id}")
 
 
 # ==============================================================================
 #                            BATCH METHODS
 # ==============================================================================
+
+
+
 
 def get_all_nonapproved_users(self):
     """Gets all users who aren't approved"""
