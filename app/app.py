@@ -90,7 +90,7 @@ def register_login_manager(app):
     def unauthorized():
         """Redirect unauthorized users to Login page."""
         flash('You must be logged in to view that page.')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
 
     # @login_manager.user_loader
     # has_role
