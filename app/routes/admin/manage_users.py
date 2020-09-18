@@ -54,6 +54,7 @@ def approve_users():
                     # Send an email to verify their account
                     token = user.get_secret_token(60*24*3) #Allow token to expire in 3 days
                     email_content = get_email_content("Approved")
+                    
                     send_email(
                         recipients = [user.email],
                         subject = email_content.get("emailSubject"),

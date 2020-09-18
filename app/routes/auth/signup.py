@@ -4,6 +4,8 @@ from flask_login import login_required, logout_user, login_user
 from forms.registration import SignupForm
 from databases.db import User, Role
 
+from utils import get_email_content
+from common import send_email
 
 from . import page
 # page = Blueprint('signup', __name__, template_folder='templates')
@@ -49,6 +51,14 @@ def signup():
 
             # Log in as newly created user
             login_user(user,remember=True)
+
+            # Send the welcome email
+            email_content = get_email_content("Welcome")
+            send_email(
+                recipients = [user.email],
+                subject = email_content.get("emailSubject"),
+                html = render_template('emails/welcome.html')
+            )
 
             return redirect(url_for('index'))
 

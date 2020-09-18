@@ -5,19 +5,22 @@
 
 <div class="email-body">
 
-  <pre>
+  <div>
   Hello,
-
-  Congratulations, you are approved for Broadway Open Data!
-
-  We only give access to cool people so you're cool...
-
-
+  <br>
+  <b>Your Open Broadway Data account has been approved!</b>
+  Welcome to the growing community of individuals using data to
+  learn more about Broadway.
+  <br>
+  Now that you are an approved member, you'll have full access to all of the free functionality Open Broadway Data
+  has to offer.
+  <br>
   To activate your account, please follow <a href="{{ url_for('internal.verify_account', token=token, _external=True) }}">this url</a>.
-
-  -BroadwayBot
-  http://openbroadwaydata.com/
-  </pre>
+  <br>
+  <br>
+  Happy learning,<br>
+  The Open Broadway Data Team
+  </div>
 </div>
 
 {% endblock %}

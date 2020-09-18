@@ -6,7 +6,7 @@
   },
   "Welcome":{
     "emailName":"Welcome",
-    "emailSubject":"Welcome to Open Broadway Data – Confirm your account",
+    "emailSubject":"Welcome to Open Broadway Data",
     "emailBody":"Welcome. We need you to confirm your account.\n{link}"
   },
   "Approved":{
