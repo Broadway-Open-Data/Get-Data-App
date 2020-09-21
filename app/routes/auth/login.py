@@ -42,7 +42,7 @@ def login():
 
             user.login_counter()
             # Save the IP address of the user
-            print(request.headers)
+            # Get this another time...
             # user.save_ip(request.environ.get('REMOTE_ADDR'))
             # ---------------------------------------
             del my_data # delete potentially saved pw
