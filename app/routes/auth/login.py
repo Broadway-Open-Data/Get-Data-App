@@ -45,6 +45,7 @@ def login():
             print(request.environ.get('HTTP_X_REAL_IP'))
             print(request.environ.get('request.remote_addr'))
             print(request.environ.get('REMOTE_ADDR'))
+            print(request.remote_addr)
             # user.save_ip(request.environ.get('REMOTE_ADDR'))
             # ---------------------------------------
             del my_data # delete potentially saved pw
