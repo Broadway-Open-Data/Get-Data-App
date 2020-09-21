@@ -39,7 +39,11 @@ def login():
 
         if user and user.check_password(password=my_data["password"]):
             login_user(user,remember=True)
+
             user.login_counter()
+            # Save the IP address of the user
+            print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+            # user.save_ip(request.environ.get('REMOTE_ADDR'))
             # ---------------------------------------
             del my_data # delete potentially saved pw
             # ---------------------------------------

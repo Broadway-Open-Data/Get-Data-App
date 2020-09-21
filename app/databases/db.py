@@ -244,6 +244,11 @@ class User(db.Model, UserMixin, dbTable):
         self.login_count += 1
         self.save_to_db()
 
+    # Increase n times logged in
+    def save_ip(self, ip_address):
+        self.ip_address = ip_address
+        self.save_to_db()
+
     # Increase n times requested password reset
     def request_pw_reset_counter(self):
         if not self.request_pw_reset_count:
