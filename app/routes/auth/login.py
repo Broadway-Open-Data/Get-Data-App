@@ -42,11 +42,8 @@ def login():
 
             user.login_counter()
             # Save the IP address of the user
-            print(request.environ.get('X-Real-IP'))
-            print(request.environ)
-            print(request.environ.get('request.remote_addr'))
-            print(request.environ.get('REMOTE_ADDR'))
-            print(request.remote_addr)
+            print(request.headers['X-Forwarded-For'])
+            print(request.headers)
             # user.save_ip(request.environ.get('REMOTE_ADDR'))
             # ---------------------------------------
             del my_data # delete potentially saved pw
@@ -62,9 +59,6 @@ def login():
         title='Log in.',
         template='login-page'
         )
-
-
-
 
 # I'd love to extend this to wrapper....
 # def is_user_approved():
