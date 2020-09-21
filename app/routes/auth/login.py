@@ -42,7 +42,6 @@ def login():
 
             user.login_counter()
             # Save the IP address of the user
-            print(request.headers['X-Forwarded-For'])
             print(request.headers)
             # user.save_ip(request.environ.get('REMOTE_ADDR'))
             # ---------------------------------------
