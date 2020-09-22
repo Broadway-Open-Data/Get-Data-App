@@ -54,12 +54,9 @@ body{
   background: rgb(0, 0, 0, 0.5);
   padding:20px;
   line-height: 1.0;
-  /* display:flex;
+  display:flex;
   flex-direction: column;
- justify-content: flex-end;
- align-items: flex-end; */
- display: flex;
- justify-content: space-between;
+  justify-content: space-between;
 }
 
 .navgroup{
@@ -131,10 +128,13 @@ body{
 
 
 /* The sticky class is added to the header with JS when it reaches its scroll position */
-.sticky {
+.navigation.sticky {
   position: fixed;
   top: 0;
-  width: 100%
+  /* Adjust for margin */
+  width: -webkit-calc(100% - 40px);
+  width: -moz-calc(100% - 40px);
+  width: calc(100% - 40px);
 }
 
 h1{
