@@ -50,7 +50,9 @@
     <!-- Only if logged in -->
     {% if current_user.is_authenticated %}
           <div class="navigation-left">
-            <a href="/">Home</a>
+            <a href="/">
+              <img src="{{ url_for('static', filename='logo/open-broadway-data-logo.png') }}" style="width:150px;">
+            </a>
           </div>
           <div class="navigation-right">
             <div class="menu">
