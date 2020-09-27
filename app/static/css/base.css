@@ -269,8 +269,27 @@ h3{
 }
 
 /* Make a glowing link... */
-a.special{
-  /* Do next... */
+.special{
+  border-radius: 50%;
+  padding:12px 2px 12px;
+  /* Animate! */
+  -webkit-animation-name: bluePulse;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+}
+@-webkit-keyframes bluePulse {
+  from {
+    background-color: var(--myBlue);
+    -webkit-box-shadow: 0 0 5px 5px rgb(53,92,171, 1);
+  }
+  60% {
+    background-color: rgb(53,92,171, 0.2);
+    -webkit-box-shadow: 0 0 5px 10px rgb(53,92,171, 0.2);
+  }
+  to{
+    background-color: var(--myBlue);
+    -webkit-box-shadow: 0 0 5px 5px rgb(53,92,171, 1);
+  }
 }
 
 /* Style your buttons */
