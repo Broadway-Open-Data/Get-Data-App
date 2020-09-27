@@ -3,6 +3,10 @@
 :root {
   --blur-effect: blur(10px);
   --theater-image:url('../images/keo-oran-theater-unsplash.jpg');
+  --myGreen:rgb(126,201,166);
+  --myGreenDark:rgb(60, 144, 105);
+  --myGreenAlt:rgb(71,173,126);
+  --myBlue:rgb(53,92,171);
 }
 
 body, html {
@@ -83,7 +87,7 @@ body{
     text-decoration-color:none;
 }
 .navigation a:hover{
-    color:darkgreen;
+    color:var(--myGreen);
 }
 .navigation .meta *{
   /* margin-left: 20px; */
@@ -145,9 +149,20 @@ body{
 
 
 
+img#logo{
+  width:50vw;
+  max-width: 500px;
+}
 
+hr{
+  width:80%;
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
 
 h1{
+  color:var(--myGreen);
   font-weight: 400;
   margin: 10px 0;
   font-size: 42px;
@@ -156,6 +171,7 @@ h1{
 }
 
 h2{
+  color:var(--myBlue);
   font-weight: 400;
   margin: 10px 0;
   font-size: 32px;
@@ -164,6 +180,7 @@ h2{
 }
 
 h3{
+  color:var(--myGreenDark);
   font-weight: 400;
   margin: 10px 0;
   font-size: 22px;
@@ -204,7 +221,6 @@ h3{
 
 .floating-module h2{
   margin-bottom: 0px;
-  color:darkgreen;
 }
 .floating-module p{
   margin-top: 0px;
@@ -240,8 +256,7 @@ h3{
   color: white;
 }
 #footer a:hover{
-  background-color: white;
-  color:grey;
+  color: var(--myGreen);
 }
 
 
@@ -268,7 +283,7 @@ button, input[type="submit"]{
   user-select: none;
   margin-bottom: 16px!important;
   color: #FFFFFF;
-  background-color: #09790d;
+  background-color: var(--myGreenAlt);
 }
 
 button.download{

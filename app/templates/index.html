@@ -13,12 +13,13 @@
   <!-- Floating Module -->
 <div class="floating-module">
     <div class="info">
-        <h1>Open Broadway Data</h1>
-        <h2>Welcome to this API!</h2>
-        <p>This API will allow you to access the data for
+        <img id="logo" src="{{ url_for('static', filename='logo/open-broadway-data-logo.png') }}" alt="Open Broadway Data Logo">
+        <h2>Welcome to this Open Broadway Data!</h2>
+        <p>This tool will allow you to access the data for
            every Broadway show since 1738.
         </p>
     </div>
+    <hr>
 
 
 {% if current_user.approved %}
