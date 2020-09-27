@@ -4,19 +4,20 @@ from pathlib import Path
 # Flask stuff
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
-from databases.db import db
+from databases.db import db, Role
 
 # Internal packages
 import common
 import utils
 import routes
 
+
 def create_app():
     # initialize
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = utils.get_db_uri("users")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+    app.config['SECURITY_TRACKABLE']=True
     # This is otherwise done through the bash profile
     if not os.environ.get("FLASK_SECRET_KEY"):
         os.environ['FLASK_SECRET_KEY'] = "some key"

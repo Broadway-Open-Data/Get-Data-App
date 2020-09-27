@@ -71,9 +71,13 @@ class Role(db.Model, RoleMixin, dbTable):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
+    # Show roles
+    def __repr__(self):
+        return '<User {}>'.format(self.id)
 
     @classmethod
     def get_by_name(self, name):
+        """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(name=name).first()
 
 
@@ -89,9 +93,6 @@ class FormMessage(db.Model, dbTable):
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    # Let the user see themselves
-    def __repr__(self):
-        return '<User {}>'.format(self.id)
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -152,44 +153,6 @@ class User(db.Model, UserMixin, dbTable):
     # Let the user see themselves
     def __repr__(self):
         return '<User {}>'.format(self.email)
-
-    # Define string method
-    # def __str__(self):
-    #     return json.dumps({
-    #         "id":self.id,
-    #         "created_at":format_dt(self.created_at),
-    #         "email":self.email,
-    #         "website":self.website,
-    #         "instagram":self.instagram,
-    #         "approved":self.approved,
-    #         "approved_at":format_dt(self.approved_at),
-    #         "unapproved_at":format_dt(self.unapproved_at),
-    #         "authenticated":self.authenticated,
-    #         "authenticated_at":format_dt(self.authenticated_at),
-    #         "login_count":self.login_count,
-    #         "request_pw_reset_count":self.request_pw_reset_count,
-    #         "api_key_count":self.request_pw_reset_count,
-    #         "n_api_requests":self.n_api_requests,
-    #     })
-    #
-    # # Get data for adding to df
-    # def __data__(self):
-    #     return {
-    #         "id":self.id,
-    #         "created_at":self.created_at,
-    #         "email":self.email,
-    #         "website":self.website,
-    #         "instagram":self.instagram,
-    #         "approved":self.approved,
-    #         "approved_at":self.approved_at,
-    #         "unapproved_at":self.unapproved_at,
-    #         "authenticated":self.authenticated,
-    #         "authenticated_at":self.authenticated_at,
-    #         "login_count":self.login_count,
-    #         "request_pw_reset_count":self.request_pw_reset_count,
-    #         "api_key_count":self.request_pw_reset_count,
-    #         "n_api_requests":self.n_api_requests,
-    #     }
 
 
     # --------------------------------------------------------------------------
@@ -335,6 +298,16 @@ class User(db.Model, UserMixin, dbTable):
             return
 
     # --------------------------------------------------------------------------
+
+    def has_role(self, role_name):
+        """Does this user have this permission?"""
+        my_role = Role.get_by_name(name=role_name)
+        if my_role in self.roles:
+            return True
+        else:
+            return False
+
+
     # ADMIN ROLES
     def is_admin(self):
         """Will soon allow admin users with privelages"""

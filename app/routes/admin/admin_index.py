@@ -1,14 +1,14 @@
-from flask import send_from_directory, Blueprint
-from flask_login import current_user, login_required
-from flask import render_template
-
+from flask import Blueprint, render_template
+from flask_login import login_required
+from utils import require_role
 from . import page
+
+
 
 @page.route("/")
 @login_required
+@require_role(role="admin-master")
 def admin():
     """Only allow admin users"""
-    if not current_user.is_admin():
-        return redirect("/")
     # Otherwise, proceed
     return render_template('admin/admin.html',title='Admin')

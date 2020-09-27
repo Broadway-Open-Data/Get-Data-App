@@ -1,5 +1,5 @@
 from flask import send_from_directory, flash, redirect, request, current_app
-from flask_login import current_user, login_required
+from flask_login import login_required
 from flask import render_template
 from flask_mail import Mail, Message
 
@@ -10,14 +10,13 @@ from utils import get_email_content
 from common import send_email
 import pandas as pd
 
-
+from utils import require_role
 from . import page
-
 
 
 @page.route("/approve-users", methods=['GET', 'POST'])
 @login_required
-
+@require_role(role="admin-master")
 def approve_users():
     """
     Authenticate users
@@ -29,10 +28,8 @@ def approve_users():
         – If user is already unapproved, will not re-unapprove
             – Sends an email with notification
     """
-    if not current_user.is_admin():
-        return redirect("/")
-    # Otherwise, proceed
 
+    # Otherwise, proceed
 
     form = AuthenticateUsersForm(request.form)
 
@@ -115,6 +112,7 @@ def approve_users():
 
 @page.route("/inspect-users", methods=['GET', 'POST'])
 @login_required
+@require_role(role="admin-master")
 def inspect_users():
     """
     Authenticate users
@@ -126,8 +124,6 @@ def inspect_users():
         – If user is already unapproved, will not re-unapprove
             – Sends an email with notification
     """
-    if not current_user.is_admin():
-        return redirect("/")
 
     # It'll be better to use the ORM instead of raw sql...
     # Otherwise, proceed

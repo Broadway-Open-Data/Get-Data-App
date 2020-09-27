@@ -1,27 +1,25 @@
 from flask import send_from_directory, flash, redirect, render_template, request
-from flask_login import current_user, login_required
+from flask_login import login_required
 from flask_mail import Mail, Message
 
 from forms.admin import CreateRoles, AssignRoles
 from databases.db import db, User
 
+from utils import require_role
+from . import page
+
 import pandas as pd
 
-from . import page
 
 
 @page.route("/create-roles", methods=['GET', 'POST'])
 @login_required
+@require_role(role="admin-master")
 def create_roles():
     """
     Assigne and manage roles
     ---
     """
-    if not current_user.is_admin():
-        return redirect("/")
-    # Otherwise, proceed
-
-
     form = CreateRoles(request.form)
 
     # Validate sign up attempt
@@ -36,15 +34,12 @@ def create_roles():
 
 @page.route("/assign-roles", methods=['GET', 'POST'])
 @login_required
+@require_role(role="admin-master")
 def assignroles():
     """
     Assigne and manage roles
     ---
     """
-    if not current_user.is_admin():
-        return redirect("/")
-    # Otherwise, proceed
-
 
     form = AssignRoles(request.form)
 

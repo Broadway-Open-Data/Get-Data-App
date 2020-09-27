@@ -80,7 +80,7 @@ def register_login_manager(app):
     # Config the login manager
     login_manager = LoginManager()
     login_manager.login_view = 'login'
-
+    login_manager.session_protection = "strong"
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -92,7 +92,6 @@ def register_login_manager(app):
         flash('You must be logged in to view that page.')
         return redirect(url_for('auth.login'))
 
-    # @login_manager.user_loader
     # has_role
     login_manager.init_app(app)
 
