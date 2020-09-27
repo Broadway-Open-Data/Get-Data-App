@@ -6,7 +6,10 @@ from dash.dependencies import Output
 
 
 def register_callbacks(dashapp):
-    @dashapp.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
+    @dashapp.callback(
+        Output('my-graph', 'figure'),
+        [Input('my-dropdown', 'value')]
+    )
     def update_graph(selected_dropdown_value):
         df = pd.DataFrame.from_records([
             {"name":"COKE", "value":10},

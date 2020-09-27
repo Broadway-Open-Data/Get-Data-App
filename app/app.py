@@ -103,7 +103,7 @@ def register_login_manager(app):
 # ------------------------------------------------------------------------------
 
 def register_dash(app):
-    from dashapp1.app1 import create_dashboard
+    from dashapp import create_dashboard
     # Create the dash app
     create_dashboard(app)
 
@@ -130,13 +130,7 @@ my_app.register_things()
 
 # Home
 @my_app.app.route('/')
-# @login_required # Not including -- the page is formatted on its own
 def index():
-
-    # Don't allow non-approved users
-    # if not current_user.approved:
-    #     return redirect("/not-yet-approved")
-
     return render_template('index.html', title='Home')
 
 
