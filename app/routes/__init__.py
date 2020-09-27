@@ -1,3 +1,4 @@
+from .about import *
 from .admin import *
 from .advanced import *
 from .analyze import *
