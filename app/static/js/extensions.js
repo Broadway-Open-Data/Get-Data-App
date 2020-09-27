@@ -7,14 +7,13 @@ function closeDiv(){
 }
 
 
-
-document.addEventListener("DOMContentLoaded", function() {
+// Make the header sticky
+document.addEventListener("readystatechange", function() {
   // When the user scrolls the page, make the header sticky
   window.onscroll = function() {makeSticky()};
 
   // Get the header
   var header = document.getElementById("myHeader");
-
   // Get the offset position of the navbar
   var sticky = header.offsetTop;
 
@@ -28,3 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 }
 )
+
+// Make the footer at the bottom of the page...
+document.addEventListener("readystatechange", function() {
+    $('#footer').css('position', $(document).height() > $(window).height() ? "inherit" : "fixed");
+});
