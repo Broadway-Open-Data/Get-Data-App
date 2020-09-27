@@ -5,4 +5,4 @@ from . import page
 def contributors():
     """Always allow"""
 
-    return render_template('about_us/contributors.html', title="Contributors")
+    return render_template('about/contributors.html', title="Contributors")
