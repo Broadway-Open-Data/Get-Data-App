@@ -12,18 +12,27 @@
   <div id="toggle-views">
     <p>Toggle between viewer modes here.</p>
 
-    <label for="interested">Interested Mode</label>
+    <div class="radiobtn">
         <input type="radio" id="interested" name="modes" value=0 class= "toggle" {% if current_user.view_mode==0  %}checked{% endif %}>
+        <label for="interested">Interested Mode</label>
+        <div class="check"></div>
+    </div>
 
-    <label for="analyst">Analyst Mode</label>
+    <div class="radiobtn">
         <input type="radio" id="analyst" name="modes" value=1 class= "toggle" {% if current_user.view_mode ==1  %}checked{% endif %}>
+        <label for="analyst">Analyst Mode</label>
+        <div class="check"></div>
+    </div>
 
-    <label for="developer">Developer Mode</label>
+    <div class="radiobtn">
         <input type="radio" id="developer" name="modes" value=2 class= "toggle" {% if current_user.view_mode==2 %}checked{% endif %}>
+        <label for="developer">Developer Mode</label>
+        <div class="check"></div>
+    </div>
 
 
     <div class='status'> You are viewing the data in
-          <div id='view-mode' style="display:inline; font-weight:bold;">
+          <div id='view-mode'>
             {% if current_user.view_mode==0%}
               Interested
             {% elif current_user.view_mode==1%}

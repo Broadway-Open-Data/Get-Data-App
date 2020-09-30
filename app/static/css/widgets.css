@@ -14,3 +14,35 @@
 #data-summary-table{
   margin: 20px 0 20px;
 }
+
+
+/*  I'd love to upgrade to: https://codepen.io/nikkipantony/pen/wpPGZp */
+/* Radio Buttons */
+#toggle-views p{
+  font-weight: bold;
+  font-size:110%;
+}
+#toggle-views .status{
+  padding: 10px 0 5px 0;
+}
+#toggle-views #view-mode{
+  background-color: #ddd;
+  display:inline;
+}
+
+.radiobtn {
+	display: block;
+	position: relative;
+  padding: 0 0 0 20px;
+}
+.radiobtn > *{
+  cursor: pointer;
+}
+
+input[type="radio"]:checked+label{
+    background-color: #ddd;
+}
+
+input[type="radio"]:hover+label{
+  font-weight: bold;
+}
