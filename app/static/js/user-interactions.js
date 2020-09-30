@@ -4,9 +4,8 @@ view_mode_dict = {0:"Interested",1:"Analyst",2:"Developer"}
 $(document).ready(function() {
    $('.toggle').change(function(e) {
 
-    // The code below is a bit too complicated...
-    // let new_status
-    console.log("ID", e.target.id, e.target.value)
+    // Simplified things
+    // console.log("ID", e.target.id, e.target.value)
     let new_status = e.target.value
     // Update the toggle value
     $.ajax({
@@ -15,8 +14,8 @@ $(document).ready(function() {
       data: {new_status: new_status},
       success: function(response) {
         let val = parseInt(response)
-        console.log("RES", val)
-       $("#view_mode").html(view_mode_dict[val]);
+        $(".page-content #view-mode").html(view_mode_dict[val]);
+        $(".navigation #view-mode").html(view_mode_dict[val])
       },
       error: function(xhr) {
        //Do Something to handle error

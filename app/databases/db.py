@@ -139,9 +139,6 @@ class User(db.Model, UserMixin, dbTable):
     api_key_count = db.Column(db.Integer, default=0)
     n_api_requests = db.Column(db.Integer, default=0)
 
-    # Developer mode, toggle on or off
-    developer_mode = db.Column(db.Boolean, unique=False, default=False) # delete soon
-
     # Allow different types of viewing modes – score as integers
     view_mode = db.Column(db.Integer, nullable=False, unique=False, default=0)
 
@@ -233,11 +230,6 @@ class User(db.Model, UserMixin, dbTable):
         if not self.n_api_requests:
             self.n_api_requests = 0
         self.n_api_requests += 1
-        self.save_to_db()
-
-
-    def toggle_developer_mode(self, val):
-        self.developer_mode = val
         self.save_to_db()
 
 
