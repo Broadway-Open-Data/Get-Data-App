@@ -27,7 +27,7 @@
 <!-- Only show the following to those who are authenticated -->
 
 
-{% if not current_user.developer_mode %}                                        <!-- Analyst Mode -->
+{% if current_user.view_mode==0 or current_user.view_mode==1 %}                                        <!-- Analyst Mode -->
     <div class="info">
         <h3>Data can be accessed in one of two ways:</h3>
         <ol>
@@ -55,7 +55,7 @@
           <a href="/analyze/explore/"><button>Explore</button></a><br>
     </div>
 
-{% else %}                                                                      <!-- Developer Mode -->
+{% elif current_user.view_mode==2 %}                                                                      <!-- Developer Mode -->
 
   <div class="info">
       <h3>Data can be accessed in one of two ways:</h3>
