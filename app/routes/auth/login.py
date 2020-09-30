@@ -59,10 +59,6 @@ def login():
         template='login-page'
         )
 
-# I'd love to extend this to wrapper....
-# def is_user_approved():
-#     if not current_user.approved:
-#         return redirect("/")
 
 # Create a decorator...
 def role_required(function):
