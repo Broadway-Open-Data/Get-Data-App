@@ -10,19 +10,30 @@
 
 
   <div id="toggle-views">
-    <p>Toggle between analyze mode and developer mode here!</p>
-    <label for="develop">Developer Mode</label>
-    <input type="radio" id="develop" name="modes" class= "toggle" {% if current_status==True %}checked{% endif %}>
+    <p>Toggle between viewer modes here.</p>
+
+    <label for="interested">Interested Mode</label>
+        <input type="radio" id="interested" name="modes" value=0 class= "toggle" {% if current_user.view_mode==0  %}checked{% endif %}>
 
     <label for="analyst">Analyst Mode</label>
-    <input type="radio" id="analyst" name="modes"  class= "toggle" {% if current_status ==False  %}checked{% endif %}>
+        <input type="radio" id="analyst" name="modes" value=1 class= "toggle" {% if current_user.view_mode ==1  %}checked{% endif %}>
+
+    <label for="developer">Developer Mode</label>
+        <input type="radio" id="developer" name="modes" value=2 class= "toggle" {% if current_user.view_mode==2 %}checked{% endif %}>
 
 
-    {% if current_status %}
-    <div class='status'> You are viewing the data in Developer Mode</div>
-    {% else %}
-    <div class='status'> You are viewing the data in Analyst Mode</div>
-    {% endif %}
+    <div class='status'> You are viewing the data in
+          <div id='view_mode' style="display:inline; font-weight:bold;">
+            {% if current_user.view_mode==0%}
+              Interested
+            {% elif current_user.view_mode==1%}
+              Analyst
+            {% elif current_user.view_mode==2%}
+              Developer
+            {% endif %}
+          </div>
+          Mode
+    </div>
   </div>
 
   <ul>

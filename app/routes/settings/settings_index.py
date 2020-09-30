@@ -1,5 +1,5 @@
 from flask import render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 import common
 from . import page
 
@@ -10,8 +10,8 @@ def settings():
     Allow a user to change their password and stuff
     """
 
-    current_status = common.curr_dev_mode()
-    if not current_status:
-        current_status = False
+    # view_mode = current_user.view_mode
+    # if not current_status:
+    #     current_status = False
 
-    return render_template('settings/settings.html',title='Settings', current_status=current_status)
+    return render_template('settings/settings.html',title='Settings')

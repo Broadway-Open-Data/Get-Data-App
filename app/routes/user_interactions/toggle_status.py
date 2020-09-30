@@ -3,13 +3,12 @@ import common
 
 from . import page
 
-@page.route('/get_toggled_status')
-def toggled_status():
-    current_status = request.args.get('status')
+@page.route('/get_view_status')
+def set_view_mode():
+    new_status = request.args.get('new_status')
+    new_status = int(new_status)
 
-    if current_status == 'Developer Mode':
-        common.toggle_dev_mode(False)
-        return 'Analyst Mode'
-    else:
-        common.toggle_dev_mode(True)
-        return 'Developer Mode'
+    # change the new status
+    common.set_view_mode(new_status)
+
+    return str(new_status)

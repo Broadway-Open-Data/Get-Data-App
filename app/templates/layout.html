@@ -67,15 +67,23 @@
               <div class="signed-in-status">
                 Signed in as "{{ current_user.email}}"
               </div>
-              <div class="dev-mode">
-                {% if current_user.developer_mode %}
-                Current Mode: Developer
-                {% else %}
-                Current Mode: Analyst
-                {% endif %}
-                <span class="tooltiptext">
-                  Switch between view modes in Settings.
-                </span>
+              <div class="status">
+                <div id="status">
+                  Current Mode:
+                </div>
+                <div id="view-mode" style="margin:none;">
+                  {% if current_user.view_mode==0%}
+                    Interested
+                  {% elif current_user.view_mode==1%}
+                    Analyst
+                  {% elif current_user.view_mode==2%}
+                    Developer
+                  {% endif %}
+
+                  <span class="tooltiptext">
+                    Switch between view modes in Settings.
+                  </span>
+                </div>
               </div>
           </div>
 

@@ -102,7 +102,7 @@ body{
 }
 
 /* Hover text */
-.navigation .dev-mode .tooltiptext {
+.navigation .tooltiptext {
   visibility: hidden;
   width: 150px;
   background: rgb(255, 255, 255, 0.90);
@@ -115,18 +115,18 @@ body{
   position: absolute;
   z-index: 1;
   top: 85px;
-  right: 100px;
+  right: 50px;
 
 }
 
-.navigation .dev-mode:hover .tooltiptext {
+.navigation #view-mode:hover .tooltiptext {
   visibility: visible;
 }
 
-.navigation .dev-mode .tooltiptext:after {
+.navigation #view-mode .tooltiptext:after {
   content: " ";
   position: absolute;
-  bottom: 100%; /* At the bottom of the tooltip */
+  bottom: 100%;
   left: 90%;
   margin-left: -5px;
   border-width: 5px;

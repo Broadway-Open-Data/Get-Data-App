@@ -2,7 +2,7 @@ from flask import render_template
 from flask_login import current_user
 from . import page
 
-@my_app.app.route('/')
+@page.route('/')
 def index():
     # if current_user.developer_mode
     # z = current_user.view_mode
