@@ -60,7 +60,7 @@ def signup():
                 html = render_template('emails/welcome.html')
             )
 
-            return redirect(url_for('index'))
+            return redirect(url_for('index.index'))
 
         flash('A user already exists with that email address.')
 

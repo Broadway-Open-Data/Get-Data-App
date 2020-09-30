@@ -47,7 +47,7 @@ def login():
             # ---------------------------------------
             del my_data # delete potentially saved pw
             # ---------------------------------------
-            return redirect(url_for('index'))
+            return redirect(url_for('index.index'))
 
         # Otherwise
         flash('Invalid username/password combination')

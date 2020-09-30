@@ -82,7 +82,7 @@ def reset_password(token):
         login_user(user,remember=True)
 
 
-        return redirect(url_for('index'))
+        return redirect(url_for('index.index'))
 
 
     return render_template('login/reset-password.html',title='Reset Your Password', form=form)
