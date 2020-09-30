@@ -4,7 +4,7 @@ import sys
 import datetime
 import uuid
 # Correct the path
-sys.path.append("././")
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 from flask import Flask
@@ -17,6 +17,7 @@ from utils.get_db_uri import get_db_uri
 
 
 # ------------------------------------------------------------------------------
+
 
 # Instantiate a blank app
 app = Flask(__name__)
@@ -50,7 +51,6 @@ def create_all():
 
 
 # ------------------------------------------------------------------------------
-
 
 if __name__ == '__main__':
     manager.run()

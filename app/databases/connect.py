@@ -4,13 +4,13 @@ import sys
 import datetime
 import uuid
 # Correct the path
-sys.path.append("././")
+sys.path.append("../")
 
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from db import db
+from databases.db import db
 from utils.get_db_uri import get_db_uri
 
 

@@ -140,7 +140,10 @@ class User(db.Model, UserMixin, dbTable):
     n_api_requests = db.Column(db.Integer, default=0)
 
     # Developer mode, toggle on or off
-    developer_mode = db.Column(db.Boolean, unique=False, default=False)
+    developer_mode = db.Column(db.Boolean, unique=False, default=False) # delete soon
+
+    # Allow different types of viewing modes – score as integers
+    view_mode = db.Column(db.Integer, nullable=False, unique=False, default=0)
 
     # Additional
     roles = db.relationship('Role', secondary=roles_users,
@@ -237,6 +240,9 @@ class User(db.Model, UserMixin, dbTable):
         self.developer_mode = val
         self.save_to_db()
 
+
+    # def get_view_mode(self):
+    #     return self.view_mode
 
     # --------------------------------------------------------------------------
     # GENERATE SECRET TOKEN

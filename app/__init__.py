@@ -4,13 +4,16 @@ from pathlib import Path
 # Flask stuff
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
-from databases.db import db, Role
 
 # Internal packages
-import common
 import utils
+import databases
+import common
 import routes
 
+
+# import a second time, why not...
+from databases.db import db, Role
 
 def create_app():
     # initialize
@@ -53,6 +56,7 @@ def register_blueprint(app):
         routes.analyze.page,
         routes.api.page,
         routes.auth.page,
+        routes.index.page,
         routes.internal.page,
         routes.settings.page,
         routes.user_interactions.page
