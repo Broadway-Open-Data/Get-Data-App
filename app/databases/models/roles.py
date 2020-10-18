@@ -1,4 +1,4 @@
-from databases import db, models
+from app.databases import db, models
 from sqlalchemy.orm import validates
 from flask_security import RoleMixin
 

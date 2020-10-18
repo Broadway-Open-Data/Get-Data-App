@@ -1,4 +1,4 @@
-from databases import db, models
+from app.databases import db, models
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship, backref

@@ -7,9 +7,9 @@ import uuid
 sys.path.append(".")
 
 # Internal stuff
-from databases import db
-from databases.models import User
-from utils.get_db_uri import get_db_uri
+from app.databases import db
+from app.databases.models import User
+from app.utils.get_db_uri import get_db_uri
 
 
 # Flask Stuff
