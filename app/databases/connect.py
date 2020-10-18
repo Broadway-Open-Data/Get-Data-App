@@ -8,7 +8,7 @@ sys.path.append("../")
 
 # Internal stuff
 from create_db import db
-from models import User
+# from models import User
 from utils.get_db_uri import get_db_uri
 
 
@@ -56,8 +56,7 @@ class ConnectApp():
 
     def foo(self):
         print("foo")
-
-
+        
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
@@ -68,5 +67,5 @@ class ConnectApp():
 if __name__ =='__main__':
     # do_all()
     db_app = ConnectApp()
-    print(db_app.query_all_users())
+    # print(db_app.query_all_users())
     print("*****\nDONE! All data is living in the database.\n*****")

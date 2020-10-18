@@ -4,7 +4,8 @@ from flask import render_template
 from flask_mail import Mail, Message
 
 from forms.admin import AuthenticateUsersForm
-from databases.db import db, User
+from databases import db
+from databases.models import User
 from utils import get_email_content
 
 from common import send_email

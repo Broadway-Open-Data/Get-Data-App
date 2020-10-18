@@ -1,6 +1,6 @@
 from flask import jsonify, flash, redirect
 from flask_login import login_required, login_user
-from databases.db import User
+from databases.models import User
 
 from . import page
 

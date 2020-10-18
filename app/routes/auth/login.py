@@ -3,7 +3,7 @@ from flask import send_from_directory, Blueprint, redirect, url_for, \
 from flask_login import current_user, login_required, logout_user, login_user
 from forms.registration import LoginForm, SignupForm, ForgotPasswordForm
 
-from databases.db import User
+from databases.models import User
 
 from . import page
 # page = Blueprint('login', __name__, template_folder='templates')

@@ -13,7 +13,7 @@ import routes
 
 
 # import a second time, why not...
-from databases.db import db, Role
+from databases import db
 
 def create_app():
     # initialize

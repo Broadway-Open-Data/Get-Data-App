@@ -3,7 +3,7 @@ from flask_login import login_required
 from flask_mail import Mail, Message
 
 from forms.admin import CreateRoles, AssignRoles
-from databases.db import db, User
+from databases.models import db, User
 
 from utils import require_role
 from . import page
