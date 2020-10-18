@@ -7,6 +7,7 @@ import datetime
 class DataEdits(db.Model, models.dbTable):
     """"""
     __tablename__ = "data_edits"
+    __bind_key__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # can be used to groupby...
     edit_id = db.Column(db.Integer, nullable=False, unique=False, primary_key=True)

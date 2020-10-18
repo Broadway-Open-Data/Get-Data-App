@@ -15,6 +15,7 @@ from nameparser import HumanName
 
 class ShowsRolesLink(db.Model, models.dbTable):
     __tablename__ = 'shows_roles_link'
+    __bind_key__ = "users"
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
     show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
@@ -33,6 +34,7 @@ class ShowsRolesLink(db.Model, models.dbTable):
 
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
+    __bind_key__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True, nullable=False) # All actors will be classified as "Performer"
     description = db.Column(db.String(255), unique=False, nullable=True)
