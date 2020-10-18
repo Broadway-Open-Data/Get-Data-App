@@ -10,7 +10,6 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-# from models import User
 
 
 # Flask Stuff

@@ -19,7 +19,7 @@ messages_users = db.Table('messages_users',
 class FormMessage(db.Model, models.dbTable):
     """"""
     __tablename__ = "message"
-    # __table_args__ = {'extend_existing': True}
+    # __table_args__ = {'extend_existing': True} # Don't use this...
 
     # Core
     id = db.Column(db.Integer,primary_key=True)
