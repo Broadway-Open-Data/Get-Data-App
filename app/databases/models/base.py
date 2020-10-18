@@ -9,6 +9,8 @@ class dbTable():
     """
     Base class for all objects in a table
     """
+    # def __init__(self, **kwargs):
+    #     self.__bind_key__=kwargs['bind_key']
 
     # Lookup by id
     @classmethod

@@ -19,6 +19,8 @@ import jwt
 class User(db.Model, UserMixin, models.dbTable):
     """"""
     __tablename__ = "user"
+    __bind_key__ = "users"
+
     # Core
     id = db.Column(db.Integer,primary_key=True)
     email = db.Column(db.String(40), nullable=False, unique=True)

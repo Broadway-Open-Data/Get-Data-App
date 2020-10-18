@@ -18,7 +18,7 @@ from databases import db
 def create_app():
     # initialize
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = utils.get_db_uri("users")
+    # app.config['SQLALCHEMY_DATABASE_URI'] = utils.get_db_uri("users")
     app.config['SQLALCHEMY_BINDS'] = {
         'users': utils.get_db_uri("users"),
         'broadway': utils.get_db_uri("broadway"),
