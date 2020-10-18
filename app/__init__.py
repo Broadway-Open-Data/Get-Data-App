@@ -19,6 +19,11 @@ def create_app():
     # initialize
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = utils.get_db_uri("users")
+    app.config['SQLALCHEMY_BINDS'] = {
+        'users': utils.get_db_uri("users"),
+        'broadway': utils.get_db_uri("broadway"),
+    }
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECURITY_TRACKABLE']=True
     # This is otherwise done through the bash profile
@@ -35,6 +40,7 @@ def create_app():
     # Configure the cache
     common.cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Path('/tmp')})
 
+    SQLALCHEMY_DATABASE_URI = 'postgres://db_user:db_pw@localhost:5432/db_name'
 
     # Configure the db
     db.init_app(app)
