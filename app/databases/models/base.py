@@ -1,6 +1,7 @@
 import json
 import datetime
-from app.databases import db, models
+from databases import db
+from databases import models
 
 
 from sqlalchemy.exc import IntegrityError

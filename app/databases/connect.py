@@ -4,18 +4,17 @@ import sys
 import datetime
 import uuid
 # Correct the path
-sys.path.append(".")
+sys.path.append("../")
 
 # Internal stuff
-from app.databases import db
-from app.databases.models import User
-from app.utils.get_db_uri import get_db_uri
+from create_db import db
+from models import User
+from utils.get_db_uri import get_db_uri
 
 
 # Flask Stuff
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
 
 
 
