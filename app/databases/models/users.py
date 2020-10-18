@@ -50,10 +50,13 @@ class User(db.Model, UserMixin, models.dbTable):
     view_mode = db.Column(db.Integer, nullable=False, unique=False, default=0)
 
     # Additional
-    roles = db.relationship('Role', secondary=models.roles_users,
+    roles = db.relationship('Role', secondary='roles_users',
                             backref=db.backref('users', lazy='dynamic'))
 
-    messages = db.relationship('FormMessage', backref='users', lazy=True)
+    # Additional
+    messages = db.relationship('FormMessage', secondary='messages_users',
+                            backref=db.backref('users', lazy='dynamic'))
+
     # --------------------------------------------------------------------------
     # STRING METHODS
 
@@ -94,6 +97,7 @@ class User(db.Model, UserMixin, models.dbTable):
         """Set the message in the db."""
         message = models.FormMessage(
             user_id = self.id,
+            message_type='signup',
             message = message
         )
         db.session.add(message)
@@ -102,7 +106,8 @@ class User(db.Model, UserMixin, models.dbTable):
     # On signup
     def get_signup_message(self):
         """Access the message from the db."""
-        return models.FormMessage.query.filter_by(user_id=self.id).first()
+        return models.get_signup_message(self.id)
+        # return models.FormMessage.query.filter_by(user_id=self.id).order_by(models.FormMessage.created_at.asc()).first()
 
     # --------------------------------------------------------------------------
     # INCREASE COUNTERS

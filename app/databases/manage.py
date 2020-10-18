@@ -12,7 +12,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 # db things
-from databases.create_db import db
+from databases import db
 from databases import models
 from utils.get_db_uri import get_db_uri
 
@@ -23,7 +23,7 @@ from utils.get_db_uri import get_db_uri
 class ManagerApp():
     # Instantiate a blank app
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
+    app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # instantiate the db
