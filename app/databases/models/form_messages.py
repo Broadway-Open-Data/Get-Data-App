@@ -6,6 +6,15 @@ import datetime
 
 
 
+
+# Define models
+
+
+messages_users = db.Table('messages_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('message_id', db.Integer(), db.ForeignKey('message.id')))
+
+
 # ------------------------------------------------------------------------------
 
 class FormMessage(db.Model, models.dbTable):
