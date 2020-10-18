@@ -1,5 +1,4 @@
-from databases import db
-from databases import models
+from databases import db, models
 from sqlalchemy.orm import validates
 
 import datetime

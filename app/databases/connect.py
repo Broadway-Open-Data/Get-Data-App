@@ -10,7 +10,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-from models import User
+# from models import User
 
 
 # Flask Stuff
@@ -48,8 +48,16 @@ class ConnectApp():
 
     def query_all_users(self):
         """Get all existing show ids"""
-        query_all = db.session.query(models.User.id).all()
-        all_ids = [int(x[0]) for x in query_all]
+
+        query = """
+        SELECT
+            id
+        FROM
+            user
+        ;
+        """
+        result = db.engine.execute(query)
+        all_ids = [int(x[0]) for x in result]
         return all_ids
 
 
@@ -67,7 +75,7 @@ class ConnectApp():
 
 
 if __name__ =='__main__':
-    # do_all()
     db_app = ConnectApp()
-    # print(db_app.query_all_users())
+    all_user_ids = db_app.query_all_users()
+    print(all_user_ids)
     # print("*****\nDONE! All data is living in the database.\n*****")

@@ -30,8 +30,6 @@ def create_app():
     os.environ['FLASK_ENV'] = 'production' if utils.is_aws() else 'development'
 
 
-    print(utils.get_db_uri("users"))
-    
     csrf = CSRFProtect(app)
 
     # Configure the cache
