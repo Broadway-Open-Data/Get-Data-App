@@ -9,9 +9,17 @@ import datetime
 # Define models
 
 
+# class messages_users(db.Table):
+#     __tablename__='messages_users'
+#     __bind_key__ = "users"
+#     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+#     message_id = db.Column(db.Integer(), db.ForeignKey('message.id'))
+
 messages_users = db.Table('messages_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-        db.Column('message_id', db.Integer(), db.ForeignKey('message.id')))
+        db.Column('message_id', db.Integer(), db.ForeignKey('message.id')),
+        info={'bind_key': 'users'}
+        )
 
 
 # ------------------------------------------------------------------------------
