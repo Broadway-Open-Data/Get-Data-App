@@ -24,14 +24,6 @@ class ShowsRolesLink(db.Model, models.dbTable):
 
 
 
-
-# I might not need this association table...
-# A table for person, shows, and roles
-# roles_table = db.Table('roles_table',
-#         db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
-#         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
-
-
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     __bind_key__ = "broadway"

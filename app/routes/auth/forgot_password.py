@@ -3,7 +3,7 @@ from flask import send_from_directory, redirect, url_for, \
 from flask_login import login_required, logout_user, login_user
 from flask_mail import Message
 
-from databases.models import User, Role
+from databases.models.users import User, Role
 from utils.get_email_content import get_email_content
 
 from forms.registration import ForgotPasswordForm

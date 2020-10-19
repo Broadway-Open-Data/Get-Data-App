@@ -38,7 +38,7 @@ from flask_mail import Mail, Message
 import waitress
 
 # import models
-from databases.models import User, Role, FormMessage
+from databases.models.users import User, Role, FormMessage
 
 # Import forms
 from forms.select_data_advanced import sqlForm

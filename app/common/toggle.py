@@ -1,6 +1,6 @@
 from flask_login import current_user
 
-from databases.models import User
+from databases.models.users import User
 
 def set_view_mode(val):
     """must be an int"""

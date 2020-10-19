@@ -110,8 +110,8 @@ class User(db.Model, UserMixin, models.dbTable):
     # On signup
     def get_signup_message(self):
         """Access the message from the db."""
-        return models.get_signup_message(self.id)
-        # return models.FormMessage.query.filter_by(user_id=self.id).order_by(models.FormMessage.created_at.asc()).first()
+        return models.users.FormMessage.get_signup_message(self.id)
+        # return models.users.FormMessage.query.filter_by(user_id=self.id).order_by(models.users.FormMessage.created_at.asc()).first()
 
     # --------------------------------------------------------------------------
     # INCREASE COUNTERS
@@ -215,7 +215,7 @@ class User(db.Model, UserMixin, models.dbTable):
 
     def has_role(self, role_name):
         """Does this user have this permission?"""
-        my_role = models.Role.get_by_name(name=role_name)
+        my_role = models.users.Role.get_by_name(name=role_name)
         if my_role in self.roles:
             return True
         else:

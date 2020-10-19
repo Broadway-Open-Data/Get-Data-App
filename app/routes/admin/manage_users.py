@@ -4,15 +4,21 @@ from flask import render_template
 from flask_mail import Mail, Message
 
 from forms.admin import AuthenticateUsersForm
+
+# Import db stuff
 from databases import db
-from databases.models import User
+from databases.models.users import User
+import databases.methods.users as user_methods
+
+
+# Import utils and common
 from utils import get_email_content
-
 from common import send_email
-import pandas as pd
-
 from utils import require_role
 from . import page
+
+# Import data tools
+import pandas as pd
 
 
 @page.route("/approve-users", methods=['GET', 'POST'])
@@ -101,7 +107,10 @@ def approve_users():
             approved=0
         ;
         """
-    df = pd.read_sql(select_st, db.engine)
+     #.execute('<your raw sql>')
+
+
+    df = pd.read_sql(select_st, db.get_engine(current_app, bind='users'))
     data = df.sort_values(by=["created_at"], ascending=[True])\
             .to_html(header="true", table_id="show-data")
 
@@ -161,7 +170,7 @@ def inspect_users():
         ;
         """
 
-    df = pd.read_sql(select_st, db.engine)
+    df = pd.read_sql(select_st, db.get_engine(current_app, bind='users'))
 
     data = df.sort_values(by=["created_at"], ascending=[True], ignore_index=True)\
             .to_html(header="true", table_id="show-data")
