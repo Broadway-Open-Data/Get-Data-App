@@ -1,6 +1,5 @@
 from databases import db, models
 from sqlalchemy.orm import validates
-
 from . import base
 
 import datetime

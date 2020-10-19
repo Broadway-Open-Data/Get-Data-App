@@ -1,9 +1,9 @@
 from databases import db, models
-
+from . import base
 import datetime
 
 
-class Theatre(db.Model, models.dbTable):
+class Theatre(db.Model, models.dbTable, base):
     """"""
     __tablename__ = "theatres"
     __bind_key__ = "broadway"

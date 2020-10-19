@@ -1,4 +1,6 @@
 from databases import db, models
+from . import base
+
 import datetime
 
 from sqlalchemy.orm import validates
@@ -13,7 +15,7 @@ from nameparser import HumanName
 
 
 
-class ShowsRolesLink(db.Model, models.dbTable):
+class ShowsRolesLink(db.Model, models.dbTable, base):
     __tablename__ = "shows_roles_link"
     __bind_key__ = "broadway"
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
@@ -24,7 +26,7 @@ class ShowsRolesLink(db.Model, models.dbTable):
 
 
 
-class Role(db.Model, models.dbTable):
+class Role(db.Model, models.dbTable, base):
     __tablename__ = "role"
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
@@ -57,7 +59,7 @@ race_table = db.Table('racial_identity_lookup_table',
         info={'bind_key': 'broadway'})
 
 
-class RacialIdentity(db.Model, models.dbTable):
+class RacialIdentity(db.Model, models.dbTable, base):
     __tablename__ = "racial_identity"
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
@@ -82,7 +84,7 @@ class RacialIdentity(db.Model, models.dbTable):
 
 # --------------------------------------------------------------------------------
 
-class GenderIdentity(db.Model, models.dbTable):
+class GenderIdentity(db.Model, models.dbTable, base):
     __tablename__ = "gender_identity"
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
@@ -109,7 +111,7 @@ class GenderIdentity(db.Model, models.dbTable):
 # --------------------------------------------------------------------------
 
 
-class Person(db.Model, models.dbTable):
+class Person(db.Model, models.dbTable, base):
     """"""
     __tablename__ = "person"
     __bind_key__ = "broadway"

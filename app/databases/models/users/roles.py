@@ -1,6 +1,7 @@
 from databases import db, models
 from sqlalchemy.orm import validates
 from flask_security import RoleMixin
+from . import base
 
 import datetime
 
@@ -19,7 +20,7 @@ roles_users = db.Table('roles_users',
 # ------------------------------------------------------------------------------
 
 
-class Role(db.Model, RoleMixin, models.dbTable):
+class Role(db.Model, RoleMixin, models.dbTable, base):
     __tablename__ = "role"
     __bind_key__ = "users"
 

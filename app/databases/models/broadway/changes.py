@@ -1,11 +1,13 @@
 from databases import db, models
-import datetime
+from . import base
 
 from sqlalchemy.sql import expression
 
+import datetime
+
 # ------------------------------------------------------------------------------
 
-class DataEdits(db.Model, models.dbTable):
+class DataEdits(db.Model, models.dbTable, base):
     """"""
     __tablename__ = "data_edits"
     __bind_key__ = "broadway"
