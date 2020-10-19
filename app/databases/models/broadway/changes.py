@@ -1,5 +1,4 @@
 from databases import db, models
-from . import Base
 
 from sqlalchemy.sql import expression
 
@@ -7,7 +6,7 @@ import datetime
 
 # ------------------------------------------------------------------------------
 
-class DataEdits(db.Model, models.dbTable, Base):
+class DataEdits(db.Model, models.dbTable):
     """"""
     __tablename__ = "data_edits"
     __bind_key__ = "broadway"

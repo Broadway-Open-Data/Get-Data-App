@@ -1,5 +1,4 @@
 from databases import db, models
-from . import Base
 
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
@@ -20,9 +19,10 @@ import jwt
 
 # ==============================================================================
 
-class User(db.Model, UserMixin, models.dbTable, Base):
+class User(db.Model, UserMixin, models.dbTable):
     """"""
     __tablename__ = "user"
+    __table_args__ = {'schema':'users'}
     __bind_key__ = "users"
 
     # Core
@@ -58,12 +58,12 @@ class User(db.Model, UserMixin, models.dbTable, Base):
     view_mode = db.Column(db.Integer, nullable=False, unique=False, default=0)
 
     # Additional
-    roles = db.relationship('Role', secondary='roles_users',
-                            backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship('Role', secondary='users.roles_users',
+                            backref=db.backref('users.users', lazy='dynamic'))
 
     # Additional
-    messages = db.relationship('FormMessage', secondary='messages_users',
-                            backref=db.backref('users', lazy='dynamic'))
+    messages = db.relationship('FormMessage', secondary='users.messages_users',
+                            backref=db.backref('users.users', lazy='dynamic'))
 
     # --------------------------------------------------------------------------
     # STRING METHODS

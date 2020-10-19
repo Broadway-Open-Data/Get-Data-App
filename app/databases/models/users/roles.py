@@ -1,7 +1,6 @@
 from databases import db, models
 from sqlalchemy.orm import validates
 from flask_security import RoleMixin
-from . import Base
 
 import datetime
 
@@ -10,9 +9,10 @@ import datetime
 
 # Define models
 roles_users = db.Table('roles_users',
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
-        info={'bind_key': 'users'}
+        db.Column('user_id', db.Integer(), db.ForeignKey('users.user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('users.role.id')),
+        info={'bind_key': 'users'},
+        schema='users'
     )
 
 
@@ -20,8 +20,9 @@ roles_users = db.Table('roles_users',
 # ------------------------------------------------------------------------------
 
 
-class Role(db.Model, RoleMixin, models.dbTable, Base):
+class Role(db.Model, RoleMixin, models.dbTable):
     __tablename__ = "role"
+    __table_args__ = {'schema':'users'}
     __bind_key__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)

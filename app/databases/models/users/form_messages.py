@@ -1,6 +1,5 @@
 from databases import db, models
 from sqlalchemy.orm import validates
-from . import Base
 
 import datetime
 
@@ -9,23 +8,25 @@ import datetime
 
 # Define models
 messages_users = db.Table('messages_users',
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-        db.Column('message_id', db.Integer(), db.ForeignKey('message.id')),
-        info={'bind_key': 'users'}
+        db.Column('user_id', db.Integer(), db.ForeignKey('users.user.id')),
+        db.Column('message_id', db.Integer(), db.ForeignKey('users.message.id')),
+        info={'bind_key': 'users'},
+        schema='users'
         )
 
 
 # ------------------------------------------------------------------------------
 
-class FormMessage(db.Model, models.dbTable, Base):
+class FormMessage(db.Model, models.dbTable):
     """"""
     __tablename__ = "message"
+    __table_args__ = {'schema':'users'}
     __bind_key__ = "users"
     # __table_args__ = {'extend_existing': True} # Don't use this...
 
     # Core
     id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column('user_id',db.Integer(), db.ForeignKey('user.id'))
+    user_id = db.Column('user_id',db.Integer(), db.ForeignKey('users.user.id'))
     message_type = db.Column(db.String(40), default="generic", nullable=False, unique=False)
     message = db.Column(db.String(400), nullable=False, unique=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
