@@ -12,6 +12,7 @@ import datetime
 class Show(db.Model, models.dbTable):
     """"""
     __tablename__ = "shows"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)

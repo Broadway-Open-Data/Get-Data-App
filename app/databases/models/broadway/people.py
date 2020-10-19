@@ -1,8 +1,7 @@
 from databases import db, models
-
 import datetime
 
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
 # import custom stuff
@@ -16,10 +15,11 @@ from nameparser import HumanName
 
 class ShowsRolesLink(db.Model, models.dbTable):
     __tablename__ = "shows_roles_link"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
-    show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
+    person_id = db.Column(db.Integer, db.ForeignKey('broadway.person.id'), primary_key=True)
+    show_id = db.Column(db.Integer, db.ForeignKey('broadway.shows.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('broadway.role.id'), primary_key=True)
     extra_data = db.Column(db.String(256))
     url = db.Column(db.String(120), unique=False, nullable=True)
 
@@ -55,13 +55,16 @@ class Role(db.Model, models.dbTable):
 # --------------------------------------------------------------------------------
 
 race_table = db.Table('racial_identity_lookup_table',
-        db.Column('person_id', db.Integer(),db.ForeignKey('person.id')),
-        db.Column('racial_identity_id', db.Integer(), db.ForeignKey('racial_identity.id')),
-        info={'bind_key': 'broadway'})
+        db.Column('person_id', db.Integer(),db.ForeignKey('broadway.person.id')),
+        db.Column('racial_identity_id', db.Integer(), db.ForeignKey('broadway.racial_identity.id')),
+        info={'bind_key': 'broadway'},
+        schema='broadway'
+        )
 
 
 class RacialIdentity(db.Model, models.dbTable):
     __tablename__ = "racial_identity"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
@@ -87,6 +90,7 @@ class RacialIdentity(db.Model, models.dbTable):
 
 class GenderIdentity(db.Model, models.dbTable):
     __tablename__ = "gender_identity"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
@@ -115,6 +119,7 @@ class GenderIdentity(db.Model, models.dbTable):
 class Person(db.Model, models.dbTable):
     """"""
     __tablename__ = "person"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
     id = db.Column(db.Integer,primary_key=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -144,17 +149,17 @@ class Person(db.Model, models.dbTable):
 
     # --------------------------------------------------------------------------
     # Here's where I need help with...
-    gender_identity_id = db.Column(db.Integer, db.ForeignKey('gender_identity.id'))
-    gender_identity = db.relationship('GenderIdentity', backref="person")
+    gender_identity_id = db.Column(db.Integer, db.ForeignKey('broadway.gender_identity.id'))
+    gender_identity = db.relationship('GenderIdentity', backref="broadway.person")
 
     # --------------------------------------------------------------------------
 
     # one to many
     # roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
-    roles = relationship('Role', secondary='shows_roles_link', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
-    shows = relationship('Show', secondary='shows_roles_link', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    roles = relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+    shows = relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
 
-    racial_identity = db.relationship('RacialIdentity', secondary='racial_identity_lookup_table', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
 
 
     # Additional fields

@@ -4,7 +4,7 @@ from sqlalchemy.orm import validates
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship, backref
 
-
+from .roles import Role
 
 import datetime
 
@@ -58,7 +58,7 @@ class User(db.Model, UserMixin, models.dbTable):
     view_mode = db.Column(db.Integer, nullable=False, unique=False, default=0)
 
     # Additional
-    roles = db.relationship('Role', secondary='users.roles_users',
+    roles = db.relationship(Role, secondary='users.roles_users',
                             backref=db.backref('users.users', lazy='dynamic'))
 
     # Additional

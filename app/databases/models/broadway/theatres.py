@@ -5,6 +5,7 @@ import datetime
 class Theatre(db.Model, models.dbTable):
     """"""
     __tablename__ = "theatres"
+    __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
     date_instantiated = db.Column(db.DateTime,  nullable=False, default=datetime.datetime.utcnow)
