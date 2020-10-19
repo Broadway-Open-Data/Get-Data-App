@@ -1,6 +1,8 @@
 from databases import db, models
 from sqlalchemy.orm import validates
 
+from . import base
+
 import datetime
 
 
@@ -16,7 +18,7 @@ messages_users = db.Table('messages_users',
 
 # ------------------------------------------------------------------------------
 
-class FormMessage(db.Model, models.dbTable):
+class FormMessage(db.Model, models.dbTable, base):
     """"""
     __tablename__ = "message"
     __bind_key__ = "users"
