@@ -14,8 +14,8 @@ from nameparser import HumanName
 
 
 class ShowsRolesLink(db.Model, models.dbTable):
-    __tablename__ = 'shows_roles_link'
-    __bind_key__ = "users"
+    __tablename__ = "shows_roles_link"
+    __bind_key__ = "broadway"
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
     show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
@@ -34,7 +34,7 @@ class ShowsRolesLink(db.Model, models.dbTable):
 
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
-    __bind_key__ = "users"
+    __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True, nullable=False) # All actors will be classified as "Performer"
     description = db.Column(db.String(255), unique=False, nullable=True)
@@ -60,12 +60,14 @@ class Role(db.Model, models.dbTable):
 # --------------------------------------------------------------------------------
 
 race_table = db.Table('racial_identity_lookup_table',
-        db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
-        db.Column('racial_identity_id', db.Integer(), db.ForeignKey('racial_identity.id')))
+        db.Column('person_id', db.Integer(),db.ForeignKey('person.id')),
+        db.Column('racial_identity_id', db.Integer(), db.ForeignKey('racial_identity.id')),
+        info={'bind_key': 'broadway'})
 
 
 class RacialIdentity(db.Model, models.dbTable):
     __tablename__ = "racial_identity"
+    __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -90,6 +92,7 @@ class RacialIdentity(db.Model, models.dbTable):
 
 class GenderIdentity(db.Model, models.dbTable):
     __tablename__ = "gender_identity"
+    __bind_key__ = "broadway"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -117,6 +120,7 @@ class GenderIdentity(db.Model, models.dbTable):
 class Person(db.Model, models.dbTable):
     """"""
     __tablename__ = "person"
+    __bind_key__ = "broadway"
     id = db.Column(db.Integer,primary_key=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
