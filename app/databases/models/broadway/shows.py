@@ -1,5 +1,5 @@
 from databases import db, models
-from . import base
+from . import Base
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -10,7 +10,7 @@ import datetime
 
 # ------------------------------------------------------------------------------
 
-class Show(db.Model, models.dbTable, base):
+class Show(db.Model, models.dbTable, Base):
     """"""
     __tablename__ = "shows"
     __bind_key__ = "broadway"

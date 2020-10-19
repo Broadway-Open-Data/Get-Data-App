@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-base = declarative_base()
+Base = declarative_base()
 
 
 from .changes import *

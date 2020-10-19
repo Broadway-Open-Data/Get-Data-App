@@ -1,5 +1,5 @@
 from databases import db, models
-from . import base
+from . import Base
 
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
@@ -20,7 +20,7 @@ import jwt
 
 # ==============================================================================
 
-class User(db.Model, UserMixin, models.dbTable, base):
+class User(db.Model, UserMixin, models.dbTable, Base):
     """"""
     __tablename__ = "user"
     __bind_key__ = "users"
