@@ -1,7 +1,7 @@
 from databases import db, models
 import datetime
 
-from sqlalchemy.orm import validates #, relationship, backref
+from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
 
 # import custom stuff

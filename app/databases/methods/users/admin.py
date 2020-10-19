@@ -1,4 +1,4 @@
-from databases import db
+# from databases import db
 from databases import models
 
 def get_all_nonapproved_users():
