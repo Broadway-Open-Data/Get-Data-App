@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ title }}</h1>
+
+  <div class="data-query">
+    <h2>Query People</h2>
+      <form method="POST" action="">
+            {{ form.csrf_token }}
+            {{ form.f_name.label }} {{ form.f_name(size=30) }} <br/>
+            {{ form.m_name.label }} {{ form.m_name(size=30) }} <br/>
+            {{ form.l_name.label }} {{ form.l_name(size=30) }} <br/>
+            {{ form.show_title.label }} {{ form.show_title(size=30) }} <br/>
+            {{ form.show_year.label }} {{ form.show_year(size=30) }} <br/>
+            {{ form.role_name.label }} {{ form.role_name(size=30) }} <br/>
+            <input type="submit" value="Submit"/>
+        </form>
+  </div>
+  <div class="data-table">
+      <div id="people-query-data">
+      </div>
+  </div>
+
+{% endblock %}
