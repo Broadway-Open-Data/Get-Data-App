@@ -5,31 +5,9 @@ from . import page
 from . import accepted_roles
 
 
-
-
-
-@page.route("/")
+@page.route('/review/')
 @login_required
 @require_role(accepted_roles)
-def index():
-    """Only allow admin users"""
-    # Otherwise, proceed
-    return render_template('people/people-index.html',title='People')
+def review():
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
+    return render_template('people/review.html', title='Review')

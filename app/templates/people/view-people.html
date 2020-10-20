@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ title }}</h1>
+
+  <div id="data-select">
+    <p>Choose the date range for the people you want to view</p>
+      <input type="range" min="1" max="4" value="2" class="slider" id="people-data-date-range" name="date-range">
+      <label for="date-range">Date Range</label>
+      <em id="people-data-date-range"></em>
+
+      <div id="view-people-data">
+          <!-- {{ data|safe }} -->
+      </div>
+
+  </div>
+
+{% endblock %}
