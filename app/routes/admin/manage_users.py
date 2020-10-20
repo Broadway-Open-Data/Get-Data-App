@@ -24,7 +24,7 @@ import pandas as pd
 
 @page.route("/approve-users", methods=['GET', 'POST'])
 @login_required
-@require_role(role="admin-master")
+@require_role("admin-master")
 def approve_users():
     """
     Authenticate users
@@ -123,7 +123,7 @@ def approve_users():
 
 @page.route("/inspect-users", methods=['GET', 'POST'])
 @login_required
-@require_role(role="admin-master")
+@require_role("admin-master")
 def inspect_users():
     """
     Authenticate users

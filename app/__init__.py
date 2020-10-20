@@ -64,6 +64,7 @@ def register_blueprint(app):
         routes.auth.page,
         routes.index.page,
         routes.internal.page,
+        routes.people.page,
         routes.settings.page,
         routes.user_interactions.page
         ]

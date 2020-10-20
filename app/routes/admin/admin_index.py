@@ -6,7 +6,7 @@ from . import page
 
 @page.route("/")
 @login_required
-@require_role(role="admin-master")
+@require_role("admin-master")
 def admin():
     """Only allow admin users"""
     # Otherwise, proceed

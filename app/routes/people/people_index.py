@@ -20,11 +20,11 @@ accepted_roles = [
 
 @page.route("/")
 @login_required
-@require_role(role=accepted_roles)
-def admin():
+@require_role(accepted_roles)
+def index():
     """Only allow admin users"""
     # Otherwise, proceed
-    return render_template('admin/admin.html',title='Admin')
+    return render_template('people/people-index.html',title='People')
 
 
 

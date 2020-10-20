@@ -14,7 +14,7 @@ import pandas as pd
 
 @page.route("/create-roles", methods=['GET', 'POST'])
 @login_required
-@require_role(role="admin-master")
+@require_role("admin-master")
 def create_roles():
     """
     Assigne and manage roles
@@ -34,7 +34,7 @@ def create_roles():
 
 @page.route("/assign-roles", methods=['GET', 'POST'])
 @login_required
-@require_role(role="admin-master")
+@require_role("admin-master")
 def assignroles():
     """
     Assigne and manage roles

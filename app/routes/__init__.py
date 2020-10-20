@@ -6,5 +6,6 @@ from .api import *
 from .auth import *
 from .index import *
 from .internal import *
+from .people import *
 from .settings import *
 from .user_interactions import *
