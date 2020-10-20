@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship, backref
 
 from .roles import Role
 
+import os
 import datetime
 
 # Password stuff
