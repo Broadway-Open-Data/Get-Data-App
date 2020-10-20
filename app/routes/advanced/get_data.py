@@ -24,6 +24,8 @@ def get_data_advanced():
     if not current_user.approved:
         return redirect("/")
 
+    data_schema = {"foo":"bar"}
+
 
     form = sqlForm()
 
@@ -46,7 +48,7 @@ def get_data_advanced():
     form.allFields.query.data = "select * from shows where show_type='musical' and year >2000;"
     form.allFields.API_KEY.data = current_user.api_key
 
-    return render_template('advanced/get-data.html', form=form, title="Get Data Avanced")
+    return render_template('advanced/get-data.html', data_schema=data_schema, form=form, title="Get Data Avanced")
 
 
 
