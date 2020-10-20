@@ -34,7 +34,7 @@ def query():
         flash(f'You submitted the following query: {query_data}')
 
         # Now make a request to get this data from the db
-        print(data)
+        # Import a db method!
 
 
     return render_template('people/query.html', title='Query', form=form, data=data)
