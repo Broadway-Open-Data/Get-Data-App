@@ -36,8 +36,9 @@ body{
   left: 0;
   right: 0;
 
-  /* Set a specific height */
-  height: 100%%;
+  /* Set a specific height --> Problem here: can't get the image to dynamically adjust...
+  */
+  height: 110%;
 
   /* Create the parallax scrolling effect */
   background-position: center top;
