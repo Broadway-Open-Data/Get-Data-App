@@ -61,7 +61,7 @@
                     <a href="/admin">Admin</a>
                 {% endif %}
                 <a href="/about"><span class="special">About</span><a>
-                  
+
                 <a href="/logout">Logout</a>
             </div>
             <div class="meta">
@@ -97,7 +97,7 @@
             <a href="/signup">Signup</a>
             <a href="/login">Login</a>
             <a href="/login/forgot-password">Forgot Password</a>
-            <a href="/about"><span class="special">About</span><a>
+            <a href="/about"><span class="special">About</span></a>
           </div>
         {% else %}
             <a href="/"><img src="{{ url_for('static', filename='logo/open-broadway-data-logo.png') }}" style="width:150px;"></a>
@@ -109,7 +109,7 @@
     {% if request.endpoint == 'login' %}
     <div class="navLogin">
       <a href="/signup">Signup</a>
-      <a href="/login/forgot-password">Forgot Password</a
+      <a href="/login/forgot-password">Forgot Password</a>
     </div>
 
     {% elif request.endpoint == 'signup' %}

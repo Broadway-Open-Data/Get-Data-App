@@ -89,6 +89,12 @@ body{
 .navigation a:hover{
     color:var(--myGreen);
 }
+
+.floating-module img:hover{
+    transform: scale(1.05); /* Make 5% larger */
+
+}
+
 .navigation .meta *{
   /* margin-left: 20px; */
   margin-top: 5px;
