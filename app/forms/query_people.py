@@ -16,4 +16,4 @@ class Query(FlaskForm):
     l_name = StringField(label='Last Name', validators=[Optional(strip_whitespace=True)])
     show_title = StringField(label='Show Title', validators=[Optional(strip_whitespace=True)])
     show_year = StringField(label='Show Year', validators=[Optional(strip_whitespace=True)])
-    role_name = StringField(label='Role Year', validators=[Optional(strip_whitespace=True)])
+    role_name = StringField(label='Role Name', validators=[Optional(strip_whitespace=True)])

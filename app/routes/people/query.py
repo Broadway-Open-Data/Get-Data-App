@@ -9,6 +9,8 @@ from forms.query_people import Query
 from . import page
 from . import accepted_roles
 
+# Import db stuff
+from databases.methods.broadway import get_all_people
 
 def dict_without_empty_values(d):
     return
@@ -35,6 +37,9 @@ def query():
 
         # Now make a request to get this data from the db
         # Import a db method!
+        data = get_all_people(query_data)
 
+    else:
+        data = {}
 
     return render_template('people/query.html', title='Query', form=form, data=data)
