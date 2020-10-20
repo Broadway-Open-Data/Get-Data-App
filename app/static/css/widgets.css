@@ -46,3 +46,18 @@ input[type="radio"]:checked+label{
 input[type="radio"]:hover+label{
   font-weight: bold;
 }
+
+
+
+.enlarge-on-hover{
+    width:200px;
+    height:auto;
+    position:relative;
+}
+
+.enlarge-on-hover:hover{
+  width:90vw;
+  max-width:900px;
+  height:auto;
+  z-index:999;
+}

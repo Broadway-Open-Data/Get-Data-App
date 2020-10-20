@@ -11,7 +11,12 @@
 
   <h3>Data Schema</h3>
   <div class="data-schema">
-    {{ data_schema }}
+    {{ data_schema|safe}}
+  <h4>Database ERD</h4>
+  <p>Ignore the `alembic table` and `data_edits` --> they are for internal use only...</p>
+    <img src="{{ url_for('static', filename='images/databases-ERD/broadway.png') }}" alt="Database ERD for Broadway data",  class="enlarge-on-hover">
+
+
   </div>
   <h3>Alternatively, you can write your SQL query below:</h3>
   <pre>

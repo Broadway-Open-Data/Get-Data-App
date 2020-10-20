@@ -1,3 +1,4 @@
+import os
 from flask import redirect, url_for, \
     flash, render_template, request, jsonify
 from flask_login import login_required, current_user
@@ -6,6 +7,9 @@ import pandas as pd
 
 # flasks stuff
 from databases.models.users import User
+import databases.methods as db_methods
+# import databases.methods.broadway as broadway_methods
+
 from forms.select_data_advanced import sqlForm
 from common.extensions import cache
 import utils
@@ -24,8 +28,12 @@ def get_data_advanced():
     if not current_user.approved:
         return redirect("/")
 
-    data_schema = {"foo":"bar"}
+    data_schema = db_methods.broadway.get_db_schema()
 
+    # generate the erd?
+    save_path = 'app/static/images/databases-ERD/broadway.png'
+    if not os.path.isfile(save_path):
+        db_methods.get_db_ERD('broadway', save_path=save_path)
 
     form = sqlForm()
 
