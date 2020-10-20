@@ -263,9 +263,9 @@ h3{
 
   /* Adjust for margin */
   height: 50px;
-  width: -webkit-calc(100%);
-  width: -moz-calc(100%);
-  width: calc(100%);
+  width: -webkit-calc(100% - 40px);
+  width: -moz-calc(100% - 40px);
+  width: calc(100% - 40px);
 
 
 }
