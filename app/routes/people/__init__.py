@@ -14,5 +14,6 @@ from flask import Blueprint
 page = Blueprint('people', __name__, template_folder='templates', url_prefix="/people")
 from . import contribute
 from . import people_index
+from . import query
 from . import review
 from . import view_people
