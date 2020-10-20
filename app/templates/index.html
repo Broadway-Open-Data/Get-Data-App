@@ -116,15 +116,15 @@
 
 {% endif %}
 
-<!-- Show people link, though may not be valid for those who do not have access -->
-<div class="section">
-      <h2>People Data</h2>
-      <p>
-        Data will only be viewable to those with special access. If you would like
-        access to this feature, give us a holler.
-      </p>
-      <a href="/people/"><button>People Data</button></a><br>
-</div>
+  <!-- Show people link, though may not be valid for those who do not have access -->
+  <div class="section">
+        <h2>People Data</h2>
+        <p>
+          Data will only be viewable to those with special access. If you would like
+          access to this feature, give us a holler.
+        </p>
+        <a href="/people/"><button>People Data</button></a><br>
+  </div>
 
 {% elif current_user.id %}
 <!--Show to users who aren't approved yet (but are signed in)-->

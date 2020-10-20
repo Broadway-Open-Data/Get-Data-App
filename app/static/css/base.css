@@ -208,12 +208,22 @@ h3{
 }
 
 /* Begin Non-loggedIn User Homepage styles */
-.floating-module .info{
+.floating-module .info, .floating-module .section{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width:80%;
 }
+
+.floating-module .section p{
+  justify-content: center;
+  width:80%;
+  min-width: 150px;
+}
+
+
+
 
 .floating-module h1{
   font-weight:bold;
