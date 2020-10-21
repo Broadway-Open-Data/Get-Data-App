@@ -42,7 +42,7 @@ def build_query_with_dict(base_query, params, myClass):
 
                 # All others are equal to
                 else:
-                    base_query = base_query.filter(getattr(myClass, field_name).is_(value))
+                    base_query = base_query.filter(getattr(myClass, field_name)==value)
 
             else:
                 # no clue what type this is...

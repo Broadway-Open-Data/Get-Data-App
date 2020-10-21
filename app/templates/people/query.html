@@ -9,11 +9,11 @@
     <h2>Query People</h2>
       <form method="POST" action="">
             {{ form.csrf_token }}
-            <div>{{ form.f_name.label }} {{ form.f_name(size=10) }}</div>
-            <div>{{ form.m_name.label }} {{ form.m_name(size=10) }}</div>
-            <div>{{ form.l_name.label }} {{ form.l_name(size=10) }}</div>
-            <div>{{ form.show_title.label }} {{ form.show_title(size=10) }}</div>
-            <div>{{ form.show_year.label }} {{ form.show_year(size=10) }}</div>
+            <div>{{ form.person_f_name.label }} {{ form.person_f_name(size=10) }}</div>
+            <div>{{ form.person_m_name.label }} {{ form.person_m_name(size=10) }}</div>
+            <div>{{ form.person_l_name.label }} {{ form.person_l_name(size=10) }}</div>
+            <div>{{ form.shows_title.label }} {{ form.shows_title(size=10) }}</div>
+            <div>{{ form.shows_year.label }} {{ form.shows_year(size=10) }}</div>
             <div>{{ form.role_name.label }} {{ form.role_name(size=10) }}</div>
             <input type="submit" value="Submit"/>
         </form>
