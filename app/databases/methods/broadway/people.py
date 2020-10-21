@@ -126,14 +126,20 @@ def get_all_people(params):
             RacialIdentity,
             RacialIdentity.id==race_table.c.racial_identity_id,
             isouter=True
-            )
+            )\
+        .order_by(
+            people_role_ids.c.year.asc(),
+            people_role_ids.c.show_title.asc(),
+            Person.l_name.asc(),
+            Person.f_name.asc()
+        )
 
     all_people = build_query_with_dict(all_people, params, Person)   #  <---  magic happens here
     all_people = all_people.subquery()
 
 
     df = pd.read_sql(all_people, db.get_engine(bind='broadway'))
-    # df.drop_duplicates(inplace=True)
+    # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     return df.to_html(header=True)
 
