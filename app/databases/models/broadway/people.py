@@ -150,7 +150,7 @@ class Person(db.Model, models.dbTable):
     # --------------------------------------------------------------------------
     # Here's where I need help with...
     gender_identity_id = db.Column(db.Integer, db.ForeignKey('broadway.gender_identity.id'))
-    gender_identity = db.relationship('GenderIdentity', backref="broadway.person")
+    gender_identity = db.relationship('GenderIdentity', backref="broadway.person",lazy="joined",join_depth=3)
 
     # --------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ class Person(db.Model, models.dbTable):
     roles = relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
     shows = relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
 
-    racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+    racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='joined', join_depth=4), passive_deletes=True)
 
 
     # Additional fields
