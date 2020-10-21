@@ -7,6 +7,7 @@ function closeDiv(){
 }
 
 
+
 // Make the header sticky
 document.addEventListener("readystatechange", function() {
   // When the user scrolls the page, make the header sticky

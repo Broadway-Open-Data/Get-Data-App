@@ -29,28 +29,85 @@ $(document).ready(function() {
 
 // -----------------------------------------------------------------------------
 
-  // Activate data summary
-  $(document).ready(function() {
+// Activate data summary
+$(document).ready(function() {
 
-    $('#detail-level-slider').on('input change', function (e) {
-       let detail_level = this.value
-       console.log("ID", e.target.id)
+  $('#detail-level-slider').on('input change', function (e) {
+     let detail_level = this.value
+     console.log("ID", e.target.id)
 
-        // Update the data summary
-        $.ajax({
-         url: "/summarize-data",
-         type: "get",
-          data: {detail_level: detail_level},
-          success: function(response) {
-            console.log("RES", response)
-             $("#data-summary-table").html(response);
+      // Update the data summary
+      $.ajax({
+       url: "/summarize-data",
+       type: "get",
+        data: {detail_level: detail_level},
+        success: function(response) {
+          console.log("RES", response)
+           $("#data-summary-table").html(response);
 
-          },
-          error: function(xhr) {
-           //Do Something to handle error
-           console.log("error")
-          }
-        });
+        },
+        error: function(xhr) {
+         //Do Something to handle error
+         console.log("error")
+        }
+      });
 
-      })
     })
+
+
+
+  })
+
+
+
+
+
+
+
+
+// // Activate data summary
+$(document).ready(function() {
+
+  // Another function....
+  $('#data-query-advanced-label').click(function(){
+    let x = document.getElementById('data-query-advanced')
+
+    let visible = x.style.display;
+
+    // Toggle visibility
+    if (visible === "none") {
+      x.style.display = "block";
+    }
+    else {
+      x.style.display = "none";
+    }
+
+
+    // console.log("visible",  visible);
+
+   })
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//

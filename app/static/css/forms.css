@@ -48,6 +48,28 @@ form .submit{
 }
 
 
+/* Special Things */
+.advanced-label{
+  padding:5px;
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+.advanced{
+  padding:5px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+
+}
+.advanced div{
+  width:calc(90% - 40px - 5px);
+}
+
+.advanced-label:hover{
+  font-size: 110%;
+}
+
+
 @media screen and (max-width: 450px) {
   form input,textarea {
     width:90%;
