@@ -32,9 +32,9 @@ class ManagerApp():
 
         # Only import necessary models...
         if self.db_name =='users':
-            from databases.models import users
+            import databases.models.users as _
         else:
-            from databases.models import broadway
+            import databases.models.broadway as _ 
 
         # instantiate the db
         db.init_app(app=self.app)

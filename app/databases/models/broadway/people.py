@@ -97,6 +97,8 @@ class GenderIdentity(db.Model, models.dbTable):
     description = db.Column(db.String(255))
 
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    # person = db.relationship('Person', backref="broadway.gender_identity",lazy="joined",join_depth=3)
+
 
     # Assert is lowercase
     @validates('name')
