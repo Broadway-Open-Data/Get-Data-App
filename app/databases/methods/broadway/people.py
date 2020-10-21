@@ -16,7 +16,7 @@ def build_query_with_dict(base_query, params, myClass):
     """Assumes the objects are being entered correctly..."""
 
     table_name = myClass.__tablename__ + "_"
-    numerical_fields = ['year','id']
+    numerical_fields = ['year','year_from','year_to','id']
     for key, value in params.items():
 
         # Only choose keys relevant to this table
