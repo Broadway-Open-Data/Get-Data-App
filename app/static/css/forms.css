@@ -49,24 +49,39 @@ form .submit{
 
 
 /* Special Things */
-.advanced-label{
-  padding:5px;
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 40px;
-}
 .advanced{
-  padding:5px;
-  margin-left: 20px;
-  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: #EEEEEE;
+  padding: 12px 12px;
+
+  margin-left: 40px;
+  margin-right: 40px;
+
+  margin-top: 20px;
+  margin-bottom: 40px;
+  width:calc(90% - 80px - 12px);
+  max-width: calc(500px - 80px - 12px);
 
 }
-.advanced div{
-  width:calc(90% - 40px - 5px);
+.advanced-label{
+  line-height: 1.2rem;
+  color:var(--myGreenAlt);
+  font-weight: bold;
+}
+
+.advanced-label svg{
+  margin-left: 5px;
+}
+
+.advanced div:not(.advanced-label){
+  /* width:calc(90% - 20px - 10px); */
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .advanced-label:hover{
   font-size: 110%;
+  line-height: 1.2rem;
 }
 
 
@@ -75,4 +90,44 @@ form .submit{
     width:90%;
     padding: 6px 6px;
   }
+  .advanced{
+    margin-left: 10px;
+    margin-right: 10px;
+    width:calc(90% - 20px - 12px);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* whitespace for peace of mind */

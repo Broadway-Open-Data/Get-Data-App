@@ -70,7 +70,7 @@ $(document).ready(function() {
 
   // Another function....
   $('#data-query-advanced-label').click(function(){
-    let x = document.getElementById('data-query-advanced')
+    let x = document.getElementById('data-query-advanced-content')
 
     let visible = x.style.display;
 

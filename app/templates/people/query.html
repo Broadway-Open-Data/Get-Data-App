@@ -4,7 +4,6 @@
 {% block content %}
 
   <h1>{{ title }}</h1>
-
   <div class="data-query">
     <h2>Query People</h2>
       <form method="POST" action="">
@@ -16,10 +15,12 @@
             <div>{{ form.shows_title.label }} {{ form.shows_title(size=10) }}</div>
             <div>{{ form.shows_year.label }} {{ form.shows_year(size=10) }}</div>
 
-            <div class="advanced-label" id="data-query-advanced-label">Advanced Options</div>
-            <div class="advanced" id="data-query-advanced" style="display:none;">
-                <div>{{ form.shows_year_from.label }} {{ form.shows_year_from(size=10) }}</div>
-                <div>{{ form.shows_year_to.label }} {{ form.shows_year_to(size=10) }}</div>
+            <div class="advanced" id="data-query-advanced">
+              <div class="advanced-label" id="data-query-advanced-label">Advanced Options  <i class="fas fa-wrench"></i></div>
+                  <div id="data-query-advanced-content" style="display:none;">
+                    <div>{{ form.shows_year_from.label }} {{ form.shows_year_from(size=10) }}</div>
+                    <div>{{ form.shows_year_to.label }} {{ form.shows_year_to(size=10) }}</div>
+                </div>
             </div>
             <input type="submit" value="Submit"/>
         </form>
