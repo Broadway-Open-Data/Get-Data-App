@@ -9,11 +9,13 @@ def require_role(*role):
         @wraps(func)
         def wrapped_function(*args, **kwargs):
 
+
             # If one role
-            if isinstance(role, str) and not current_user.has_role(role):
+            if isinstance(*role, str) and not current_user.has_role(*role):
                 return redirect("/")
+
             # If a list of roles
-            if isinstance(role, list) and not any([current_user.has_role(x) for x in role]):
+            if isinstance(*role, list) and not any([current_user.has_role(x) for x in role]):
                 return redirect("/")
             # Otherwise
             return func(*args, **kwargs)
