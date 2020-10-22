@@ -1,11 +1,11 @@
 # only allow these roles to view these pages...
 accepted_roles = [
-    'admin-master'
-    'admin-master-2'
-    'data.admin'
-    'data.editor'
-    'data.viewer'
-    'user-approval.admin'
+    'admin-master',
+    'admin-master-2',
+    'data.admin',
+    'data.editor',
+    'data.viewer',
+    'user-approval.admin',
     'user-approval.editor'
 ]
 

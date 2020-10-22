@@ -30,7 +30,8 @@ def query():
         query_data.pop("csrf_token")
 
         # filter null values
-        query_data = {k:v for k,v in query_data.items() if v}
+        query_data = {k:v.lower() for k,v in query_data.items() if v}
+
 
         # show the user (for debugging)
         flash(f'You submitted the following query: {query_data}')
