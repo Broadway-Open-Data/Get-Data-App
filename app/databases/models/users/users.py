@@ -226,7 +226,7 @@ class User(db.Model, UserMixin, models.dbTable):
         else:
             return False
 
-    def add_or_remove_role(self, role_name, add_or_remove='add'):
+    def assign_role(self, role_name, assign_or_unassign='assign'):
         """Add this role to the user."""
         my_role = models.users.Role.get_by_name(name=role_name)
 
@@ -234,22 +234,22 @@ class User(db.Model, UserMixin, models.dbTable):
         if my_role:
 
             # Add the role
-            if add_or_remove=='add':
+            if assign_or_unassign=='assign':
                 if my_role in self.roles:
                     None
                 else:
-                    self.roles = self.roles.append(my_role)
+                    self.roles.append(my_role)
                     self.save_to_db()
 
             # Remove the role
-            elif add_or_remove=='remove':
+            elif assign_or_unassign=='unassign':
                 if my_role in self.roles:
-                    self.roles = self.roles.pop(my_role)
+                    self.roles.remove(my_role)
                     self.save_to_db()
                 else:
                     None
 
-            # Foo
+            # Option for continuing here.
 
     # --------------------------------------------------------------------------
 

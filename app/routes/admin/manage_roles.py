@@ -46,12 +46,13 @@ def assignroles():
     # Validate sign up attempt
     if form.validate_on_submit():
 
-        # get data
-        my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
+        # get data + enforce lowercase values
+        my_data = {k:v.lower() for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
         flash('Your data is: {}'.format(my_data))
 
         # Add or remove the role here
-        # my_user = User.find_user_by_email(email)
-        # .add_or_remove_role()
+        my_user = User.find_user_by_email(my_data['userEmail'])
+        my_user.assign_role(my_data['roleName'], assign_or_unassign=my_data['assign'])
+        print("new updated roles: ", my_user.roles)
 
     return render_template('admin/assign-roles.html',title='Assign Roles', form=form)
