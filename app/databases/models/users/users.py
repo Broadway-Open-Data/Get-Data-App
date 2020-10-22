@@ -226,14 +226,41 @@ class User(db.Model, UserMixin, models.dbTable):
         else:
             return False
 
+    def add_or_remove_role(self, role_name, add_or_remove='add'):
+        """Add this role to the user."""
+        my_role = models.users.Role.get_by_name(name=role_name)
 
+        # Only if you have a role...
+        if my_role:
+
+            # Add the role
+            if add_or_remove=='add':
+                if my_role in self.roles:
+                    None
+                else:
+                    self.roles = self.roles.append(my_role)
+                    self.save_to_db()
+
+            # Remove the role
+            elif add_or_remove=='remove':
+                if my_role in self.roles:
+                    self.roles = self.roles.pop(my_role)
+                    self.save_to_db()
+                else:
+                    None
+
+            # Foo
+
+    # --------------------------------------------------------------------------
+
+    # I should remove this...
     # ADMIN ROLES
-    def is_admin(self):
-        """Will soon allow admin users with privelages"""
-        if self.email in ["yaakovgs@gmail.com", "jocelynshek@gmail.com", "kamat2003@gmail.com", "stanislavlevitt@gmail.com"]:
-            return True
-        else:
-            return False
+    # def is_admin(self):
+    #     """Will soon allow admin users with privelages"""
+    #     if self.email in ["yaakovgs@gmail.com", "jocelynshek@gmail.com", "kamat2003@gmail.com", "stanislavlevitt@gmail.com"]:
+    #         return True
+    #     else:
+    #         return False
 
 
     def approve(self):
