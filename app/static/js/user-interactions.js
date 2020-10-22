@@ -69,23 +69,25 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   // Another function....
-  $('#data-query-advanced-label').click(function(){
-    let x = document.getElementById('data-query-advanced-content')
+  $('.advanced-label').each(function(e){
+    $(this).on("click", function(){
 
-    let visible = x.style.display;
+      // Allow this to work, regardless of id
+      let myId = this.id.replace('label','content')
+      let x = document.getElementById(myId)
 
-    // Toggle visibility
-    if (visible === "none") {
-      x.style.display = "block";
-    }
-    else {
-      x.style.display = "none";
-    }
+      let visible = x.style.display;
 
+      // Toggle visibility
+      if (visible === "none") {
+        x.style.display = "block";
+      }
+      else {
+        x.style.display = "none";
+      }
+    }) // close the on click function
 
-    // console.log("visible",  visible);
-
-   })
+  }) // close the selector function
 
 })
 

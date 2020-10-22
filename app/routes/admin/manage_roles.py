@@ -43,6 +43,8 @@ def assignroles():
 
     form = AssignRoles(request.form)
 
+    available_roles = Role.query.with_entities(Role.name).all()
+
     # Validate sign up attempt
     if form.validate_on_submit():
 
@@ -55,4 +57,4 @@ def assignroles():
         my_user.assign_role(my_data['roleName'], assign_or_unassign=my_data['assign'])
         print("new updated roles: ", my_user.roles)
 
-    return render_template('admin/assign-roles.html',title='Assign Roles', form=form)
+    return render_template('admin/assign-roles.html',title='Assign Roles', form=form, available_roles=available_roles)

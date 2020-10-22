@@ -13,7 +13,21 @@
   <br>
   <hr>
 
+
+
   <h2>Assign Roles:</h2>
+
+  <div class="advanced list-options" id="advanced-list-options">
+    <div class="advanced-label" id="advanced-list-options-label">Available Roles  <i class="fas fa-wrench"></i></div>
+        <div id="advanced-list-options-content" style="display:none;">
+          <p>Here are the currently available system roles:</p>
+          <ul>
+            {% for item in available_roles %}
+               <li> {{ item[0] }}</li>
+            {% endfor %}
+          </ul>
+      </div>
+  </div>
 
   <!-- Create a form -->
   <form method="POST">
