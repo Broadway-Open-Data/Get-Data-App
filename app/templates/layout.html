@@ -62,7 +62,7 @@
               <a href="/settings">Settings</a>
 
                 <!--  Only allow admin users -->
-                {% if current_user.is_admin() %}
+                {% if current_user.has_role('admin-master') %}
                     <a href="/admin">Admin</a>
                 {% endif %}
                 <a href="/about"><span class="special">About</span><a>

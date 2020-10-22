@@ -253,16 +253,6 @@ class User(db.Model, UserMixin, models.dbTable):
 
     # --------------------------------------------------------------------------
 
-    # I should remove this...
-    # ADMIN ROLES
-    # def is_admin(self):
-    #     """Will soon allow admin users with privelages"""
-    #     if self.email in ["yaakovgs@gmail.com", "jocelynshek@gmail.com", "kamat2003@gmail.com", "stanislavlevitt@gmail.com"]:
-    #         return True
-    #     else:
-    #         return False
-
-
     def approve(self):
         """Approve the user"""
 

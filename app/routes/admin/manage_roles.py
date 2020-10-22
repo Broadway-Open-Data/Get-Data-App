@@ -50,4 +50,8 @@ def assignroles():
         my_data = {k:v for k,v in form.allFields.data.items() if k not in ["csrf_token"]}
         flash('Your data is: {}'.format(my_data))
 
+        # Add or remove the role here
+        # my_user = User.find_user_by_email(email)
+        # .add_or_remove_role()
+
     return render_template('admin/assign-roles.html',title='Assign Roles', form=form)

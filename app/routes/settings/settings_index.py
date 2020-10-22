@@ -9,9 +9,5 @@ def settings():
     """
     Allow a user to change their password and stuff
     """
-
-    # view_mode = current_user.view_mode
-    # if not current_status:
-    #     current_status = False
-
+    
     return render_template('settings/settings.html',title='Settings')
