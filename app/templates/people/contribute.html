@@ -16,9 +16,17 @@
   <p>
     Here it is...
   </p>
-  <div class="table-container" style="max-height:750px;">
-      {{ data|safe }}
-  </div>
+  <div class="two-columns">
 
+      <div class="table-container column-75pct" style="max-height:750px;">
+          {{ data|safe }}
+      </div>
+
+      <div class="form-container column-25pct" style="max-height:750px;">
+          <p>THIS IS WHERE THE FORM WILL GO</p>
+      </div>
+
+
+  </div>
 
 {% endblock %}

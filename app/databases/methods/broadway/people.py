@@ -157,7 +157,7 @@ def get_all_people(params, output_format='html'):
 
 # ------------------------------------------------------------------------------
 
-def get_all_directors(params, output_format='html'):
+def get_all_directors(params, include_show_data_json=False, output_format='html'):
     """Returns all directors for this given period"""
 
     assert(isinstance(params, dict))
@@ -231,6 +231,8 @@ def get_all_directors(params, output_format='html'):
 
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
 
+    if not include_show_data_json:
+        df.drop(columns=['show_data'], inplace=True)
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     if output_format=='html':

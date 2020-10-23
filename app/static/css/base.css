@@ -58,13 +58,27 @@ body{
 .navigation{
   font-family: normal medium/1.4 sans-serif;
   background: rgb(0, 0, 0, 0.5);
-  padding:20px;
+  padding:15px 20px;
   line-height: 1.0;
   display:flex;
   align-items: center;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+
+
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0; /* Don't forget this, required for the stickiness */
+  z-index: 1;
+
+  /* Adjust for margin */
+  width: -webkit-calc(100% - 40px);
+  width: -moz-calc(100% - 40px);
+  width: calc(100% - 40px);
+
+
+
 }
 
 
@@ -121,7 +135,7 @@ body{
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
-  top: 85px;
+  top: 80px;
   right: 50px;
 
 }
@@ -139,22 +153,6 @@ body{
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent rgb(255, 255, 255, 0.90); transparent;
-}
-
-
-
-
-/* Always make sticky...*/
-.navigation{
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0; /* Don't forget this, required for the stickiness */
-  z-index: 1;
-
-  /* Adjust for margin */
-  width: -webkit-calc(100% - 40px);
-  width: -moz-calc(100% - 40px);
-  width: calc(100% - 40px);
 }
 
 
