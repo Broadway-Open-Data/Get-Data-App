@@ -58,11 +58,15 @@ def build_query_with_dict(base_query, params, myClass):
 
 
 
-def get_all_people(params):
+def get_all_people(params, output_format='html'):
 
     """Returns a list of all people who performed on broadway in a given time period
     Note: We have no clue what the type of data "query_data" is
     """
+
+    assert(isinstance(params, dict))
+    assert(isinstance(output_format, str) and output_format in ('html','pandas','dict'))
+
 
     # Query all shows in this selection
     valid_show_ids = Show.query.with_entities(Show.id, Show.title.label("show_title"), Show.year, Show.theatre_name)
@@ -141,14 +145,99 @@ def get_all_people(params):
     df = pd.read_sql(all_people, db.get_engine(bind='broadway'))
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
-    return df.to_html(header=True)
+    if output_format=='html':
+        return df.to_html(header=True)
+    elif output_format=='pandas':
+        return df
+    elif output_format=='dict':
+        return df.to_dict()
 
 
 
 
+# ------------------------------------------------------------------------------
+
+def get_all_directors(params, output_format='html'):
+    """Returns all directors for this given period"""
+
+    assert(isinstance(params, dict))
+    assert(isinstance(output_format, str) and output_format in ('html','pandas','dict'))
+
+    # Set defaults
+    if not params.get('shows_year_from'):
+        params['shows_year_from'] = 1950
+
+    if not params.get('shows_year_to'):
+        params['shows_year_to'] = 2020
+
+    if not params.get('role_name'):
+        params['role_name'] = 'director'
 
 
+    print("new params: ", params)
 
+    # Query all shows in this selection
+    query = f"""SELECT
+        	person.id,
+        		 CONCAT_WS(
+        			' ',
+        			person.name_title,
+        			person.f_name,
+        			person.m_name,
+        			person.l_name,
+        			person.name_nickname,
+        			person.name_suffix
+        		) AS 'full name',
+        	person.date_of_birth,
+             gender_identity.name as 'gender_identity',
+        	 CONCAT_WS(' ,' , racial_identity.name) as 'racial_identities',
+        	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
+        	 COUNT(DISTINCT(shows.id)) AS 'n shows',
+             MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
+             -- GROUP_CONCAT(DISTINCT(role.name)) AS 'all roles',
+             MIN(shows.year) AS 'earliest show year',
+             MAX(shows.year) AS 'most recent show year',
+             SUBSTRING_INDEX(GROUP_CONCAT(shows.title ORDER BY shows.opening_date DESC), ',', 1) AS 'most recent show'
+
+        FROM
+            shows
+                INNER JOIN
+            shows_roles_link ON shows_roles_link.show_id = shows.id
+                INNER JOIN
+            role ON role.id = shows_roles_link.role_id
+            INNER JOIN
+        		person ON person.id = shows_roles_link.person_id
+            LEFT JOIN
+        		gender_identity ON gender_identity.id = person.gender_identity_id
+        	LEFT JOIN
+        		racial_identity_lookup_table ON racial_identity_lookup_table.person_id = person.id
+        	LEFT JOIN
+        		racial_identity ON racial_identity.id = racial_identity_lookup_table.racial_identity_id
+
+        WHERE(
+                shows.year >= {params['shows_year_from']}
+                AND shows.year <=  {params['shows_year_to']}
+                AND (role.name LIKE '{params['role_name']}%%'
+                OR role.name LIKE 'stage {params['role_name']}'
+                OR role.name LIKE 'co-{params['role_name']}')
+                {"AND role.name NOT LIKE '%%marketing' AND role.name NOT LIKE '%%manager%%'" if params['role_name']=='director' else ""}
+
+        	)
+        GROUP BY(person.id)
+        ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
+        ;
+    """
+
+
+    df = pd.read_sql(query, db.get_engine(bind='broadway'))
+    # df.drop_duplicates(inplace=True) # <---- may not need to drop...
+
+    if output_format=='html':
+        return df.to_html(header=True)
+    elif output_format=='pandas':
+        return df
+    elif output_format=='dict':
+        return df.to_dict()
 
 
 
