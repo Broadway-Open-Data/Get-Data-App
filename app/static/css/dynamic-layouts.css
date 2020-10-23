@@ -1,1 +1,36 @@
 /* Flex and stuff */
+
+
+
+.flex-columns{
+  background: rgb(0, 0, 0, 0.5);
+  display:flex;
+  justify-content: flex-start;
+  flex-flow: row wrap;
+}
+
+.flex-columns .column{
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  flex: 1;
+}
+
+.tall-container{
+  height:750px !important;
+  max-height:750px !important;
+}
+@media screen and (max-width: 1000px) {
+  .flex-columns{
+    flex-flow: column wrap;
+    justify-content: center;
+  }
+  .flex-columns .column{
+    flex-direction: row;
+  }
+  .tall-container{
+    height:500px !important;
+    max-height:500px !important;
+  }
+}

@@ -187,7 +187,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         			person.l_name,
         			person.name_nickname,
         			person.name_suffix
-        		) AS 'full name',
+        		) AS 'full_name',
         	person.date_of_birth,
              gender_identity.name as 'gender_identity',
         	 CONCAT_WS(' ,' , racial_identity.name) as 'racial_identities',
@@ -233,10 +233,20 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     if not include_show_data_json:
         df.drop(columns=['show_data'], inplace=True)
+
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     if output_format=='html':
+
+        # also, fix full name
+        df['full_name'] = df['full_name'].str.title()
+
+        # fix column names
+        df.columns = df.columns.str.replace('_',' ').str.title()
+
         return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, render_links=True, classes=['freeze-header'])
+
+
     elif output_format=='pandas':
         return df
     elif output_format=='dict':
