@@ -144,10 +144,13 @@ body{
 
 
 
-/* The sticky class is added to the header with JS when it reaches its scroll position */
-.navigation.sticky {
-  position: fixed;
-  top: 0;
+/* Always make sticky...*/
+.navigation{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0; /* Don't forget this, required for the stickiness */
+  z-index: 1;
+
   /* Adjust for margin */
   width: -webkit-calc(100% - 40px);
   width: -moz-calc(100% - 40px);

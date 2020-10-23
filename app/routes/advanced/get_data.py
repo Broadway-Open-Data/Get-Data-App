@@ -100,7 +100,7 @@ def get_data_advanced_sql():
 
         # Render the page
         return render_template('analyze/display-data.html', summary=summary,
-            data=df.to_html(header="true", table_id="show-data"), title="Data")
+            data=df.to_html(header="true", table_id="show-data", na_rep='', bold_rows=False, index_names=False, render_links=True, classes='freeze-header'), title="Data")
 
     else:
         # return the request

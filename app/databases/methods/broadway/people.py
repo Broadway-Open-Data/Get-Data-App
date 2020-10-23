@@ -146,7 +146,7 @@ def get_all_people(params, output_format='html'):
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     if output_format=='html':
-        return df.to_html(header=True)
+        return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, render_links=True, classes='freeze-header')
     elif output_format=='pandas':
         return df
     elif output_format=='dict':
@@ -230,10 +230,11 @@ def get_all_directors(params, output_format='html'):
 
 
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
+
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     if output_format=='html':
-        return df.to_html(header=True)
+        return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, render_links=True, classes=['freeze-header'])
     elif output_format=='pandas':
         return df
     elif output_format=='dict':

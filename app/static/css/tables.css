@@ -1,5 +1,15 @@
 /* body            { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;} */
 
+
+.table-container{
+  display: inline-block;
+  max-height:500px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+ }
+
+
+
 table.dataframe, .dataframe th, .dataframe td {
   border: none;
   border-bottom: 1px solid #C8C8C8;
@@ -9,22 +19,35 @@ table.dataframe, .dataframe th, .dataframe td {
   margin-bottom: 20px;
   font-size: 0.9em;
 }
+table.dataframe {
+  position: relative;
+  border-collapse: collapse;
+  z-index:1;
 
-.table-container{ */
-  display: inline-block;
-  max-height:500px;
-  overflow-y: scroll;
-  margin-bottom: 20px;
- }
+}
 
-/* table#show-data >tbody{
-  display: inline-block;
-  max-height:500px;
-  overflow-y: scroll;
-  margin-bottom: 20px;
+table.dataframe.freeze-header  th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0; /* Don't forget this, required for the stickiness */
+  z-index: 1;
+  background-color: silver;
+}
+
+
+
+/* Allows you to collapse a column */
+/* table.dataframe.fixed-width td:nth-child(7) {
+  font-size: 8px;
+  width: 150px;
+  max-width: 150px !important;
+  white-space: nowrap;
+  overflow-x: scroll;
 } */
 
-tr:nth-child(odd)       { background-color:#eee; }
+
+
+tr:nth-child(odd)   { background-color:#eee; }
 tr:nth-child(even)  { background-color:#fff; }
 
 /* Highlight rows and columns */
@@ -37,3 +60,18 @@ table#show-data .hover {
   display: inline-block;
   margin: 0 0 20px 20px;
 }
+
+
+table.dataframe tbody tr:hover {
+    background: rgb(255,247,230) !important;
+    cursor: pointer !important;
+}
+
+
+
+
+/* table thead {
+  position: inline-block;
+  top: 0px;
+  width: 960px;
+} */
