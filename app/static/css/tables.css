@@ -36,16 +36,6 @@ table.dataframe.freeze-header  th {
 
 
 
-/* Allows you to collapse a column */
-/* table.dataframe.fixed-width td:nth-child(7) {
-  font-size: 8px;
-  width: 150px;
-  max-width: 150px !important;
-  white-space: nowrap;
-  overflow-x: scroll;
-} */
-
-
 
 tr:nth-child(odd)   { background-color:#eee; }
 tr:nth-child(even)  { background-color:#fff; }
@@ -66,12 +56,3 @@ table.dataframe tbody tr:hover {
     background: rgb(255,247,230) !important;
     cursor: pointer !important;
 }
-
-
-
-
-/* table thead {
-  position: inline-block;
-  top: 0px;
-  width: 960px;
-} */
