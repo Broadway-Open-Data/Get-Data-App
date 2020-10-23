@@ -9,7 +9,10 @@ from flask_wtf.csrf import CSRFProtect
 import utils
 import databases
 import common
+# Order is important here
+import forms
 import routes
+
 
 
 # import a second time, why not...

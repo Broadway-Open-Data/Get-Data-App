@@ -4,7 +4,7 @@ from flask_login import login_required
 from flask import render_template
 from flask_mail import Mail, Message
 
-from forms.admin import AuthenticateUsersForm
+from forms import AuthenticateUsersForm
 
 # Import db stuff
 from databases import db

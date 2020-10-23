@@ -6,8 +6,8 @@ from flask_mail import Message
 from databases.models.users import User, Role
 from utils.get_email_content import get_email_content
 
-from forms.registration import ForgotPasswordForm
-from forms.settings import ChangePasswordForm
+from forms import ForgotPasswordForm
+from forms import ChangePasswordForm
 
 from common import send_email
 

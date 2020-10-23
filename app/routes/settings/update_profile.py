@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from databases.models.users import User
 
-from forms.settings import UpdateProfileForm
+from forms import UpdateProfileForm
 
 from . import page
 

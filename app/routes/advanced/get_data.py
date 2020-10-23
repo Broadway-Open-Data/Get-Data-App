@@ -10,7 +10,7 @@ from databases.models.users import User
 import databases.methods as db_methods
 # import databases.methods.broadway as broadway_methods
 
-from forms.select_data_advanced import sqlForm
+from forms import sqlForm
 from common.extensions import cache
 import utils
 

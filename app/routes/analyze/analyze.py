@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 import pandas as pd
 
 # flasks stuff
-from forms.select_data_simple import dataForm
+from forms import dataForm
 from common.extensions import cache
 import utils
 

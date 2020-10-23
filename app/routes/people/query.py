@@ -3,7 +3,7 @@ from flask_login import login_required
 from utils import require_role
 
 # Import my form
-from forms.query_people import Query
+from forms.people import Query
 
 # Module stuff
 from . import page

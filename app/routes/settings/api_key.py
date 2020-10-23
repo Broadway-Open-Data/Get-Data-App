@@ -2,7 +2,7 @@ from flask import render_template, flash, request
 from flask_login import login_required, current_user
 from databases.models.users import User
 
-from forms.settings import ResetApiKey
+from forms import ResetApiKey
 
 
 from . import page

@@ -2,7 +2,7 @@ from flask import send_from_directory, flash, redirect, render_template, request
 from flask_login import login_required
 from flask_mail import Mail, Message
 
-from forms.admin import CreateRoles, AssignRoles
+from forms import CreateRoles, AssignRoles
 from databases.models.users import User, Role
 
 from utils import require_role
