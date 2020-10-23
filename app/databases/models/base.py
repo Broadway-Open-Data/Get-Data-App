@@ -40,16 +40,27 @@ class dbTable():
 
     # Udate info
     def update_info(self, **kwargs):
-        # self.before_update(**kwargs)
+        # Track changes?
+        if kwargs.get('track_changes',False)==True:
+            self.before_update(**kwargs)
+        # Update info...
         self.query.filter_by(id=self.id).update(kwargs.get('update_dict'), synchronize_session=False)
-        self.save_to_db()
+
+        if kwargs.get('debug',False)==True:
+            None
+        else:
+            self.save_to_db()
+
+
 
 
     # Define string methods...
+    @classmethod
     def __data__(self):
         data = {x: getattr(self, x) for x in self.__mapper__.columns.keys()}
         return data
 
+    @classmethod
     def __str__(self):
         data = self.__data__()
         return json.dumps(data, default=str)
@@ -65,63 +76,65 @@ class dbTable():
         raise NameError(colname)
 
 
-    # Not sure how to integrate this yet...
-    # # @classmethod
-    # def before_update(self, **kwargs):
-    #
-    #     # Consult this to get the column dtypes?
-    #     # state = db.inspect(self)
-    #
-    #
-    #     # Get edit meta info
-    #     edit_date = datetime.datetime.utcnow()
-    #     edit_id = db.session.query(models.DataEdits.edit_id).order_by(-models.DataEdits.edit_id.asc()).first()
-    #
-    #     # Unpack the tuple to a result
-    #     if edit_id:
-    #         edit_id = edit_id[0] + 1
-    #     else:
-    #         edit_id = 1
-    #
-    #
-    #     # Who made the edit ? – This will have to be built as a wrapper I guess...
-    #     edit_by = kwargs.get('edit_by', '__obd_application__')
-    #     edit_comment = kwargs.get('edit_comment', 'Automated edit made through the open broadway data backend interface.')
-    #     approved =  kwargs.get('approved', True)
-    #     approved_by = kwargs.get('approved_by', '__obd_application__')
-    #     approved_comment = kwargs.get('approved_comment', 'Automated edit made through the open broadway data backend interface.')
-    #
-    #     # Get reference stuff
-    #     table_name = self.__tablename__
-    #
-    #     # Get the data
-    #     _data = self.__data__()
-    #
-    #
-    #     for key, value in kwargs.get('update_dict').items():
-    #
-    #         # If no edit, then don't store
-    #         if _data[key] == value:
-    #             # No edit
-    #             print("no edit needed")
-    #             continue
-    #
-    #         my_edit = models.DataEdits(
-    #             edit_date=edit_date,
-    #             edit_id=edit_id,
-    #             edit_by=edit_by,
-    #             edit_comment=edit_comment,
-    #             approved=approved,
-    #             approved_by=approved_by,
-    #             approved_comment=approved_comment,
-    #             table_name=table_name,
-    #             value_primary_id=self.id,
-    #             field = key,
-    #             field_type = str(self.find_type(key)),
-    #             value_pre = _data[key],
-    #             value_post = value
-    #         )
-    #         my_edit.save_to_db()
+    # Let's see if it works...
+    # @staticmethod
+    def before_update(self, **kwargs):
+
+        # Consult this to get the column dtypes?
+        # state = db.inspect(self)
+
+
+        # Get edit meta info
+        edit_date = datetime.datetime.utcnow()
+        edit_id = db.session.query(models.broadway.DataEdits.edit_id).order_by(-models.broadway.DataEdits.edit_id.asc()).first()
+
+        # Unpack the tuple to a result
+        if edit_id:
+            edit_id = edit_id[0] + 1
+        else:
+            edit_id = 1
+
+
+        # Who made the edit ? – This will have to be built as a wrapper I guess...
+        edit_by = kwargs.get('edit_by', '__obd_application__')
+        edit_comment = kwargs.get('edit_comment', 'Automated edit made through the open broadway data backend interface.')
+        approved =  kwargs.get('approved', True)
+        approved_by = kwargs.get('approved_by', '__obd_application__')
+        approved_comment = kwargs.get('approved_comment', 'Automated edit made through the open broadway data backend interface.')
+
+        # Get reference stuff
+        table_name = self.__tablename__
+
+        # Get the data
+        _data = self.__dict__
+
+        for key, value in kwargs.get('update_dict').items():
+
+            # If no edit, then don't store
+            if _data[key] == value:
+                # No edit
+                print("no edit needed")
+                continue
+
+            my_edit = models.broadway.DataEdits(
+                edit_date=edit_date,
+                edit_id=edit_id,
+                edit_by=edit_by,
+                edit_comment=edit_comment,
+                approved=approved,
+                approved_by=approved_by,
+                approved_comment=approved_comment,
+                table_name=table_name,
+                value_primary_id=self.id,
+                field = key,
+                field_type = str(self.find_type(key)),
+                value_pre = _data[key],
+                value_post = value
+            )
+            if kwargs.get('debug',False)==True:
+                print(my_edit.__dict__)
+            else:
+                my_edit.save_to_db()
 
 
 

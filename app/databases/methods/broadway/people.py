@@ -174,7 +174,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         params['role_name'] = 'director'
 
 
-    print("new params: ", params)
+    # print("new params: ", params)
 
     # Query all shows in this selection
     query = f"""SELECT
@@ -244,6 +244,9 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         # fix column names
         df.columns = df.columns.str.replace('_',' ').str.title()
 
+        # fill in na
+        df = df.fillna(value='')
+        
         return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, render_links=True, classes=['freeze-header'])
 
 
