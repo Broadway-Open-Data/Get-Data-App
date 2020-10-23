@@ -23,7 +23,14 @@
       </div>
 
       <div class="form-container column tall-container" style="flex: 1; padding-left:25px;">
-          <p>THIS IS WHERE THE FORM WILL GO</p>
+        <form method="POST" action="">
+              {{ form.csrf_token }}
+              <div>{{ form.person_id.label }} {{ form.person_id(size=10) }}</div>
+              <div>{{ form.gender_identity.label }} {{ form.gender_identity(size=10) }}</div>
+              <div>{{ form.racial_identities.label }} {{ form.racial_identities(size=10) }}</div>
+              <input type="submit" value="Submit"/>
+          </form>
+
       </div>
 
 
