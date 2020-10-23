@@ -10,4 +10,8 @@ from . import accepted_roles
 @require_role(accepted_roles)
 def contribute():
 
-    return render_template('people/contribute.html', title='Contribute')
+
+    # Get the director data stuff
+    data = ""
+
+    return render_template('people/contribute.html', title='Contribute', data=data)

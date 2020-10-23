@@ -41,6 +41,6 @@ def query():
         data = get_all_people(query_data)
 
     else:
-        data = {}
+        data = ""
 
     return render_template('people/query.html', title='Query', form=form, data=data)

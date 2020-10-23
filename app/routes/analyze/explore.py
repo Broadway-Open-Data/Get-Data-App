@@ -11,4 +11,3 @@ from . import page
 @login_required
 def explore_index():
     return redirect('/explore/')
-    # render_template('analyze/explore/index.html', title='Explore')
