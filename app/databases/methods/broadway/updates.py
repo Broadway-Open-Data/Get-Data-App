@@ -17,8 +17,33 @@ def update_people_data(params):
     my_person = Person.get_by_id(params['person_id'])
 
 
+
+    # ==========================================================================
+
+    # Date of birth
+    if params.get('date_of_birth'):
+        date_of_birth = dt.datetime.strptime(params.get('date_of_birth'), "%m/%d/%Y")
+
+        my_person.update_info(
+            update_dict={'date_of_birth':date_of_birth},
+            track_changes=True,
+            edit_by=current_user.email,
+            edit_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+            approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+            debug=False
+            )
+
+
+    # ==========================================================================
+
+
+
     # Gender identity
     if params.get('gender_identity'):
+
+        # reload the person?
+        my_person = Person.get_by_id(params['person_id'])
+
         my_gender = GenderIdentity.get_by_name(params['gender_identity'])
 
         # If the gender identity doesn't exist, create it...
@@ -41,6 +66,10 @@ def update_people_data(params):
 
 
     if params.get('racial_identities'):
+
+        # reload the person?
+        my_person = Person.get_by_id(params['person_id'])
+
 
         # convert to a set
         racial_identities = set()

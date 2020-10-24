@@ -7,8 +7,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 # import custom stuff
 from nameparser import HumanName
 
-
-
 # --------------------------------------------------------------------------------
 
 
@@ -137,9 +135,10 @@ class Person(db.Model, models.dbTable):
     @hybrid_property
     def full_name(self):
         """Return proper casing too"""
-        name_string = " ".join(list(filter(None, [self.name_title, self.f_name, self.m_name, self.l_name, self.name_suffix, self.name_nickname])))
+        name_list = [self.name_title, self.f_name, self.m_name, self.l_name, self.name_suffix, self.name_nickname]
+        name_string = " ".join(map(str, name_list))
         full_name = HumanName(name_string)
-        full_name.capitalize()
+        full_name.capitalize(force=True)
         return str(full_name)
 
 

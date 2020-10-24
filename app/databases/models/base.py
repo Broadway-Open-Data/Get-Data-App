@@ -57,7 +57,8 @@ class dbTable():
     # Define string methods...
     @classmethod
     def __data__(self):
-        data = {x: getattr(self, x) for x in self.__mapper__.columns.keys()}
+        data = {x: getattr(self, x) for x in self.__dict__.keys() if not x.startswith('_')}
+        # data = {x: getattr(self, x) for x in self.__mapper__.columns.keys()}
         return data
 
     @classmethod
@@ -106,7 +107,8 @@ class dbTable():
         table_name = self.__tablename__
 
         # Get the data
-        _data = self.__dict__
+        _data = {x: getattr(self, x) for x in self.__dict__.keys() if not x.startswith('_')}
+        # _data = self.__data__()
 
         for key, value in kwargs.get('update_dict').items():
 

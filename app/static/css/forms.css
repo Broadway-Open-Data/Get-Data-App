@@ -26,6 +26,14 @@ form label {
   display:block;
 }
 
+form .help-text{
+  font-size: 9px;
+  font-style: italic;
+  letter-spacing: 0.5px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+}
+
 /* All the labels */
 form input,textarea {
   width: 90%;

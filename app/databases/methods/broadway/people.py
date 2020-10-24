@@ -188,14 +188,14 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         			person.name_nickname,
         			person.name_suffix
         		) AS 'full_name',
-        	person.date_of_birth,
+        	 DATE_FORMAT(person.date_of_birth, '%%m/%%d/%%Y') AS date_of_birth,
              gender_identity.name as 'gender_identity',
         	 CONCAT_WS(' ,' , racial_identity.name) as 'racial_identities',
         	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
              MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
              -- GROUP_CONCAT(DISTINCT(role.name)) AS 'all roles',
-             MIN(shows.year) AS 'earliest show year',
+             -- MIN(shows.year) AS 'earliest show year',
              MAX(shows.year) AS 'most recent show year',
              SUBSTRING_INDEX(GROUP_CONCAT(shows.title ORDER BY shows.opening_date DESC), ',', 1) AS 'most recent show'
 
@@ -246,7 +246,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
         # fill in na
         df = df.fillna(value='')
-        
+
         return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, render_links=True, classes=['freeze-header'])
 
 
