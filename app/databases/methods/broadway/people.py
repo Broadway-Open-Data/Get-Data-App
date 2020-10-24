@@ -190,7 +190,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         		) AS 'full_name',
         	 DATE_FORMAT(person.date_of_birth, '%%m/%%d/%%Y') AS date_of_birth,
              gender_identity.name as 'gender_identity',
-        	 CONCAT_WS(' ,' , racial_identity.name) as 'racial_identities',
+             GROUP_CONCAT(DISTINCT( racial_identity.name)) as 'racial_identities',
         	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
              MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
