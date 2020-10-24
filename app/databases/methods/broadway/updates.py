@@ -148,7 +148,8 @@ def update_people_data(params):
             field = 'racial_identities (relationship)',
             field_type = 'LIST (INTEGERS)',
             value_pre = ', '.join(map(str, previous_ids)),
-            value_post = ', '.join(map(str, updated_ids))
+            value_post = ', '.join(map(str, updated_ids)),
+            edit_citation=params.get('edit_citation')
         )
 
         # Save the edit message

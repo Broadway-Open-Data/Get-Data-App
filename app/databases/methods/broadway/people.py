@@ -12,6 +12,7 @@ import pandas as pd
 # define a lambda to convert to datetime
 year_to_dt = lambda x: dt.datetime(year=x, month=1, day=1)
 
+
 def build_query_with_dict(base_query, params, myClass):
     """Assumes the objects are being entered correctly..."""
 
@@ -176,8 +177,10 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     # print("new params: ", params)
 
-    # Query all shows in this selection
-    query = f"""SELECT
+
+
+    query = f"""
+            SELECT
         	person.id,
         		 CONCAT_WS(
         			' ',
@@ -190,11 +193,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         		) AS 'full_name',
         	 DATE_FORMAT(person.date_of_birth, '%%m/%%d/%%Y') AS date_of_birth,
              gender_identity.name as 'gender_identity',
-             GROUP_CONCAT(DISTINCT( racial_identity.name)) as 'racial_identities',
+             GROUP_CONCAT(DISTINCT racial_identity.name) as 'racial_identities',
         	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
              MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
-             -- GROUP_CONCAT(DISTINCT(role.name)) AS 'all roles',
+             -- GROUP_CONCAT(DISTINCT role.name ) AS 'all roles',
              -- MIN(shows.year) AS 'earliest show year',
              MAX(shows.year) AS 'most recent show year',
              SUBSTRING_INDEX(GROUP_CONCAT(shows.title ORDER BY shows.opening_date DESC), ',', 1) AS 'most recent show'
