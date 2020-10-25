@@ -147,7 +147,7 @@ def get_all_people(params, output_format='html'):
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
     if output_format=='html':
-        return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, render_links=True, classes='freeze-header')
+        return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, index=False, render_links=True, classes='freeze-header')
     elif output_format=='pandas':
         return df
     elif output_format=='dict':
@@ -181,7 +181,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     query = f"""
             SELECT
-        	person.id,
+        	person.id AS person_id,
         		 CONCAT_WS(
         			' ',
         			person.name_title,
@@ -250,7 +250,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         # fill in na
         df = df.fillna(value='')
 
-        return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, render_links=True, classes=['freeze-header'])
+        return df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, index=False, render_links=True, classes=['freeze-header'])
 
 
     elif output_format=='pandas':

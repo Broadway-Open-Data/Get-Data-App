@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
-
-<script type=text/javascript src="{{url_for('static', filename='js/contribute-page.js') }}"></script>
-
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+
+  <script type=text/javascript src="{{url_for('static', filename='js/contribute-page.js') }}"> </script>  
+
   <h1>{{ title }}</h1>
   <p>
     Because there are over 100,000 people in our database (some of which may be repeats),

@@ -1,30 +1,38 @@
-
+// Toggle this for rich console printouts
+var debug = false;
 
 // // Activate data summary
 $(document).ready(function() {
 
-  // Add this in a bit
-  /*
-  // Another function....
-  $('.advanced-label').each(function(e){
-    $(this).on("click", function(){
+  // Up here, can determine the column values / index position
+  // Backlogging this though...
 
-      // Allow this to work, regardless of id
-      let myId = this.id.replace('label','content')
-      let x = document.getElementById(myId)
+  $('table.dataframe').delegate('tr', 'click', function() {
 
-      let visible = x.style.display;
+      // Get values
+      let myRow = this.children
+      let rowId = parseInt(myRow[0].innerText)
+      let rowDOB = myRow[2].innerText
+      let rowGenderIdentity = myRow[3].innerText
+      let rowRacialIdentity = myRow[4].innerText
 
-      // Toggle visibility
-      if (visible === "none") {
-        x.style.display = "block";
+      // For testing
+      if(debug==true){
+        console.log(
+          "id: "+ rowId + "; " +
+          "DOB: " + rowDOB + "; " +
+          "Gender Identity: " + rowGenderIdentity + "; " +
+          "Racial Identity: " + rowRacialIdentity + ";"
+        );
       }
-      else {
-        x.style.display = "none";
-      }
-    }) // close the on click function
 
-  }) // close the selector function
-*/
+
+      // Set values
+      $('input[name=person_id]').val(rowId);
+      $('input[name=date_of_birth]').val(rowDOB);
+      $('input[name=racial_identities]').val(rowRacialIdentity);
+      $('input[name=gender_identity]').val(rowGenderIdentity);
+
+    });
 
 })
