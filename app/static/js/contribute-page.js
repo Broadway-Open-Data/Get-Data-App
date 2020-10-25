@@ -1,6 +1,12 @@
 // Toggle this for rich console printouts
 var debug = false;
 
+// sleep time expects milliseconds
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
+
+
 // // Activate data summary
 $(document).ready(function() {
 
@@ -34,5 +40,16 @@ $(document).ready(function() {
       $('input[name=gender_identity]').val(rowGenderIdentity);
 
     });
+
+    // Indeed you can do 2 functions in one "on document ready"
+    $('form').submit( function() {
+
+
+        // I'd love to have this delayed before pushing
+        // Might need to submit the form with ajax to make this happen...
+        // Now clear
+        $('input[name=edit_citation]').val('');
+
+  });
 
 })
