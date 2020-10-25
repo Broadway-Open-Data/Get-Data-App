@@ -109,7 +109,7 @@ class User(db.Model, UserMixin, models.dbTable):
             message_type='signup',
             message = message
         )
-        print(FormMessage)
+        print(models.users.FormMessage)
         print(message)
         message.save_to_db()
 
