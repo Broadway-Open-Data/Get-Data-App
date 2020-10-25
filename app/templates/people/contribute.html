@@ -12,17 +12,23 @@
     Below, you will find data for all directors going back to 1800.
   </p>
 
-  <h2>Data</h2>
-  <p>
-    Here it is...
-  </p>
+
   <div class="flex-columns">
 
       <div class="table-container column tall-container" style="flex: 3;">
+        <h2>Data</h2>
+        <div class="help-text">Here it is...</div>
           {{ data|safe }}
       </div>
 
       <div class="form-container column tall-container" style="flex: 1; padding-left:25px;">
+        <h2>Update Data</h2>
+        <div class="help-text">
+          <b>Hint:</b> click on a person's row and their current data will be populated below.
+          Then, change the data to be the correct version. Any differences will be registered.
+          Any missing data (on edit) will be dropped. <i>(So be careful!)</i>
+        </div>
+
         <form method="POST" action="">
               {{ form.csrf_token }}
               <div>{{ form.person_id.label }}

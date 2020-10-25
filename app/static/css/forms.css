@@ -27,11 +27,13 @@ form label {
 }
 
 form .help-text{
-  font-size: 9px;
-  font-style: italic;
-  letter-spacing: 0.5px;
-  padding-bottom: 10px;
-  padding-right: 20px;
+  color:var(--myGreenAlt) !important;
+  /* color:black !important; */
+  font-size: 9px !important;
+  font-style: italic !important;
+  letter-spacing: 0.5px !important;
+  padding-bottom: 10px !important;
+  padding-right: 20px !important;
 }
 
 /* All the labels */
