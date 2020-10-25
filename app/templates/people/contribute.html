@@ -26,12 +26,11 @@
         <form method="POST" action="">
               {{ form.csrf_token }}
               <div>{{ form.person_id.label }}
-                <div class="help-text">We have a feature in development where you'll click a person's row and their ID will populate below...
-                </div>{{ form.person_id(size=10) }}</div>
+                <div class="help-text">We have a feature in development where you'll click a person's row and their ID will populate below...</div> {{ form.person_id(size=10) }}</div>
               <div>{{ form.date_of_birth.label }} {{ form.date_of_birth(size=10) }}</div>
               <div>{{ form.racial_identities.label }} {{ form.racial_identities(size=10) }}</div>
               <div>{{ form.gender_identity.label }} {{ form.gender_identity(size=10) }}</div>
-              <div>{{ form.edit_citation.label }} {{ form.edit_citation(size=10) }}</div>
+              <div>{{ form.edit_citation.label }}<div class="help-text">Optional. Also, Citation is only saved for racial identity edits (at present).</div>{{ form.edit_citation(size=10) }}</div>
               <input type="submit" value="Submit"/>
           </form>
 
