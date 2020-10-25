@@ -109,8 +109,7 @@ class User(db.Model, UserMixin, models.dbTable):
             message_type='signup',
             message = message
         )
-        db.session.add(message)
-        db.session.commit()
+        message.save_to_db()
 
     # On signup
     def get_signup_message(self):
