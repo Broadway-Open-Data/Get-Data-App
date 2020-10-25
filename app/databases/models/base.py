@@ -115,7 +115,8 @@ class dbTable():
             # If no edit, then don't store
             if _data[key] == value:
                 # No edit
-                print("no edit needed")
+                if kwargs.get('debug',False)==True:
+                    print("no edit needed")
                 continue
 
             my_edit = models.broadway.DataEdits(

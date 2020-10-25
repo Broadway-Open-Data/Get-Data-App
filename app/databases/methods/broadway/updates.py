@@ -172,4 +172,3 @@ def update_people_data(params):
 
     # if params.get('gender_identity'):
     #     my_gender = GenderIdentity.get_by_name(params['gender_identity'].lower())
-    print(my_person)
