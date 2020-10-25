@@ -104,7 +104,7 @@ class User(db.Model, UserMixin, models.dbTable):
     # Signup message
     def save_signup_message(self, message):
         """Set the message in the db."""
-        message = models.FormMessage(
+        message = models.users.FormMessage(
             user_id = self.id,
             message_type='signup',
             message = message
