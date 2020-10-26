@@ -14,25 +14,29 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from ..data_manipulation import flatten_to_string
 from ..get_db_uri import get_db_uri
 
+# import the db
+from databases.models import db
+from databases.models.broadway import Show, Theatre
 # ------------------------------------------------------------------------------
 
 # Use this resource https://www.pythonsheets.com/notes/python-sqlalchemy.html
 
 # Now build the connection
-SQLALCHEMY_DATABASE_URI = get_db_uri()
-engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)
-
-
-# build and bind the metadata
-metadata = MetaData(bind=engine)
-metadata.reflect()
+# SQLALCHEMY_DATABASE_URI = get_db_uri()
+# engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)
+#
+#
+# # build and bind the metadata
+# metadata = MetaData(bind=engine)
+# metadata.reflect()
 
 # Use this if you don't want to use pandas...
 # conn = engine.connect()
 
 # Build your tables
-shows = metadata.tables.get('shows',[])
-theatres = metadata.tables.get('theatres',[])
+# shows = metadata.tables.get('shows',[])
+# shows = Show.query.with_entities(Show.id, Show.title.label("show_title"), Show.year, Show.theatre_name)
+# theatres = metadata.tables.get('theatres',[])
 
 # ------------------------------------------------------------------------------
 
@@ -92,25 +96,25 @@ def select_data_from_simple(my_params={}, theatre_data=True):
 
     # Build the select statement
 
-    select_st = select([shows]).\
-        where(shows.c.year >= my_params["startYear"]).\
-        where(shows.c.year <= my_params["endYear"]).\
-        where(shows.c.show_type_simple.in_(query_dict["show_type_simple"])).\
-        where(shows.c.production_type.in_(query_dict["production_type"]))
+    select_st = select([Show]).\
+        where(Show.year >= my_params["startYear"]).\
+        where(Show.year <= my_params["endYear"]).\
+        where(Show.show_type_simple.in_(query_dict["show_type_simple"])).\
+        where(Show.production_type.in_(query_dict["production_type"]))
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     # If theatre info is requested
     if my_params.get("theatre_info"):
 
-        join_obj = shows.join(theatres, shows.c.theatre_id == theatres.c.id, isouter=True)
+        join_obj = shows.join(Theatre, Show.theatre_id == Theatre.id, isouter=True)
 
         # Update the select statement
-        select_st =  select_st.column(theatres).select_from(join_obj)
+        select_st =  select_st.column(Theatre).select_from(join_obj)
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     # Load to a pandas dataframe
-    df = pd.read_sql(select_st, engine)
+    df = pd.read_sql(select_st, db.get_engine(bind='broadway'))
     return df
 
 
@@ -125,7 +129,7 @@ def select_data_advanced(query=""):
 
     # Make an SQL call – using SQL sematic structure
     # result = engine.execute(query)
-    df = pd.read_sql(query, engine)
+    df = pd.read_sql(query, db.get_engine(bind='broadway'))
 
     return df
 
