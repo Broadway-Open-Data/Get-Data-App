@@ -109,8 +109,7 @@ class User(db.Model, UserMixin, models.dbTable):
             message_type='signup',
             message = message
         )
-        print(models.users.FormMessage)
-        print(message)
+        print(message.__dict__)
         message.save_to_db()
 
     # On signup

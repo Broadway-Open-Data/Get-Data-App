@@ -16,6 +16,7 @@ dash-table==4.9.0
 dnspython==2.0.0
 email-validator==1.1.1
 Flask==1.1.2
+flask-alchemydumps==0.0.11
 Flask-BabelEx==0.9.4
 Flask-Caching==1.9.0
 Flask-Compress==1.5.0
@@ -48,6 +49,7 @@ PyJWT==1.7.1
 PyMySQL==0.9.3
 pyparsing==2.4.7
 python-dateutil==2.8.1
+python-decouple==3.3
 python-editor==1.0.4
 pytz==2020.1
 requests==2.24.0

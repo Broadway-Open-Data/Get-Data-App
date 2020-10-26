@@ -31,8 +31,8 @@ metadata.reflect()
 # conn = engine.connect()
 
 # Build your tables
-shows = metadata.tables['shows']
-theatres = metadata.tables['theatres']
+shows = metadata.tables.get('shows',[])
+theatres = metadata.tables.get('theatres',[])
 
 # ------------------------------------------------------------------------------
 
@@ -42,6 +42,8 @@ def select_data_from_simple(my_params={}, theatre_data=True):
     Input a dictionary statement in dict format.
     Returns records from db.
     """
+
+
 
     # Must have a start and end year
     if "startYear" not in my_params.keys():

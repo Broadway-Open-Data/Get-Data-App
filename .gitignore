@@ -23,3 +23,7 @@ old
 
 # Ignore migrations:
 migrations
+_migrations
+
+# Ignore backups
+db_backups/

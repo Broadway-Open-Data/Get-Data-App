@@ -12,7 +12,12 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 # db things
-from databases import db
+from databases import models
+from flask_sqlalchemy import SQLAlchemy
+from databases import db, models
+# from flask_alchemydumps import AlchemyDumps
+
+
 from utils.get_db_uri import get_db_uri
 
 
@@ -26,21 +31,29 @@ class ManagerApp():
         self.db_name = kwargs.get('db_name', 'users')
         # Instantiate a blank app
         self.app = Flask(__name__)
-        self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri(self.db_name)
-        self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        # self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri(self.db_name)
+        self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+        self.app.config['SQLALCHEMY_BINDS'] = {
+            'users': get_db_uri("users"),
+            'broadway': get_db_uri("broadway"),
+        }
 
 
-        # Only import necessary models...
-        if self.db_name =='users':
-            import databases.models.users as _
-        else:
-            import databases.models.broadway as _ 
+        # Configure the db
+        db.init_app(self.app)
+        # db = SQLAlchemy(self.app)
+        with self.app.app_context():
+            db.create_all()
+            # db.create_all(bind=['users','broadway'])
 
-        # instantiate the db
-        db.init_app(app=self.app)
+
+
         # extend_existing=True
 
         # ------------------------------------------------------------------------------
+
+
+
 
 
         # Instantiate the migration manager
@@ -48,6 +61,8 @@ class ManagerApp():
 
         self.manager = Manager(self.app)
         self.manager.add_command('db', MigrateCommand)
+
+
 
 
 # ------------------------------------------------------------------------------
