@@ -14,6 +14,7 @@ import forms
 import routes
 
 
+# sys.setdefaultencoding('utf-8')
 
 # import a second time, why not...
 from databases import db
@@ -27,7 +28,7 @@ def create_app():
         'broadway': utils.get_db_uri("broadway"),
     }
     # app.config['MYSQL_DATABASE_CHARSET'] = 'utf8mb4'
-    app.config['MYSQL_CHARSET'] = 'utf8mb4'
+    # app.config['MYSQL_CHARSET'] = 'utf8mb4'
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECURITY_TRACKABLE']=True
