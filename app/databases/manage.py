@@ -15,7 +15,6 @@ from flask_migrate import Migrate, MigrateCommand
 from databases import models
 from flask_sqlalchemy import SQLAlchemy
 from databases import db, models
-# from flask_alchemydumps import AlchemyDumps
 
 
 from utils.get_db_uri import get_db_uri
