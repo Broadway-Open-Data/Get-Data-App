@@ -289,6 +289,18 @@ class User(db.Model, UserMixin, models.dbTable):
 
 
     def delete_from_db(self):
-        db.engine.execute(f"DELETE FROM roles_users WHERE user_id={self.id}")
-        db.engine.execute(f"DELETE FROM message WHERE user_id={self.id}")
-        db.engine.execute(f"DELETE FROM user WHERE id={self.id}")
+
+        my_engine = db.get_engine(bind='users')
+        my_engine.execute(f"DELETE FROM roles_users WHERE user_id={self.id}")
+        my_engine.execute(f"DELETE FROM message WHERE user_id={self.id}")
+        my_engine.execute(f"DELETE FROM user WHERE id={self.id}")
+
+
+
+
+
+
+
+
+
+#
