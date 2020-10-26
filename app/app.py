@@ -158,7 +158,7 @@ def main():
     # Serve in development server if local
     if not utils.is_aws():
         # The reloader has not yet run - open the browser
-        if not os.environ.get("WERKZEUG_RUN_MAIN"):
+        if not os.environ.get("WERKZEUG_RUN_MAIN") and not os.environ.get("AWS_OVERRIDE"):
             webbrowser.open_new('http://0.0.0.0:5010/')
 
         # Otherwise, continue as normal
