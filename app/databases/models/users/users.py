@@ -60,11 +60,11 @@ class User(db.Model, UserMixin, models.dbTable):
 
     # Additional
     roles = db.relationship(Role, secondary='users.roles_users',
-                            backref=db.backref('users.users', lazy='dynamic'), passive_deletes=True)
+                            backref=db.backref('users.users', lazy='dynamic'))
 
     # Additional
     messages = db.relationship('FormMessage', secondary='users.messages_users',
-                            backref=db.backref('users.users', lazy='dynamic'), passive_deletes=True)
+                            backref=db.backref('users.users', lazy='dynamic'))
 
     # --------------------------------------------------------------------------
     # STRING METHODS
@@ -290,6 +290,8 @@ class User(db.Model, UserMixin, models.dbTable):
 
     def delete_from_db(self):
 
+        # There may be a better way to do this....
+        # Do this another time...
         my_engine = db.get_engine(bind='users')
         my_engine.execute(f"DELETE FROM roles_users WHERE user_id={self.id}")
         my_engine.execute(f"DELETE FROM message WHERE user_id={self.id}")
