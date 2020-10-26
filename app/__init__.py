@@ -26,7 +26,8 @@ def create_app():
         'users': utils.get_db_uri("users"),
         'broadway': utils.get_db_uri("broadway"),
     }
-
+    app.config['MYSQL_DATABASE_CHARSET'] = 'utf8mb4'
+    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECURITY_TRACKABLE']=True
     # This is otherwise done through the bash profile
