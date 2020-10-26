@@ -48,6 +48,7 @@ $(document).ready(function() {
         // I'd love to have this delayed before pushing
         // Might need to submit the form with ajax to make this happen...
         // Now clear
+        $('input[name=edit_comment]').val('');
         $('input[name=edit_citation]').val('');
 
   });

@@ -17,6 +17,10 @@ def update_people_data(params):
     my_person = Person.get_by_id(params['person_id'])
 
 
+    edit_comment = params.get(
+        "edit_comment",
+        f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface."
+        )
 
     # ==========================================================================
 
@@ -28,7 +32,7 @@ def update_people_data(params):
             update_dict={'date_of_birth':date_of_birth},
             track_changes=True,
             edit_by=current_user.email,
-            edit_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+            edit_comment=edit_comment,
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
             debug=False
             )
@@ -56,7 +60,7 @@ def update_people_data(params):
             update_dict={'gender_identity_id':my_gender.id},
             track_changes=True,
             edit_by=current_user.email,
-            edit_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+            edit_comment=edit_comment,
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
             debug=False
             )
@@ -131,7 +135,6 @@ def update_people_data(params):
         else: edit_id = 1
 
         # Comments
-        edit_comment = f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
         approved_comment =f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
 
 
