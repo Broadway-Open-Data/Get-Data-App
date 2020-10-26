@@ -9,7 +9,7 @@ import datetime
 # Define models
 messages_users = db.Table('messages_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('users.user.id')),
-        db.Column('message_id', db.Integer(), db.ForeignKey('users.message.id')),
+        db.Column('message_id', db.Integer(), db.ForeignKey('users.message.id'), ondelete='CASCADE'),
         info={'bind_key': 'users'},
         schema='users'
         )

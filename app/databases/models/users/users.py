@@ -60,11 +60,11 @@ class User(db.Model, UserMixin, models.dbTable):
 
     # Additional
     roles = db.relationship(Role, secondary='users.roles_users',
-                            backref=db.backref('users.users', lazy='dynamic'))
+                            backref=db.backref('users.users', lazy='dynamic'), passive_deletes=True')
 
     # Additional
     messages = db.relationship('FormMessage', secondary='users.messages_users',
-                            backref=db.backref('users.users', lazy='dynamic'))
+                            backref=db.backref('users.users', lazy='dynamic'), passive_deletes=True)
 
     # --------------------------------------------------------------------------
     # STRING METHODS
