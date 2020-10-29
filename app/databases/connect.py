@@ -39,7 +39,7 @@ class ConnectApp():
         db.init_app(app=self.app)
         self.app.app_context().push()
 
-        # db.create_all()
+        db.create_all()
 
     # ------------------------------------------------------------------------------
 
