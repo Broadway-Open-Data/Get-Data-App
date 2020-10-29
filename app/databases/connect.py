@@ -35,10 +35,10 @@ class ConnectApp():
         self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users')
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['JSON_AS_ASCII'] = False
+        
         # instantiate the db
-        db.init_app(app=self.app)
         self.app.app_context().push()
-
+        db.init_app(app=self.app)
         db.create_all()
 
     # ------------------------------------------------------------------------------
