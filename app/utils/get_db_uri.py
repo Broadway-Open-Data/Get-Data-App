@@ -63,5 +63,6 @@ def get_db_uri(which_db="broadway"):
         query={'charset': 'latin1'}
         )
     print(connection_string)
+    sys.exit()
     return connection_string
 # ------------------------------------------------------------------------------
