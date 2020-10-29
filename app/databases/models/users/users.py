@@ -29,7 +29,7 @@ class User(db.Model, UserMixin, models.dbTable):
     # Core
     id = db.Column(db.Integer,primary_key=True)
     email = db.Column(db.String(40), nullable=False, unique=True)
-    password = db.Column(db.String(200), nullable=False, unique=False)
+    password = db.Column(db.String(200), nullable=False, unique=False, convert_unicode=True)
     website = db.Column(db.String(200), nullable=True, unique=False)
     instagram = db.Column(db.String(40), nullable=True, unique=False)
 
