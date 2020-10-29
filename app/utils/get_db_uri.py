@@ -60,8 +60,8 @@ def get_db_uri(which_db="broadway"):
         host=host,
         port=port,
         database=dbname,
-        query={'charset': 'utf8'}
+        query={'charset': 'latin1'}
         )
-
+    print(connection_string)
     return connection_string
 # ------------------------------------------------------------------------------
