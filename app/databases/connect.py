@@ -32,7 +32,7 @@ class ConnectApp():
 
         # Instantiate a blank app
         self.app = Flask(__name__)
-        self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users') + "?charset=utf8"
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users')
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         # instantiate the db
