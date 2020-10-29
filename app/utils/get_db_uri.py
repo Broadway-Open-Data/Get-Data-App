@@ -59,8 +59,7 @@ def get_db_uri(which_db="broadway"):
         password=password,
         host=host,
         port=port,
-        database=dbname,
-        charset = 'utf-8'
+        database=dbname
         )
 
     return connection_string
