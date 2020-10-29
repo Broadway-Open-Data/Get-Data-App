@@ -34,8 +34,8 @@ class ConnectApp():
         self.app = Flask(__name__)
         self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users')
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-        self.app.config['JSON_AS_ASCII'] = False
-        
+        # self.app.config['JSON_AS_ASCII'] = False
+
         # instantiate the db
         self.app.app_context().push()
         db.init_app(app=self.app)
