@@ -1,4 +1,6 @@
 from databases import db, models
+from . import BaseModel
+
 from sqlalchemy.orm import validates
 from flask_security import RoleMixin
 
@@ -20,7 +22,7 @@ roles_users = db.Table('roles_users',
 # ------------------------------------------------------------------------------
 
 
-class Role(db.Model, RoleMixin, models.dbTable):
+class Role(db.Model, RoleMixin, BaseModel):
     __tablename__ = "role"
     __table_args__ = {'schema':'users'}
     __bind_key__ = "users"

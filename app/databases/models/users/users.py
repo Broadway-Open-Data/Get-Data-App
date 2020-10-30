@@ -1,4 +1,6 @@
 from databases import db, models
+from . import BaseModel
+
 
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
@@ -20,11 +22,11 @@ import jwt
 
 # ==============================================================================
 
-class User(db.Model, UserMixin, models.dbTable):
+class User(db.Model, UserMixin, BaseModel):
     """"""
     __tablename__ = "user"
-    __table_args__ = {'schema':'users'}
-    __bind_key__ = "users"
+    # __table_args__ = {'schema':'users'}
+    # __bind_key__ = "users"
 
     # Core
     id = db.Column(db.Integer,primary_key=True)
