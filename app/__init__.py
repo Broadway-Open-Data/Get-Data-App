@@ -53,8 +53,9 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # Done this through aws console...
         # Set the max length, just once...
-        db.get_engine(bind='broadway').execute("SET session group_concat_max_len=30000;")
+        # db.get_engine(bind='broadway').execute("SET session group_concat_max_len=30000;")
 
     return app
 
