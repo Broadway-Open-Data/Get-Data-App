@@ -13,11 +13,14 @@ class DataEditsValuesLink(db.Model, models.dbTable):
     __table_args__ = {'schema':'broadway'}
     __bind_key__ = "broadway"
 
-    data_edits_values_id = db.Column(db.Integer,db.ForeignKey('broadway.data_edits_values.id'), primary_key=True)
+    data_edits_id = db.Column(db.Integer,db.ForeignKey('broadway.data_edits.id'), primary_key=True)
     value_id = db.Column(db.Integer,db.ForeignKey('broadway.data_values.id'), primary_key=True)
 
+    # Alternatively, use this value here to then decide if values are pre or post.... (and drop the extra table...)
+    pre_or_post = db.Column(db.Boolean, nullable=False, comment='`0` represents `pre`, `1` represents `post`')
+
     def __repr__(self):
-        return f"id: {self.data_edits_values_id}; value: {self.value_id}"
+        return f"id: {self.data_edits_values_id}; value: {self.value_id}; {'PRE' if self.pre_or_post==0 else 'POST'}"
 
 
 class DataValues(db.Model, models.dbTable):
@@ -33,25 +36,25 @@ class DataValues(db.Model, models.dbTable):
         return f"id: {self.id}; value: {self.value}"
 
 
-class DataEditsValues(db.Model, models.dbTable):
-    """Stores values as related by the data edits table"""
-    __tablename__ = "data_edits_values"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
-
-    # self
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pre_or_post = db.Column(db.Boolean, nullable=False, comment='`0` represents `pre`, `1` represents `post`')
-
-    # Parent
-    data_edits_row_id = db.Column(db.Integer, db.ForeignKey('broadway.data_edits.id'), primary_key=True, comment='Primary key from `data_edits` table.')
-
-    # Children
-    data_values = db.relationship(DataValues, secondary='broadway.data_edits_values_link', backref=db.backref('broadway.data_edits_values', lazy='dynamic'), passive_deletes=True)
-
-
-    def __repr__(self):
-        return f"data_edits_row_id: {self.data_edits_row_id}; edit_id: {self.edit_id}, value_id: {self.value_id}"
+# class DataEditsValues(db.Model, models.dbTable):
+#     """Stores values as related by the data edits table"""
+#     __tablename__ = "data_edits_values"
+#     __table_args__ = {'schema':'broadway'}
+#     __bind_key__ = "broadway"
+#
+#     # self
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     pre_or_post = db.Column(db.Boolean, nullable=False, comment='`0` represents `pre`, `1` represents `post`')
+#
+#     # Parent
+#     data_edits_row_id = db.Column(db.Integer, db.ForeignKey('broadway.data_edits.id'), primary_key=True, comment='Primary key from `data_edits` table.')
+#
+#     # Children
+#     data_values = db.relationship(DataValues, secondary='broadway.data_edits_values_link', backref=db.backref('broadway.data_edits_values', lazy='dynamic'), passive_deletes=True)
+#
+#
+#     def __repr__(self):
+#         return f"data_edits_row_id: {self.data_edits_row_id}; edit_id: {self.edit_id}, value_id: {self.value_id}"
 
 
 
@@ -92,7 +95,7 @@ class DataEdits(db.Model, models.dbTable):
 
 
     # Not including values here just yet...
-
+    # data_values = db.relationship(DataValues, secondary='broadway.data_edits_values_link', backref=db.backref('broadway.data_edits_values', lazy='dynamic'), passive_deletes=True)
 
 
 
