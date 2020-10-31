@@ -39,9 +39,14 @@ class dbTable():
 
     # Udate info
     def update_info(self, **kwargs):
-        # Track changes? --> DO THIS IN THE INHERETED INSTANCE
-        # if kwargs.get('track_changes',False)==True:
-        #     self.before_update(**kwargs)
+        """
+        Updates data.
+
+        Note: for tracking edits, a custom function must be defined. Our approach
+        is to create such a function in the child / inhereted class, so that
+        edits are stored in the specific database in which they belong.
+        """
+        
         # Update info...
         self.query.filter_by(id=self.id).update(kwargs.get('update_dict'), synchronize_session=False)
 
