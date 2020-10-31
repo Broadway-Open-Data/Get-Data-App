@@ -24,8 +24,6 @@ roles_users = db.Table('roles_users',
 
 class Role(db.Model, RoleMixin, BaseModel):
     __tablename__ = "role"
-    __table_args__ = {'schema':'users'}
-    __bind_key__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)

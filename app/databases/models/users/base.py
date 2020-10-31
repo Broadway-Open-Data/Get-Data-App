@@ -1,4 +1,3 @@
-from databases import db
 from databases.models import dbTable
 
 

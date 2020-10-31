@@ -1,12 +1,13 @@
 from databases import db, models
+from . import BaseModel
 import datetime
 
 
-class Theatre(db.Model, models.dbTable):
+class Theatre(db.Model, BaseModel):
     """"""
     __tablename__ = "theatres"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+
+    
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
     date_instantiated = db.Column(db.DateTime,  nullable=False, default=datetime.datetime.utcnow)
 

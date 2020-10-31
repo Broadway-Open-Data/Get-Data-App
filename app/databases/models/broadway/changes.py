@@ -1,4 +1,5 @@
 from databases import db, models
+from . import BaseModel
 from sqlalchemy.sql import expression
 
 import datetime
@@ -7,11 +8,9 @@ import datetime
 
 
 
-class DataEditsValuesLink(db.Model, models.dbTable):
+class DataEditsValuesLink(db.Model, BaseModel):
     """Stores values as related by the data edits table"""
     __tablename__ = "data_edits_values_link"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
 
     data_edits_id = db.Column(db.Integer,db.ForeignKey('broadway.data_edits.id'), primary_key=True)
     value_id = db.Column(db.Integer,db.ForeignKey('broadway.data_values.id'), primary_key=True)
@@ -23,11 +22,9 @@ class DataEditsValuesLink(db.Model, models.dbTable):
         return f"id: {self.data_edits_values_id}; value: {self.value_id}; {'PRE' if self.pre_or_post==0 else 'POST'}"
 
 
-class DataValues(db.Model, models.dbTable):
+class DataValues(db.Model, BaseModel):
     """Stores values as related by the data edits table"""
     __tablename__ = "data_values"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     value = db.Column(db.String(300), nullable=True, unique=False)
@@ -61,11 +58,9 @@ class DataValues(db.Model, models.dbTable):
 
 
 
-class DataEdits(db.Model, models.dbTable):
+class DataEdits(db.Model, BaseModel):
     """"""
     __tablename__ = "data_edits"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # can be used to groupby...

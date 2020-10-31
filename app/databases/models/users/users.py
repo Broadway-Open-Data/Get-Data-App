@@ -25,8 +25,6 @@ import jwt
 class User(db.Model, UserMixin, BaseModel):
     """"""
     __tablename__ = "user"
-    # __table_args__ = {'schema':'users'}
-    # __bind_key__ = "users"
 
     # Core
     id = db.Column(db.Integer,primary_key=True)

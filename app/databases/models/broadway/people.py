@@ -1,4 +1,5 @@
 from databases import db, models
+from . import BaseModel
 import datetime
 
 from sqlalchemy.orm import validates, relationship
@@ -11,10 +12,9 @@ from nameparser import HumanName
 
 
 
-class ShowsRolesLink(db.Model, models.dbTable):
+class ShowsRolesLink(db.Model, BaseModel):
     __tablename__ = "shows_roles_link"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+
     person_id = db.Column(db.Integer, db.ForeignKey('broadway.person.id'), primary_key=True)
     show_id = db.Column(db.Integer, db.ForeignKey('broadway.shows.id'), primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('broadway.role.id'), primary_key=True)
@@ -23,10 +23,8 @@ class ShowsRolesLink(db.Model, models.dbTable):
 
 
 
-class Role(db.Model, models.dbTable):
+class Role(db.Model, BaseModel):
     __tablename__ = "role"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True, nullable=False) # All actors will be classified as "Performer"
@@ -60,10 +58,10 @@ race_table = db.Table('racial_identity_lookup_table',
         )
 
 
-class RacialIdentity(db.Model, models.dbTable):
+class RacialIdentity(db.Model, BaseModel):
     __tablename__ = "racial_identity"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -86,10 +84,10 @@ class RacialIdentity(db.Model, models.dbTable):
 
 # --------------------------------------------------------------------------------
 
-class GenderIdentity(db.Model, models.dbTable):
+class GenderIdentity(db.Model, BaseModel):
     __tablename__ = "gender_identity"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -116,11 +114,11 @@ class GenderIdentity(db.Model, models.dbTable):
 # --------------------------------------------------------------------------
 
 
-class Person(db.Model, models.dbTable):
+class Person(db.Model, BaseModel):
     """"""
     __tablename__ = "person"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+
+
     id = db.Column(db.Integer,primary_key=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 

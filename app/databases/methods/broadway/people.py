@@ -191,7 +191,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         			person.name_nickname,
         			person.name_suffix
         		) AS 'full_name',
-        	 DATE_FORMAT(person.date_of_birth, '%%m/%%d/%%Y') AS date_of_birth,
+        	 DATE_FORMAT(person.date_of_birth, '%m/%d/%Y') AS date_of_birth,
              gender_identity.name as 'gender_identity',
              GROUP_CONCAT(DISTINCT racial_identity.name) as 'racial_identities',
         	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,

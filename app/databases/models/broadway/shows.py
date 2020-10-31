@@ -1,4 +1,5 @@
 from databases import db, models
+from . import BaseModel
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -9,11 +10,10 @@ import datetime
 
 # ------------------------------------------------------------------------------
 
-class Show(db.Model, models.dbTable):
+class Show(db.Model, BaseModel):
     """"""
     __tablename__ = "shows"
-    __table_args__ = {'schema':'broadway'}
-    __bind_key__ = "broadway"
+    
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
