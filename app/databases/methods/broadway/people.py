@@ -201,7 +201,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         	 DATE_FORMAT(person.date_of_birth, '{dt_format}') AS date_of_birth,
              gender_identity.name as 'gender_identity',
              GROUP_CONCAT(DISTINCT racial_identity.name SEPARATOR ', ') as 'racial_identities',
-        	 GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
+        	 -- GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
              MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
              -- GROUP_CONCAT(DISTINCT role.name ) AS 'all roles',
@@ -242,7 +242,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
 
     if not include_show_data_json:
-        df.drop(columns=['show_data'], inplace=True)
+        df.drop(columns=['show_data'], inplace=True, errors='ignore')
 
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
 
