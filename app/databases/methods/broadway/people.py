@@ -174,10 +174,10 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     if not params.get('role_name'):
         params['role_name'] = 'director'
 
-    
+
     # f string notation causes the '%' to get messed up.
     # Alt: dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
-    dt_format = "%m/%d/%Y"
+    dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
 
     query = f"""
             SELECT
