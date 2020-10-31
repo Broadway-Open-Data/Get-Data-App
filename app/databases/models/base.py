@@ -8,8 +8,6 @@ class dbTable():
     """
     Base class for all objects in a table
     """
-    # def __init__(self, **kwargs):
-    #     self.__bind_key__=kwargs['bind_key']
 
     # Lookup by id
     @classmethod
@@ -46,7 +44,7 @@ class dbTable():
         is to create such a function in the child / inhereted class, so that
         edits are stored in the specific database in which they belong.
         """
-        
+
         # Update info...
         self.query.filter_by(id=self.id).update(kwargs.get('update_dict'), synchronize_session=False)
 

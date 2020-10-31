@@ -1,7 +1,7 @@
 from databases import db, models
 from . import BaseModel
 from sqlalchemy.sql import expression
-
+from sqlalchemy.sql.expression import and_
 import datetime
 
 # ------------------------------------------------------------------------------
@@ -9,7 +9,7 @@ import datetime
 
 
 class DataEditsValuesLink(db.Model, BaseModel):
-    """Stores values as related by the data edits table"""
+    """A 'link table' for data_edits and data_values"""
     __tablename__ = "data_edits_values_link"
 
     data_edits_id = db.Column(db.Integer,db.ForeignKey('broadway.data_edits.id'), primary_key=True)
@@ -22,6 +22,7 @@ class DataEditsValuesLink(db.Model, BaseModel):
         return f"id: {self.data_edits_values_id}; value: {self.value_id}; {'PRE' if self.pre_or_post==0 else 'POST'}"
 
 
+
 class DataValues(db.Model, BaseModel):
     """Stores values as related by the data edits table"""
     __tablename__ = "data_values"
@@ -31,26 +32,6 @@ class DataValues(db.Model, BaseModel):
 
     def __repr__(self):
         return f"id: {self.id}; value: {self.value}"
-
-
-# class DataEditsValues(db.Model, BaseModel):
-#     """Stores values as related by the data edits table"""
-#     __tablename__ = "data_edits_values"
-#
-#     # self
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     pre_or_post = db.Column(db.Boolean, nullable=False, comment='`0` represents `pre`, `1` represents `post`')
-#
-#     # Parent
-#     data_edits_row_id = db.Column(db.Integer, db.ForeignKey('broadway.data_edits.id'), primary_key=True, comment='Primary key from `data_edits` table.')
-#
-#     # Children
-#     data_values = db.relationship(DataValues, secondary='broadway.data_edits_values_link', backref=db.backref('broadway.data_edits_values', lazy='dynamic'), passive_deletes=True)
-#
-#
-#     def __repr__(self):
-#         return f"data_edits_row_id: {self.data_edits_row_id}; edit_id: {self.edit_id}, value_id: {self.value_id}"
-
 
 
 
@@ -88,6 +69,28 @@ class DataEdits(db.Model, BaseModel):
 
 
     # Not including values here just yet...
+    data_values_pre = db.relationship("DataValues",
+                            secondary="data_edits_values_link",
+                            primaryjoin="data_values.id==data_edits_values_link.value_id",
+                            secondaryjoin="and_( \
+                                data_edits.id==data_edits_values_link.data_edits_id, \
+                                data_edits_values_link.pre_or_post==0 \
+                                )",
+                            backref=db.backref("data_edits", lazy='joined'),
+                            lazy='dynamic'
+                            )
+
+    data_values_post = db.relationship("DataValues",
+                            secondary="data_edits_values_link",
+                            primaryjoin="data_values.id==data_edits_values_link.value_id",
+                            secondaryjoin="and_( \
+                                data_edits.id==data_edits_values_link.data_edits_id, \
+                                data_edits_values_link.pre_or_post==1 \
+                                )",
+                            backref=db.backref("data_edits", lazy='joined'),
+                            lazy='dynamic'
+                            )
+
     # data_values = db.relationship(DataValues, secondary='broadway.data_edits_values_link', backref=db.backref('broadway.data_edits_values', lazy='dynamic'), passive_deletes=True)
 
 

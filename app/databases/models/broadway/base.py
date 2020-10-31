@@ -21,7 +21,7 @@ class BaseModel(dbTable):
 
 
 
-    # This works!
+    # This works! Store values here...
     def track_change(self, **kwargs):
 
         # Get edit meta info
