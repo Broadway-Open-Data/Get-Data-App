@@ -28,9 +28,9 @@ def update_people_data(params):
     if params.get('date_of_birth'):
         date_of_birth = dt.datetime.strptime(params.get('date_of_birth'), "%m/%d/%Y")
 
-        my_person.update_info(
+        my_person.update_info_and_track(
             update_dict={'date_of_birth':date_of_birth},
-            track_changes=True,
+            # track_changes=True,
             edit_by=current_user.email,
             edit_comment=edit_comment,
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
@@ -56,9 +56,9 @@ def update_people_data(params):
             my_gender.save_to_db()
 
         # now set the person's gender identity
-        my_person.update_info(
+        my_person.update_info_and_track(
             update_dict={'gender_identity_id':my_gender.id},
-            track_changes=True,
+            # track_changes=True,
             edit_by=current_user.email,
             edit_comment=edit_comment,
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
@@ -128,11 +128,11 @@ def update_people_data(params):
         # ----------------------------------------------------------------------
 
         # Get edit meta info
-        edit_id = db.session.query(DataEdits.edit_id).order_by(-DataEdits.edit_id.asc()).first()
+        user_edit_id = db.session.query(DataEdits.user_edit_id).order_by(-DataEdits.user_edit_id.asc()).first()
 
         # Unpack the tuple to a result
-        if edit_id: edit_id = edit_id[0] + 1
-        else: edit_id = 1
+        if user_edit_id: user_edit_id = user_edit_id[0] + 1
+        else: user_edit_id = 1
 
         # Comments
         approved_comment =f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
@@ -140,7 +140,7 @@ def update_people_data(params):
 
         my_edit = DataEdits(
             edit_date=dt.datetime.utcnow(),
-            edit_id=edit_id,
+            user_edit_id=user_edit_id,
             edit_by=current_user.email,
             edit_comment=edit_comment,
             approved=True,
