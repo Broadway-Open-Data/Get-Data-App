@@ -1,3 +1,5 @@
+import sys
+
 # from databases import db
 from sqlalchemy.orm import load_only
 import sqlalchemy.sql.functions as func
@@ -177,7 +179,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     # f string notation causes the '%' to get messed up.
     # Alt: dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
-    dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
+    # dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
+    # dt_format= "%" + "m/" + "%" + "d/" + "%" + "/Y"
+
+    if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
+    else: dt_format = '%%m/%%d/%%Y'
 
     query = f"""
             SELECT
