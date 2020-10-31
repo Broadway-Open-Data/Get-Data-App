@@ -177,13 +177,14 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         params['role_name'] = 'director'
 
 
-    # f string notation causes the '%' to get messed up.
-    # Alt: dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
-    # dt_format= f"{chr(37)}m/{chr(37)}d/{chr(37)}Y"
-    # dt_format= "%" + "m/" + "%" + "d/" + "%" + "/Y"
+    # In python 3.8 and on, a "%" does not need special escaping.
+    # In versions prior, special escaping ("%%") is needed.
 
-    if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
-    else: dt_format = '%%m/%%d/%%Y'
+    if sys.version_info.major==3:
+        if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
+        else: dt_format = '%%m/%%d/%%Y'
+    # Maybe this works... ?
+    else: dt_format = '%m/%d/%Y'
 
     query = f"""
             SELECT
