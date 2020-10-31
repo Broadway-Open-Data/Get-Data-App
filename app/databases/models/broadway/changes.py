@@ -33,11 +33,9 @@ class DataValues(db.Model, BaseModel):
         return f"id: {self.id}; value: {self.value}"
 
 
-# class DataEditsValues(db.Model, models.dbTable):
+# class DataEditsValues(db.Model, BaseModel):
 #     """Stores values as related by the data edits table"""
 #     __tablename__ = "data_edits_values"
-#     __table_args__ = {'schema':'broadway'}
-#     __bind_key__ = "broadway"
 #
 #     # self
 #     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
