@@ -1,5 +1,6 @@
 import json
 from databases import db
+from sqlalchemy.orm import class_mapper, ColumnProperty
 
 
 from sqlalchemy.exc import IntegrityError
@@ -54,21 +55,36 @@ class dbTable():
             self.save_to_db()
 
 
+    # --------------------------------------------------------------------------
 
-
-    # Define string methods...
-    @classmethod
-    def __data__(self):
-        data = {x: getattr(self, x) for x in self.__dict__.keys() if not x.startswith('_')}
-        # data = {x: getattr(self, x) for x in self.__mapper__.columns.keys()}
-        return data
-
-    @classmethod
     def __str__(self):
+        """Should this be a class method?"""
         data = self.__data__()
         return json.dumps(data, default=str)
 
 
+    
+    def as_dict(self):
+        """This method calls all data directly related to `self`, relationships are ignored..."""
+        result = {}
+        for prop in class_mapper(self.__class__).iterate_properties:
+            if isinstance(prop, ColumnProperty):
+                result[prop.key] = getattr(self, prop.key)
+        return result
+
+
+    # Define string methods...
+    def __data__(self):
+        """
+        This method calls all data related to `self`, including mapped relationships...
+        Note: Don't make this a class method...
+        """
+        data = {x: getattr(self, x) for x in self.__dict__.keys() if not x.startswith('_')}
+        return data
+
+
+
+    # --------------------------------------------------------------------------
 
     @classmethod
     def find_type(self, colname):

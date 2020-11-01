@@ -48,16 +48,16 @@ class BaseModel(dbTable):
         table_name = self.__tablename__
 
         # Get the data
-        _data = {x: getattr(self, x) for x in self.__dict__.keys() if not x.startswith('_')}
-        # _data = self.__data__()
+        #   --> using as_dict method because it's explicit, even though it's more "brutal"
+        _data = self.as_dict()
+
 
         for key, value in kwargs.get('update_dict').items():
 
             # If no edit, then don't store
             if _data[key] == value:
                 # No edit
-                if kwargs.get('debug',False)==True:
-                    print("no edit needed")
+                if kwargs.get('debug',False)==True: print("no edit needed")
                 continue
 
             my_edit = broadway_models.DataEdits(
@@ -76,23 +76,48 @@ class BaseModel(dbTable):
                 value_post = value
             )
             if kwargs.get('debug',False)==True:
-                print(my_edit.__dict__)
+                print(my_edit.as_dict())
 
 
-            else:
-                if kwargs.get('test',False)==False:
-                    my_edit.save_to_db()
+            # Don't save edit when testing.
+            if kwargs.get('test',False)==False:
+                my_edit.save_to_db()
 
-                # Sample here, add values pre and post to corresponding link tables...
-                # Start where the values are a string:
-                if isinstance(_data[key], str):
-                    # Do something...
-                    print(_data[key])
+            # Sample here, add values pre and post to corresponding link tables...
+            # Start where the values are a string:
+            # CONTINUE FROM HERE --> ON EDIT, ADD "PRE" AND "POST" VALUES TO LINK TABLE
+            # THEN REMOVE PRE AND POST AS FIELDS FROM DATAEDITS....
+            if isinstance(_data[key], str):
+                # Do something...
+                print(_data[key])
 
-                # if type(value)==list:
-                #     for v in value:
-                #         # Add each value
-                #         None
-                # else:
-                #     # Add the value...
-                #     None
+            print("THIS")
+            # if type(value)==list:
+            #     for v in value:
+            #         # Add each value
+            #         None
+            # else:
+            #     # Add the value...
+            #     None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
