@@ -17,7 +17,10 @@ class BaseModel(dbTable):
         """Updates data and tracks edits"""
 
         self.track_change(**kwargs)
-        self.update_info(**kwargs)
+
+        if kwargs.get('test',False)==False:
+            self.update_info(**kwargs)
+
 
 
 
@@ -74,8 +77,11 @@ class BaseModel(dbTable):
             )
             if kwargs.get('debug',False)==True:
                 print(my_edit.__dict__)
+
+
             else:
-                my_edit.save_to_db()
+                if kwargs.get('test',False)==False:
+                    my_edit.save_to_db()
 
                 # Sample here, add values pre and post to corresponding link tables...
                 # Start where the values are a string:

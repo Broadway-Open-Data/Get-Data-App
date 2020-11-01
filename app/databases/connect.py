@@ -11,13 +11,17 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
+from databases.models.broadway import Person
+from utils.get_db_uri import get_db_uri
 
 
 # Flask Stuff
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from utils.get_db_uri import get_db_uri
+# Data stuff
+import pandas as pd
+
 
 
 # Define args
@@ -71,7 +75,21 @@ class ConnectApp():
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     def test_on_change(self):
-        print("foo")
+
+        # Alt:
+        my_person = Person.get_by_id(18174)
+
+        # print(my_person.__dict__)
+        curr_g_id = my_person.gender_identity_id
+
+        new_g_id = 1 if curr_g_id==0 else 0
+        # Update value
+        my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=True)
+
+        # result = db.get_engine(bind='broadway').execute(query)
+
+        # result = list(result)
+
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
