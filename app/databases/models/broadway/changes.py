@@ -34,8 +34,6 @@ class DataValues(db.Model, BaseModel):
 
 
 
-
-
 class DataEdits(db.Model, BaseModel):
     """"""
     __tablename__ = "data_edits"

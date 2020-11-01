@@ -95,6 +95,9 @@ class BaseModel(dbTable):
 
                 # Hopefully this is it...
                 # Though, I'll need to make sure the value has "pre" or "post" in it...
+
+                # Maybe, make an instance "my value" and append to the parent?
+                # will consult yacin on this....
                 # my_edit.data_values_pre.append(_data[key])
                 print(my_edit)
                 # my_value = broadway_models.DataValues(
