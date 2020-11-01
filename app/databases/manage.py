@@ -27,10 +27,8 @@ class ManagerApp():
 
     def __init__(self, **kwargs):
 
-        self.db_name = kwargs.get('db_name', 'users')
         # Instantiate a blank app
         self.app = Flask(__name__)
-        # self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri(self.db_name)
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
         self.app.config['SQLALCHEMY_BINDS'] = {
             'users': get_db_uri("users"),
@@ -38,16 +36,12 @@ class ManagerApp():
         }
 
 
-        # Configure the db
-        db.init_app(self.app)
-        # db = SQLAlchemy(self.app)
-        with self.app.app_context():
-            db.create_all()
-            # db.create_all(bind=['users','broadway'])
+        # instantiate the db
+        self.app.app_context().push()
+        db.init_app(app=self.app)
+        db.create_all()
 
 
-
-        # extend_existing=True
 
         # ------------------------------------------------------------------------------
 

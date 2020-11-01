@@ -76,3 +76,17 @@ class BaseModel(dbTable):
                 print(my_edit.__dict__)
             else:
                 my_edit.save_to_db()
+
+                # Sample here, add values pre and post to corresponding link tables...
+                # Start where the values are a string:
+                if isinstance(_data[key], str):
+                    # Do something...
+                    print(_data[key])
+
+                # if type(value)==list:
+                #     for v in value:
+                #         # Add each value
+                #         None
+                # else:
+                #     # Add the value...
+                #     None

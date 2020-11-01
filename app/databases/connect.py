@@ -32,9 +32,11 @@ class ConnectApp():
 
         # Instantiate a blank app
         self.app = Flask(__name__)
-        self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri('users')
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-        # self.app.config['JSON_AS_ASCII'] = False
+        self.app.config['SQLALCHEMY_BINDS'] = {
+            'users': get_db_uri("users"),
+            'broadway': get_db_uri("broadway"),
+        }
 
         # instantiate the db
         self.app.app_context().push()
@@ -52,10 +54,10 @@ class ConnectApp():
         SELECT
             id
         FROM
-            user
+            users.user
         ;
         """
-        result = db.engine.execute(query)
+        result = db.get_engine(bind='users').execute(query)
         all_ids = [int(x[0]) for x in result]
         return all_ids
 
@@ -63,7 +65,7 @@ class ConnectApp():
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    def foo(self):
+    def test_update_functionality(self):
         print("foo")
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -77,4 +79,7 @@ if __name__ =='__main__':
     db_app = ConnectApp()
     all_user_ids = db_app.query_all_users()
     print(all_user_ids)
+
+    # Test the functionality of the update stuff
+    db_app.test_update_functionality()
     # print("*****\nDONE! All data is living in the database.\n*****")
