@@ -56,8 +56,8 @@ class BaseModel(dbTable):
 
             # If no edit, then don't store
             if _data[key] == value:
-                # No edit
-                if kwargs.get('debug',False)==True: print("no edit needed")
+                if kwargs.get('debug',False)==True:
+                    print("no edit needed")
                 continue
 
             my_edit = broadway_models.DataEdits(
@@ -75,23 +75,56 @@ class BaseModel(dbTable):
                 value_pre = _data[key],
                 value_post = value
             )
+
             if kwargs.get('debug',False)==True:
                 print(my_edit.as_dict())
 
 
             # Don't save edit when testing.
-            if kwargs.get('test',False)==False:
-                my_edit.save_to_db()
+            # if kwargs.get('test',False)==False:
+            #     my_edit.save_to_db()
 
             # Sample here, add values pre and post to corresponding link tables...
             # Start where the values are a string:
             # CONTINUE FROM HERE --> ON EDIT, ADD "PRE" AND "POST" VALUES TO LINK TABLE
             # THEN REMOVE PRE AND POST AS FIELDS FROM DATAEDITS....
-            if isinstance(_data[key], str):
+
+            # ======== PRE ========
+            # Single value
+            if isinstance(_data[key], (str,int)):
+
+                # Hopefully this is it...
+                # Though, I'll need to make sure the value has "pre" or "post" in it...
+                # my_edit.data_values_pre.append(_data[key])
+                print(my_edit)
+                # my_value = broadway_models.DataValues(
+                #     value=_data[key]
+                #     )
+                # my_value.save_to_db()
+                #
+                # my_value_link = broadway_models.DataEditsValuesLink(
+                #     data_edits_id=my_edit.id, # primary key for DataEdits
+                #     value_id=my_value.id, # primary key for DataValues
+                #     pre_or_post=0,
+                # )
+                # my_value_link.save_to_db()
+                # print("Value link: ", my_value_link)
+
+
+
+            # Multiple values
+            if isinstance(_data[key], (tuple,list)):
                 # Do something...
                 print(_data[key])
 
-            print("THIS")
+
+
+
+
+
+
+            # ======== POST ========
+
             # if type(value)==list:
             #     for v in value:
             #         # Add each value
