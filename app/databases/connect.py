@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import sys
@@ -19,7 +20,11 @@ from flask_sqlalchemy import SQLAlchemy
 from utils.get_db_uri import get_db_uri
 
 
+# Define args
+import argparse
 
+parser = argparse.ArgumentParser(description='describe the name of the operation you want to do -- using the function name / class method.')
+parser.add_argument('function_name', nargs='*', help='name of the class method you want to run')
 
 
 
@@ -65,7 +70,7 @@ class ConnectApp():
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    def test_update_functionality(self):
+    def test_on_change(self):
         print("foo")
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -76,10 +81,23 @@ class ConnectApp():
 
 
 if __name__ =='__main__':
+
+    args = parser.parse_args()
+
     db_app = ConnectApp()
-    all_user_ids = db_app.query_all_users()
-    print(all_user_ids)
+
+    if 'query_all_users' in args.function_name:
+        all_user_ids = db_app.query_all_users()
+        print(all_user_ids)
 
     # Test the functionality of the update stuff
-    db_app.test_update_functionality()
-    # print("*****\nDONE! All data is living in the database.\n*****")
+    if 'test_on_change' in args.function_name:
+        db_app.test_on_change()
+
+
+
+
+
+
+
+#
