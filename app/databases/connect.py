@@ -96,18 +96,41 @@ class ConnectApp():
         my_person = Person.get_by_id(18174)
 
         # print(my_person.__dict__)
-        curr_racial_id = my_person.racial_identity
-
+        curr_racial_ids = my_person.racial_identity
+        new_racial_ids = []
 
         racial_ids = ['white','british']
         for r_name in racial_ids:
             my_r_id = RacialIdentity.get_by_name(r_name)
-            print(my_r_id)
-        return
-        new_g_id = 1 if curr_g_id==2 else 2
+            new_racial_ids.append(my_r_id)
 
-        # Update value
-        my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=False)
+        # keep it changing for spicyness
+        if len(curr_racial_ids)>=1:
+            new_racial_ids.pop(1)
+
+        # ----------------------------------------------------------------------
+        # Will work on this later!
+
+        # Before doing the actual changes -- save here!
+        # OR maybe this is a class action on the person class?
+        # my_person.update_info_and_track(
+        #     update_dict={'racial_identity':curr_racial_ids},
+        #     debug=True,
+        #     track_changes_but_dont_update=True
+        #     )
+        #
+        # # remove current ids first:
+        # for r_id in my_person.racial_identity:
+        #     if r_id not in new_racial_ids:
+        #         my_person.racial_identity.remove(r_id)
+        #
+        # # Now add ids
+        # for r_id in new_racial_ids:
+        #     if r_id not in my_person.racial_identity:
+        #         my_person.racial_identity.append(r_id)
+        #
+        # # Update value
+        # ----------------------------------------------------------------------
 
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -

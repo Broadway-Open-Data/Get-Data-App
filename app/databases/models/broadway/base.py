@@ -32,8 +32,11 @@ class BaseModel(dbTable):
 
         self.track_change(**kwargs)
 
-        if kwargs.get('test',False)==False:
-            self.update_info(**kwargs)
+        if kwargs.get('test',False)==True:
+            return
+        if kwargs.get('track_changes_but_dont_update',False)==True:
+            return
+        self.update_info(**kwargs)
 
 
 
