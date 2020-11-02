@@ -122,9 +122,11 @@ class ConnectApp():
             – value_pre
             – value_post
         """
-        table_name = self.__tablename__
-        print(table_name)
-
+        # Choose the parent table name...
+        table_name = my_person.__tablename__ # this is the one we want (parent)
+        _data = my_person.as_dict() # value is not in here...
+        curr_racial_ids = getattr(my_person, 'racial_identity') # maybe it's in here....
+        print(curr_racial_ids)
 
 
         #
@@ -138,7 +140,7 @@ class ConnectApp():
         #     if r_id not in new_racial_ids:
         #         my_person.racial_identity.remove(r_id)
         #
-        # # Now add ids
+        # Now add ids
         # for r_id in new_racial_ids:
         #     if r_id not in my_person.racial_identity:
         #         my_person.racial_identity.append(r_id)
@@ -147,7 +149,7 @@ class ConnectApp():
         # ----------------------------------------------------------------------
 
         # WHILE TESTING: DON'T UPDATE VALUE
-
+        # my_person.save_to_db()
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 

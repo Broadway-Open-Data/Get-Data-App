@@ -34,7 +34,7 @@ class BaseModel(dbTable):
 
         if kwargs.get('test',False)==True:
             return
-        
+
         self.update_info(**kwargs)
 
 
@@ -70,8 +70,11 @@ class BaseModel(dbTable):
 
         for key, value in kwargs.get('update_dict').items():
 
+            # Get the value from the class...
+            pre_value = getattr(self, key)
+
             # If no edit, then don't store
-            if _data[key] == value:
+            if pre_value == value:
                 if kwargs.get('debug',False)==True:
                     print("no edit needed")
                 continue
@@ -88,7 +91,7 @@ class BaseModel(dbTable):
                 value_primary_id=self.id,
                 field = key,
                 field_type = str(self.find_type(key)),
-                value_pre = _data[key],
+                value_pre = pre_value, # alt: use getattr(self, key)
                 value_post = value
             )
 
@@ -105,7 +108,7 @@ class BaseModel(dbTable):
             # ======== Save edit values ========
 
 
-            all_values_pre = convert_to_tuple(_data[key])
+            all_values_pre = convert_to_tuple(pre_value)
             all_values_post = convert_to_tuple(value)
 
 
