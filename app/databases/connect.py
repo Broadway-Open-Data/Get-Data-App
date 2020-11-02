@@ -111,12 +111,26 @@ class ConnectApp():
         # ----------------------------------------------------------------------
         # Will work on this later!
 
-        # Before doing the actual changes -- save here!
-        # OR maybe this is a class action on the person class?
-        # my_person.update_info_and_track(
+        # Just track the change, don't update...
+
+        """
+        Let's test to see what values we get for the following:
+            – table_name
+            – value_primary_id
+            – field (key)
+            – field_type
+            – value_pre
+            – value_post
+        """
+        table_name = self.__tablename__
+        print(table_name)
+
+
+
+        #
+        # my_person.track_change(
         #     update_dict={'racial_identity':curr_racial_ids},
         #     debug=True,
-        #     track_changes_but_dont_update=True
         #     )
         #
         # # remove current ids first:
@@ -132,6 +146,7 @@ class ConnectApp():
         # # Update value
         # ----------------------------------------------------------------------
 
+        # WHILE TESTING: DON'T UPDATE VALUE
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
