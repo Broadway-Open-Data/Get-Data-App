@@ -12,6 +12,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Internal stuff
 from create_db import db
 from databases.models.broadway import Person, RacialIdentity
+from databases.methods.broadway import update_person_identities
 from utils.get_db_uri import get_db_uri
 
 
@@ -94,86 +95,62 @@ class ConnectApp():
 
         # Alt:
         my_person = Person.get_by_id(18174)
-
+        print("pre:", my_person.racial_identity)
 
         # ----------------------------------------------------------------------
         # Just track the change, don't update...
 
-        """
-        Let's test to see what values we get for the following:
-            ✔️ table_name
-            ✔️ value_primary_id
-            ✔️ field (key)
-            ✔️ field_type (kwargs override)
-            ✔️ value_pre
-            – value_post
-        """
-
         curr_racial_ids = getattr(my_person, 'racial_identity') # maybe it's in here....
-        field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
 
-        # You must pass a list of racial identity ids
-        # Conver a list of names to ids with the following:
-        new_racial_ids = [RacialIdentity.get_by_name(x).id for x in ['white','british']]
-        # if len(curr_racial_ids)>=1:
-        #     new_racial_ids.pop(1)
-
-        # Finally, track the changes
-        my_person.track_change(
-            update_dict={'racial_identity':new_racial_ids},
-            field_type = 'RELATIONSHIP (LIST CHILD.IDS)',
-            debug=True,
-            test=False
-            )
-
-        print(new_racial_ids)
-
-        # for r_name in racial_ids:
-        #     my_r_id =
-        #     new_racial_ids.append(my_r_id)
-
-        # # keep it changing for spicyness
+        if len(curr_racial_ids)==2:
+            new_racial_identity = ['white']
+        else:
+            new_racial_identity = ['white','british']
 
 
+        update_person_identities(18174, 'racial_identity', new_racial_identity, track_changes=True)
 
-        # my_edit = broadway_models.DataEdits(
-        #     edit_date=edit_date,
-        #     user_edit_id=user_edit_id,
-        #     edit_by=edit_by,
-        #     edit_comment=edit_comment,
-        #     approved=approved,
-        #     approved_by=approved_by,
-        #     approved_comment=approved_comment,
-        #     table_name=table_name,
-        #     value_primary_id=self.id,
-        #     field = key,
-        #     field_type = str(self.find_type(key)),
-        #     value_pre = pre_value, # alt: use getattr(self, key)
-        #     value_post = value
-        # )
-
-
-
+        print("post:", my_person.racial_identity)
 
         #
-
+        # field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
+        #
+        # # You must pass a list of racial identity ids
+        # # Conver a list of names to ids with the following:
+        # new_racial_identity = [RacialIdentity.get_by_name(x) for x in ['white','british']]
+        #
+        # # keep things exciting
+        # if len(curr_racial_ids)>1:
+        #     new_racial_identity.pop(1)
+        #
+        # new_racial_identity_id = [x.id for x in new_racial_identity]
+        #
+        # # Finally, track the changes
+        # my_person.track_change(
+        #     update_dict={'racial_identity':new_racial_identity_id},
+        #     field_type = 'RELATIONSHIP (LIST CHILD.IDS)',
+        #     debug=True,
+        #     test=False
+        #     )
+        #
+        #
+        # # ----------------------------------------------------------------------
+        # # Update values
         #
         # # remove current ids first:
         # for r_id in my_person.racial_identity:
-        #     if r_id not in new_racial_ids:
+        #     if r_id not in new_racial_identity:
         #         my_person.racial_identity.remove(r_id)
         #
-        # Now add ids
-        # for r_id in new_racial_ids:
+        # # Now add ids
+        # for r_id in new_racial_identity:
         #     if r_id not in my_person.racial_identity:
         #         my_person.racial_identity.append(r_id)
         #
-        # # Update value
-        # ----------------------------------------------------------------------
-
-        # WHILE TESTING: DON'T UPDATE VALUE
         # my_person.save_to_db()
+        # print("post:", my_person.racial_identity)
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    # Done with this function...
 
 
 

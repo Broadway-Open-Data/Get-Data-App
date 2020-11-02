@@ -66,10 +66,6 @@ class BaseModel(dbTable):
         # Get reference stuff
         table_name = self.__tablename__
 
-        # Get the data -- using getattr method now...
-        #   --> using as_dict method because it's explicit, even though it's more "brutal"
-        # _data = self.as_dict()
-
 
         for key, value in kwargs.get('update_dict').items():
 
@@ -90,6 +86,7 @@ class BaseModel(dbTable):
                 continue
 
 
+
             my_edit = broadway_models.DataEdits(
                 edit_date=edit_date,
                 user_edit_id=user_edit_id,
@@ -102,8 +99,6 @@ class BaseModel(dbTable):
                 value_primary_id=self.id,
                 field = key,
                 field_type = kwargs.get('field_type') if kwargs.get('field_type') else str(self.find_type(key)), # this is weird since the `.get` method valls the second value.....
-                value_pre = pre_value,
-                value_post = value
             )
 
 
@@ -126,7 +121,7 @@ class BaseModel(dbTable):
 
             def add_edit_values(values, pre_or_post:int):
                 """Add values, pre or post..."""
-                for val in all_values_pre:
+                for val in values:
                     my_value = broadway_models.DataValues(value=val, pre_or_post=pre_or_post)
 
                     # Don't save edit value when testing.
@@ -140,10 +135,10 @@ class BaseModel(dbTable):
                         my_edit.data_values_post.append(my_value)
 
 
-
             # Now save them!
             add_edit_values(all_values_pre, 0)
             add_edit_values(all_values_post, 1)
+
 
             # Don't save edit when testing.
             if kwargs.get('test',False)==False:

@@ -163,6 +163,64 @@ def update_people_data(params):
 
 
 
+def update_person_identities(person_id:int, attr:str, children_names:list, track_changes=True):
+    """
+    Updates a person for the given criteria
+
+    Params:
+        person_id: (int) the id of the person
+        attr: (str) the attribute which you'd like to update (ex: racial_identity)
+        children_names: (list, str) a list of (str) names of the children to be updated (ex: ['white','british'])
+        track_changes: (bool) track changes and store in data_edits table? (default True)
+    """
+
+    my_person = Person.get_by_id(person_id)
+
+
+    # ----------------------------------------------------------------------
+    # 1. Track changes without updating
+
+    curr_children = getattr(my_person, attr)
+    field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
+
+    # You must pass a list of racial identity ids
+    # Conver a list of names to ids with the following:
+    if attr=='racial_identity':
+        new_children = [RacialIdentity.get_by_name(x) for x in children_names]
+    elif attr=='gender_identity':
+        new_children = [GenderIdentity.get_by_name(x) for x in children_names]
+    else:
+        raise NameError(f'{attr} not recognized')
+
+
+    new_children_ids = [x.id for x in new_children]
+
+    # Finally, track the changes
+    my_person.track_change(
+        update_dict={attr: new_children_ids},
+        field_type = 'RELATIONSHIP (LIST CHILD.IDS)',
+        debug=False,
+        test=False
+        )
+
+
+    # ----------------------------------------------------------------------
+    # Update values
+
+    # remove current ids first:
+    for child in getattr(my_person, attr):
+        if child not in new_children:
+            getattr(my_person, attr).remove(child)
+
+    # Now add ids
+    for child in new_children:
+        if child not in getattr(my_person, attr):
+            getattr(my_person, attr).append(child)
+
+    # Now save...
+    my_person.save_to_db()
+
+
 
 
 

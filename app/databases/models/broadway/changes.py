@@ -53,10 +53,6 @@ class DataEdits(db.Model, BaseModel):
     field = db.Column(db.String(40), nullable=False, unique=False)
     field_type = db.Column(db.String(40), default="VARCHAR(40)", nullable=False, unique=False)
 
-
-    value_pre = db.Column(db.String(300), nullable=True, unique=False)
-    value_post = db.Column(db.String(300), nullable=False, unique=False)
-
     # Who made the edit ?
     edit_by = db.Column(db.String(40), nullable=False, unique=False)
     edit_comment = db.Column(db.String(300), nullable=True, unique=False)
