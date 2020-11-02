@@ -59,7 +59,7 @@ class dbTable():
 
     def __str__(self):
         """Should this be a class method?"""
-        data = self.__data__()
+        data = self.as_dict()
         return json.dumps(data, default=str)
 
 

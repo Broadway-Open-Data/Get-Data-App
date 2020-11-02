@@ -11,7 +11,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-from databases.models.broadway import Person
+from databases.models.broadway import Person, RacialIdentity
 from utils.get_db_uri import get_db_uri
 
 
@@ -74,7 +74,7 @@ class ConnectApp():
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    def test_on_change(self):
+    def test_single_change(self):
 
         # Alt:
         my_person = Person.get_by_id(18174)
@@ -87,7 +87,27 @@ class ConnectApp():
         # Update value
         my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=False)
 
-        
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    def test_multi_change(self):
+        """Try changing multiple things"""
+
+        # Alt:
+        my_person = Person.get_by_id(18174)
+
+        # print(my_person.__dict__)
+        curr_racial_id = my_person.racial_identity
+
+
+        racial_ids = ['white','british']
+        for r_name in racial_ids:
+            my_r_id = RacialIdentity.get_by_name(r_name)
+            print(my_r_id)
+        return
+        new_g_id = 1 if curr_g_id==2 else 2
+
+        # Update value
+        my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=False)
 
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -108,8 +128,12 @@ if __name__ =='__main__':
         print(all_user_ids)
 
     # Test the functionality of the update stuff
-    if 'test_on_change' in args.function_name:
-        db_app.test_on_change()
+    if 'test_single_change' in args.function_name:
+        db_app.test_single_change()
+
+    # Test the functionality of the update stuff
+    if 'test_multi_change' in args.function_name:
+        db_app.test_multi_change()
 
 
 
