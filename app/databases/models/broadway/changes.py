@@ -14,8 +14,11 @@ class DataEditsValuesLink(db.Model, BaseModel):
 
     data_edits_id = db.Column(db.Integer,db.ForeignKey('broadway.data_edits.id'), primary_key=True)
     value_id = db.Column(db.Integer,db.ForeignKey('broadway.data_values.id'), primary_key=True)
+    pre_or_post = db.relationship('DataValues', backref="broadway.data_values",lazy="joined")
+
+
     def __repr__(self):
-        return f"id: {self.data_edits_values_id}; value: {self.value_id};"
+        return f"id: {self.data_edits_values_id}; value: {self.value_id}; state: {'PRE' if self.pre_or_post==0 else 'POST'};"
 
 
 
@@ -64,13 +67,12 @@ class DataEdits(db.Model, BaseModel):
     approved_by = db.Column(db.String(40), nullable=False, unique=False)
     approved_comment = db.Column(db.String(300), nullable=True, unique=False)
 
-
     # Include relationships here...
     data_values_pre = db.relationship(DataValues,
                             secondary="broadway.data_edits_values_link",
-                            primaryjoin="broadway.data_values.c.id==broadway.data_edits_values_link.c.value_id",
+                            primaryjoin="broadway.data_edits_values_link.c.data_edits_id==broadway.data_edits.c.id",
                             secondaryjoin="and_( \
-                                broadway.data_edits.c.id==broadway.data_edits_values_link.c.data_edits_id, \
+                                broadway.data_edits_values_link.c.value_id==broadway.data_values.c.id, \
                                 broadway.data_values.c.pre_or_post==0 \
                                 )",
                             backref=db.backref("values_pre", lazy='dynamic'),
@@ -81,9 +83,9 @@ class DataEdits(db.Model, BaseModel):
 
     data_values_post = db.relationship(DataValues,
                             secondary="broadway.data_edits_values_link",
-                            primaryjoin="broadway.data_values.c.id==broadway.data_edits_values_link.c.value_id",
+                            primaryjoin="broadway.data_edits_values_link.c.data_edits_id==broadway.data_edits.c.id",
                             secondaryjoin="and_( \
-                                broadway.data_edits.c.id==broadway.data_edits_values_link.c.data_edits_id, \
+                                broadway.data_edits_values_link.c.value_id==broadway.data_values.c.id, \
                                 broadway.data_values.c.pre_or_post==1 \
                                 )",
                             backref=db.backref("values_post", lazy='dynamic'),

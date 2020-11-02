@@ -5,6 +5,20 @@ from databases.models import broadway as broadway_models
 import datetime
 
 
+def convert_to_tuple(value):
+    """Helpful function"""
+    # Single value
+    if isinstance(value, (str,int)):
+        return (value,)
+
+    if isinstance(value, list):
+        return tuple(value)
+
+    if isinstance(value, tuple):
+        return value
+
+
+
 
 class BaseModel(dbTable):
     __table_args__ = {'schema':'broadway'}
@@ -81,68 +95,37 @@ class BaseModel(dbTable):
 
 
             # Don't save edit when testing.
-            # if kwargs.get('test',False)==False:
-            #     my_edit.save_to_db()
-
-            # Sample here, add values pre and post to corresponding link tables...
-            # Start where the values are a string:
-            # CONTINUE FROM HERE --> ON EDIT, ADD "PRE" AND "POST" VALUES TO LINK TABLE
-            # THEN REMOVE PRE AND POST AS FIELDS FROM DATAEDITS....
-
-            # ======== PRE ========
-            # Single value
-            if isinstance(_data[key], (str,int)):
-
-                # Hopefully this is it...
-                # Though, I'll need to make sure the value has "pre" or "post" in it...
-
-                # Maybe, make an instance "my value" and append to the parent?
-                # will consult yacin on this....
-                # my_edit.data_values_pre.append(_data[key])
-                print(my_edit)
-                # my_value = broadway_models.DataValues(
-                #     value=_data[key]
-                #     )
-                # my_value.save_to_db()
-                #
-                # my_value_link = broadway_models.DataEditsValuesLink(
-                #     data_edits_id=my_edit.id, # primary key for DataEdits
-                #     value_id=my_value.id, # primary key for DataValues
-                #     pre_or_post=0,
-                # )
-                # my_value_link.save_to_db()
-                # print("Value link: ", my_value_link)
+            if kwargs.get('test',False)==False:
+                my_edit.save_to_db()
 
 
 
-            # Multiple values
-            if isinstance(_data[key], (tuple,list)):
-                # Do something...
-                print(_data[key])
+            # ======== Save edit values ========
+
+
+            all_values_pre = convert_to_tuple(_data[key])
+            all_values_post = convert_to_tuple(value)
+
+
+            def add_edit_values(values, pre_or_post:int):
+                """Add values, pre or post..."""
+                for val in all_values_pre:
+                    my_value = broadway_models.DataValues(value=val, pre_or_post=pre_or_post)
+                    my_value.save_to_db()
+
+                    # Now save
+                    if pre_or_post==0:
+                        my_edit.data_values_pre.append(my_value)
+                    else:
+                        my_edit.data_values_post.append(my_value)
 
 
 
+            # Now save them!
+            add_edit_values(all_values_pre, 0)
+            add_edit_values(all_values_post, 1)
 
-
-
-
-            # ======== POST ========
-
-            # if type(value)==list:
-            #     for v in value:
-            #         # Add each value
-            #         None
-            # else:
-            #     # Add the value...
-            #     None
-
-
-
-
-
-
-
-
+            my_edit.save_to_db()
 
 
 

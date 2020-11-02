@@ -82,13 +82,12 @@ class ConnectApp():
         # print(my_person.__dict__)
         curr_g_id = my_person.gender_identity_id
 
-        new_g_id = 1 if curr_g_id==0 else 0
+        new_g_id = 1 if curr_g_id==2 else 2
+
         # Update value
-        my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=True)
+        my_person.update_info_and_track(update_dict={'gender_identity_id':new_g_id}, debug=True, test=False)
 
-        # result = db.get_engine(bind='broadway').execute(query)
-
-        # result = list(result)
+        
 
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -

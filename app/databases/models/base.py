@@ -49,10 +49,10 @@ class dbTable():
         # Update info...
         self.query.filter_by(id=self.id).update(kwargs.get('update_dict'), synchronize_session=False)
 
-        if kwargs.get('debug',False)==True:
-            None
-        else:
+        # don't save edits when testing
+        if kwargs.get('test',False)==False:
             self.save_to_db()
+
 
 
     # --------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class dbTable():
         return json.dumps(data, default=str)
 
 
-    
+
     def as_dict(self):
         """This method calls all data directly related to `self`, relationships are ignored..."""
         result = {}
