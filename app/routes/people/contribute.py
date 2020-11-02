@@ -34,7 +34,6 @@ def contribute():
         # make an int
         update_data['person_id'] = int(update_data['person_id'])
 
-
         # show the user (for debugging)
         flash(f'You submitted the following update_data: {update_data}')
 

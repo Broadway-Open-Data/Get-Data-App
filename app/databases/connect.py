@@ -108,47 +108,10 @@ class ConnectApp():
             new_racial_identity = ['white','british']
 
 
-        _ = update_person_identities(18174, 'racial_identity', new_racial_identity, track_changes=True)
+        update_person_identities(18174, 'racial_identity', new_racial_identity, track_changes=True)
 
         print("post:", my_person.racial_identity)
 
-        #
-        # field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
-        #
-        # # You must pass a list of racial identity ids
-        # # Conver a list of names to ids with the following:
-        # new_racial_identity = [RacialIdentity.get_by_name(x) for x in ['white','british']]
-        #
-        # # keep things exciting
-        # if len(curr_racial_ids)>1:
-        #     new_racial_identity.pop(1)
-        #
-        # new_racial_identity_id = [x.id for x in new_racial_identity]
-        #
-        # # Finally, track the changes
-        # my_person.track_change(
-        #     update_dict={'racial_identity':new_racial_identity_id},
-        #     field_type = 'RELATIONSHIP (LIST CHILD.IDS)',
-        #     debug=True,
-        #     test=False
-        #     )
-        #
-        #
-        # # ----------------------------------------------------------------------
-        # # Update values
-        #
-        # # remove current ids first:
-        # for r_id in my_person.racial_identity:
-        #     if r_id not in new_racial_identity:
-        #         my_person.racial_identity.remove(r_id)
-        #
-        # # Now add ids
-        # for r_id in new_racial_identity:
-        #     if r_id not in my_person.racial_identity:
-        #         my_person.racial_identity.append(r_id)
-        #
-        # my_person.save_to_db()
-        # print("post:", my_person.racial_identity)
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     # Done with this function...
 

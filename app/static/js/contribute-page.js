@@ -36,7 +36,7 @@ $(document).ready(function() {
       // Set values
       $('input[name=person_id]').val(rowId);
       $('input[name=date_of_birth]').val(rowDOB);
-      $('input[name=racial_identities]').val(rowRacialIdentity);
+      $('input[name=racial_identity]').val(rowRacialIdentity);
       $('input[name=gender_identity]').val(rowGenderIdentity);
 
     });

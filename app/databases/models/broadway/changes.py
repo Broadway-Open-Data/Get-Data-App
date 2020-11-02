@@ -95,7 +95,7 @@ class DataEdits(db.Model, BaseModel):
 
 
     def get_next_edit_id(self):
-        x = DataEdits.query(DataEdits.user_edit_id).order_by(-DataEdits.user_edit_id.asc()).first()
+        x = DataEdits.query.with_entities(DataEdits.user_edit_id).order_by(-DataEdits.user_edit_id.asc()).first()
         if not x:
             return 1
         return int(*x)
