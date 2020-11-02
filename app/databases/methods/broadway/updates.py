@@ -31,11 +31,11 @@ def update_people_data(params):
     assert(isinstance(params['person_id'], int))
     my_person = Person.get_by_id(params['person_id'])
 
-
     edit_comment = params.get(
         "edit_comment",
         f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface."
         )
+
 
 
     # Default, start off with an edit id
@@ -56,6 +56,7 @@ def update_people_data(params):
             edit_id=edit_id,
             edit_by=current_user.email,
             edit_comment=edit_comment,
+            edit_citation = params.get('edit_citation'),
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
         )
 
@@ -71,6 +72,7 @@ def update_people_data(params):
             edit_id=edit_id,
             edit_by=current_user.email,
             edit_comment=edit_comment,
+            edit_citation = params.get('edit_citation'),
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
             debug=False
             )
@@ -100,6 +102,7 @@ def update_people_data(params):
             edit_id=edit_id,
             edit_by=current_user.email,
             edit_comment=edit_comment,
+            edit_citation = params.get('edit_citation'),
             approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
             debug=False
             )

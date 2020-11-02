@@ -10,8 +10,13 @@ import datetime
 
 def convert_to_tuple(value):
     """Helpful function"""
+
+    # Null values
+    if value==None:
+        return (None,)
+
     # Single value
-    if isinstance(value, (str,int)):
+    if isinstance(value, (str,int, datetime.datetime)):
         return (value,)
 
     if isinstance(value, list):
@@ -88,6 +93,7 @@ class BaseModel(dbTable):
                 user_edit_id=user_edit_id,
                 edit_by=edit_by,
                 edit_comment=edit_comment,
+                edit_citation = kwargs.get('edit_citation'),
                 approved=approved,
                 approved_by=approved_by,
                 approved_comment=approved_comment,
@@ -109,7 +115,6 @@ class BaseModel(dbTable):
 
 
             # ======== Save edit values ========
-
 
             all_values_pre = convert_to_tuple(pre_value)
             all_values_post = convert_to_tuple(value)
