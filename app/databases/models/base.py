@@ -90,8 +90,8 @@ class dbTable():
     def find_type(self, colname):
         if hasattr(self, '__table__') and colname in self.__table__.c:
             return self.__table__.c[colname].type
-        for base in self.__bases__:
-            return find_type(base, colname)
+        # for base in self.__bases__:
+        #     return find_type(base, colname)
         raise NameError(colname)
 
 

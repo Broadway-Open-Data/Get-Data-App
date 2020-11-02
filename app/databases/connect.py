@@ -95,45 +95,68 @@ class ConnectApp():
         # Alt:
         my_person = Person.get_by_id(18174)
 
-        # print(my_person.__dict__)
-        curr_racial_ids = my_person.racial_identity
-        new_racial_ids = []
-
-        racial_ids = ['white','british']
-        for r_name in racial_ids:
-            my_r_id = RacialIdentity.get_by_name(r_name)
-            new_racial_ids.append(my_r_id)
-
-        # keep it changing for spicyness
-        if len(curr_racial_ids)>=1:
-            new_racial_ids.pop(1)
 
         # ----------------------------------------------------------------------
-        # Will work on this later!
-
         # Just track the change, don't update...
 
         """
         Let's test to see what values we get for the following:
-            – table_name
-            – value_primary_id
-            – field (key)
-            – field_type
-            – value_pre
+            ✔️ table_name
+            ✔️ value_primary_id
+            ✔️ field (key)
+            ✔️ field_type (kwargs override)
+            ✔️ value_pre
             – value_post
         """
-        # Choose the parent table name...
-        table_name = my_person.__tablename__ # this is the one we want (parent)
-        _data = my_person.as_dict() # value is not in here...
+
         curr_racial_ids = getattr(my_person, 'racial_identity') # maybe it's in here....
-        print(curr_racial_ids)
+        field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
+
+        # You must pass a list of racial identity ids
+        # Conver a list of names to ids with the following:
+        new_racial_ids = [RacialIdentity.get_by_name(x).id for x in ['white','british']]
+        # if len(curr_racial_ids)>=1:
+        #     new_racial_ids.pop(1)
+
+        # Finally, track the changes
+        my_person.track_change(
+            update_dict={'racial_identity':new_racial_ids},
+            field_type = 'RELATIONSHIP (LIST CHILD.IDS)',
+            debug=True,
+            test=False
+            )
+
+        print(new_racial_ids)
+
+        # for r_name in racial_ids:
+        #     my_r_id =
+        #     new_racial_ids.append(my_r_id)
+
+        # # keep it changing for spicyness
+
+
+
+        # my_edit = broadway_models.DataEdits(
+        #     edit_date=edit_date,
+        #     user_edit_id=user_edit_id,
+        #     edit_by=edit_by,
+        #     edit_comment=edit_comment,
+        #     approved=approved,
+        #     approved_by=approved_by,
+        #     approved_comment=approved_comment,
+        #     table_name=table_name,
+        #     value_primary_id=self.id,
+        #     field = key,
+        #     field_type = str(self.find_type(key)),
+        #     value_pre = pre_value, # alt: use getattr(self, key)
+        #     value_post = value
+        # )
+
+
 
 
         #
-        # my_person.track_change(
-        #     update_dict={'racial_identity':curr_racial_ids},
-        #     debug=True,
-        #     )
+
         #
         # # remove current ids first:
         # for r_id in my_person.racial_identity:

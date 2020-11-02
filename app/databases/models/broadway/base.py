@@ -2,6 +2,9 @@ from databases import db
 from databases.models import dbTable
 from databases.models import broadway as broadway_models
 
+# sqlalchemy stuff
+from sqlalchemy.orm.collections import InstrumentedList
+
 import datetime
 
 
@@ -63,9 +66,9 @@ class BaseModel(dbTable):
         # Get reference stuff
         table_name = self.__tablename__
 
-        # Get the data
+        # Get the data -- using getattr method now...
         #   --> using as_dict method because it's explicit, even though it's more "brutal"
-        _data = self.as_dict()
+        # _data = self.as_dict()
 
 
         for key, value in kwargs.get('update_dict').items():
@@ -73,11 +76,19 @@ class BaseModel(dbTable):
             # Get the value from the class...
             pre_value = getattr(self, key)
 
+            # If the data type is a list of children
+            if isinstance(pre_value, InstrumentedList):
+                pre_value = [x.id for x in pre_value]
+
+
             # If no edit, then don't store
-            if pre_value == value:
+            # compare two lists...
+            if (isinstance(pre_value, list) and set(pre_value)==set(value)) \
+            or pre_value == value:
                 if kwargs.get('debug',False)==True:
                     print("no edit needed")
                 continue
+
 
             my_edit = broadway_models.DataEdits(
                 edit_date=edit_date,
@@ -90,10 +101,11 @@ class BaseModel(dbTable):
                 table_name=table_name,
                 value_primary_id=self.id,
                 field = key,
-                field_type = str(self.find_type(key)),
-                value_pre = pre_value, # alt: use getattr(self, key)
+                field_type = kwargs.get('field_type') if kwargs.get('field_type') else str(self.find_type(key)), # this is weird since the `.get` method valls the second value.....
+                value_pre = pre_value,
                 value_post = value
             )
+
 
             if kwargs.get('debug',False)==True:
                 print(my_edit.as_dict())
@@ -116,7 +128,10 @@ class BaseModel(dbTable):
                 """Add values, pre or post..."""
                 for val in all_values_pre:
                     my_value = broadway_models.DataValues(value=val, pre_or_post=pre_or_post)
-                    my_value.save_to_db()
+
+                    # Don't save edit value when testing.
+                    if kwargs.get('test',False)==False:
+                        my_value.save_to_db()
 
                     # Now save
                     if pre_or_post==0:
@@ -130,7 +145,10 @@ class BaseModel(dbTable):
             add_edit_values(all_values_pre, 0)
             add_edit_values(all_values_post, 1)
 
-            my_edit.save_to_db()
+            # Don't save edit when testing.
+            if kwargs.get('test',False)==False:
+                my_edit.save_to_db()
+
 
 
 
