@@ -48,11 +48,7 @@ class BaseModel(dbTable):
 
         # Get edit meta info
         edit_date = datetime.datetime.utcnow()
-        user_edit_id = db.session.query(broadway_models.DataEdits.user_edit_id).order_by(-broadway_models.DataEdits.user_edit_id.asc()).first()
-
-        # Unpack the tuple to a result
-        if user_edit_id: user_edit_id = user_edit_id[0] + 1
-        else: user_edit_id = 1
+        user_edit_id = kwargs.get('edit_id', broadway_models.DataEdits().get_next_edit_id())
 
 
         # Who made the edit ? – This will have to be built as a wrapper I guess...
@@ -143,9 +139,6 @@ class BaseModel(dbTable):
             # Don't save edit when testing.
             if kwargs.get('test',False)==False:
                 my_edit.save_to_db()
-
-
-
 
 
 

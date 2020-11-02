@@ -11,7 +11,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-from databases.models.broadway import Person, RacialIdentity
+from databases.models.broadway import Person, DataEdits, RacialIdentity
 from databases.methods.broadway import update_person_identities
 from utils.get_db_uri import get_db_uri
 
@@ -108,7 +108,7 @@ class ConnectApp():
             new_racial_identity = ['white','british']
 
 
-        update_person_identities(18174, 'racial_identity', new_racial_identity, track_changes=True)
+        _ = update_person_identities(18174, 'racial_identity', new_racial_identity, track_changes=True)
 
         print("post:", my_person.racial_identity)
 
