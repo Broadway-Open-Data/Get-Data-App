@@ -119,26 +119,26 @@ class ConnectApp():
 
         # Alt:
         my_person = Person.get_by_id(person_id)
-        my_gender_id = my_person.gender_identity_id # will be single value:
+        curr_gender_ids = my_person.gender_identity # will be single value:
 
-        if not my_gender_id:
+        print("pre:", my_person.gender_identity)
+
+        if not curr_gender_ids:
             return
 
         # otherwise
-        my_gender = GenderIdentity.get_by_id(my_gender_id).name
+        curr_gender_ids = [x.name for x in curr_gender_ids]
+
+        if 'non binary' not in curr_gender_ids:
+            curr_gender_ids.append('non binary')
+        else:
+            curr_gender_ids.remove('non binary')
 
         # let's give it a go...
-        if my_gender not in my_person.gender_identity:
-            update_person_identities(person_id, 'gender_identity', [my_gender], track_changes=True)
+        update_person_identities(person_id, 'gender_identity', curr_gender_ids, track_changes=True)
 
+        print("post:", my_person.gender_identity)
 
-
-    def update_many_genders(self):
-        """Try changing multiple things"""
-
-        all_people = Person.query.with_entities(Person.id).filter(Person.gender_identity_id.isnot(None)).all()
-        for person_id in all_people:
-            self.update_gender(int(*person_id))
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     # Done with this function...
@@ -168,9 +168,6 @@ if __name__ =='__main__':
 
     if 'update_gender' in args.function_name:
         db_app.update_gender()
-
-    if 'update_many_genders' in args.function_name:
-        db_app.update_many_genders()
 
 
 

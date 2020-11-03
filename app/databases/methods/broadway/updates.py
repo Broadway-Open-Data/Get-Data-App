@@ -134,17 +134,16 @@ def update_person_identities(person_id:int, attr:str, children_names:list, track
     curr_children = getattr(my_person, attr)
     field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
 
-
     # You must pass a list of racial identity ids
     # Conver a list of names to ids with the following:
     if attr=='racial_identity':
-        new_children = [RacialIdentity.get_by_name(x) for x in children_names]
+        new_children = [RacialIdentity.get_by_name(x, create_mode=True) for x in children_names]
     elif attr=='gender_identity':
-        new_children = [GenderIdentity.get_by_name(x) for x in children_names]
+        new_children = [GenderIdentity.get_by_name(x, create_mode=True) for x in children_names]
     else:
         raise NameError(f'{attr} not recognized')
 
-
+    
     new_children_ids = [x.id for x in new_children]
 
     # Finally, track the changes
