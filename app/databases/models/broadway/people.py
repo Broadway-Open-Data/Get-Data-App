@@ -8,7 +8,10 @@ from sqlalchemy.ext.hybrid import hybrid_property
 # import custom stuff
 from nameparser import HumanName
 
-# --------------------------------------------------------------------------------
+
+# ==============================================================================
+#    1. ROLES (AND SHOWS)
+# ==============================================================================
 
 
 
@@ -48,7 +51,9 @@ class Role(db.Model, BaseModel):
         return f"{self.id}: {self.name}"
 
 
-# --------------------------------------------------------------------------------
+# ==============================================================================
+#    2. RACIAL IDENTITY
+# ==============================================================================
 
 race_table = db.Table('racial_identity_lookup_table',
         db.Column('person_id', db.Integer(),db.ForeignKey('broadway.person.id')),
@@ -82,7 +87,17 @@ class RacialIdentity(db.Model, BaseModel):
     def __repr__(self):
         return f"{self.id}: {self.name}"
 
-# --------------------------------------------------------------------------------
+# ==============================================================================
+#    3. GENDER IDENTITY
+# ==============================================================================
+
+gender_table = db.Table('gender_identity_lookup_table',
+        db.Column('person_id', db.Integer(),db.ForeignKey('broadway.person.id')),
+        db.Column('gender_identity_id', db.Integer(), db.ForeignKey('broadway.gender_identity.id')),
+        info={'bind_key': 'broadway'},
+        schema='broadway'
+        )
+
 
 class GenderIdentity(db.Model, BaseModel):
     __tablename__ = "gender_identity"
@@ -93,8 +108,7 @@ class GenderIdentity(db.Model, BaseModel):
     description = db.Column(db.String(255))
 
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    # person = db.relationship('Person', backref="broadway.gender_identity",lazy="joined",join_depth=3)
-
+    person = db.relationship('Person', secondary='broadway.gender_identity_lookup_table', backref=db.backref('broadway.gender_identity', lazy='joined'), passive_deletes=True)
 
     # Assert is lowercase
     @validates('name')
@@ -111,7 +125,9 @@ class GenderIdentity(db.Model, BaseModel):
         return f"{self.id}: {self.name}"
 
 
-# --------------------------------------------------------------------------
+# ==============================================================================
+#    4. PERSON
+# ==============================================================================
 
 
 class Person(db.Model, BaseModel):
@@ -160,15 +176,15 @@ class Person(db.Model, BaseModel):
     # Here's where I need help with...
     # Convert this to a one to many...
     gender_identity_id = db.Column(db.Integer, db.ForeignKey('broadway.gender_identity.id'))
-    gender_identity = db.relationship('GenderIdentity', backref="broadway.person",lazy="joined",join_depth=3)
+    # gender_identity = db.relationship('GenderIdentity', backref="broadway.person",lazy="joined",join_depth=3)
 
     # --------------------------------------------------------------------------
 
     # one to many
-    roles = relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
-    shows = relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+    roles = db.relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+    shows = db.relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
 
-
+    gender_identity = db.relationship('GenderIdentity', secondary='broadway.gender_identity_lookup_table', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
     racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='joined', join_depth=4), passive_deletes=True)
 
 
