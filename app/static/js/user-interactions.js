@@ -100,26 +100,15 @@ $(document).ready(function() {
 // DATE UPDATE THINGY
 $(document).ready(function() {
 
-  // Another function....
-  $('.advanced-label').each(function(e){
-    $(this).on("click", function(){
 
-      // Allow this to work, regardless of id
-      let myId = this.id.replace('label','content')
-      let x = document.getElementById(myId)
+// <input id="date_of_birth" name="date_of_birth" size="10" type="text" value=""></input>
+$('input[name=person_id]').val(rowId);
 
-      let visible = x.style.display;
+ $('input[name=date_of_birth]').keyup(function(e){
 
-      // Toggle visibility
-      if (visible === "none") {
-        x.style.display = "block";
-      }
-      else {
-        x.style.display = "none";
-      }
-    }) // close the on click function
-
-  }) // close the selector function
+    // Allow this to work, regardless of id
+    let myVal = this.value;
+    console.log('my value = ' + myVal);
 
 })
 
