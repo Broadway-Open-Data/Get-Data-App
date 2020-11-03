@@ -113,6 +113,18 @@ class ConnectApp():
         print("post:", my_person.racial_identity)
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    def update_gender(self):
+        """Try changing multiple things"""
+
+        # Alt:
+        my_person = Person.get_by_id(18174)
+        print("gender identity:", my_person.gender_identity_id, my_person.gender_identity)
+        
+
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
     # Done with this function...
 
 
