@@ -5,7 +5,7 @@ from sqlalchemy.orm import load_only
 import sqlalchemy.sql.functions as func
 
 from sqlalchemy import select
-from databases.models.broadway import Person, Show, ShowsRolesLink, Role, GenderIdentity, RacialIdentity, race_table
+from databases.models.broadway import Person, Show, ShowsRolesLink, Role, GenderIdentity, RacialIdentity, race_table, gender_table
 from databases.models import db
 import datetime as dt
 
@@ -120,8 +120,13 @@ def get_all_people(params, output_format='html'):
             isouter=True
             )\
         .join(
+            gender_table,
+            gender_table.c.person_id==Person.id,
+            isouter=True
+            )\
+        .join(
             GenderIdentity,
-            GenderIdentity.id==Person.gender_identity_id,
+            GenderIdentity.id==gender_table.c.gender_identity_id,
             isouter=True
             )\
         .join(
@@ -181,7 +186,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     # In versions prior, special escaping ("%%") is needed.
 
     if sys.version_info.major==3:
-        if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
+        if sys.version_info.minor>=8 and sys.version_info.micro>=3: dt_format = '%m/%d/%Y'
         else: dt_format = '%%m/%%d/%%Y'
     # Maybe this works... ?
     else: dt_format = '%m/%d/%Y'
@@ -199,7 +204,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         			person.name_suffix
         		) AS 'full_name',
         	 DATE_FORMAT(person.date_of_birth, '{dt_format}') AS date_of_birth,
-             gender_identity.name as 'gender_identity',
+             GROUP_CONCAT(DISTINCT gender_identity.name SEPARATOR ', ') as 'gender_identities',
              GROUP_CONCAT(DISTINCT racial_identity.name SEPARATOR ', ') as 'racial_identities',
         	 -- GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
@@ -217,8 +222,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
             role ON role.id = shows_roles_link.role_id
             INNER JOIN
         		person ON person.id = shows_roles_link.person_id
+            -- Personal Identifiers
             LEFT JOIN
-        		gender_identity ON gender_identity.id = person.gender_identity_id
+        		gender_identity_lookup_table ON gender_identity_lookup_table.person_id = person.id
+        	LEFT JOIN
+        		gender_identity ON gender_identity.id = gender_identity_lookup_table.gender_identity_id
         	LEFT JOIN
         		racial_identity_lookup_table ON racial_identity_lookup_table.person_id = person.id
         	LEFT JOIN
