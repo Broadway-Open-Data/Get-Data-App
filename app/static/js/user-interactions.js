@@ -101,8 +101,8 @@ $(document).ready(function() {
 $(document).ready(function() {
 
 
-// <input id="date_of_birth" name="date_of_birth" size="10" type="text" value=""></input>
-$('input[name=person_id]').val(rowId);
+  // <input id="date_of_birth" name="date_of_birth" size="10" type="text" value=""></input>
+  //$('input[name=person_id]').val(rowId);
 
  $('input[name=date_of_birth]').keyup(function(e){
 
@@ -110,7 +110,14 @@ $('input[name=person_id]').val(rowId);
     let myVal = this.value;
     console.log('my value = ' + myVal);
 
-})
+    // Take the input and add "/" when appropriate
+    if(myVal.length==2){
+      this.value = myVal+'/';
+    }
+
+}) // Close on keyup function
+
+}) // Close main function
 
 
 
