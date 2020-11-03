@@ -122,7 +122,7 @@ class Person(db.Model, BaseModel):
     id = db.Column(db.Integer,primary_key=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-
+    # Regular name
     name_title =  db.Column(db.String(10), nullable=True, unique=False)
     f_name = db.Column(db.String(40), nullable=True, unique=False)
     m_name = db.Column(db.String(40), nullable=True, unique=False)
@@ -139,24 +139,35 @@ class Person(db.Model, BaseModel):
         full_name.capitalize(force=True)
         return str(full_name)
 
+    # Phonetic pronounciation
+    phonetic_pronunciation_f_name = db.Column(db.String(60), nullable=True, unique=False)
+    phonetic_pronunciation_m_name = db.Column(db.String(60), nullable=True, unique=False)
+    phonetic_pronunciation_l_name = db.Column(db.String(60), nullable=True, unique=False)
+    phonetic_pronunciation_nickname = db.Column(db.String(60), nullable=True, unique=False)
+
+    @hybrid_property
+    def phonetic_pronunciation(self):
+        """Return full phonetic pronounciation"""
+        name_list = [self.phonetic_pronunciation_f_name, self.phonetic_pronunciation_m_name, self.phonetic_pronunciation_l_name, self.phonetic_pronunciation_nickname]
+        name_string = " ".join(map(str, name_list))
+        return name_string
+
 
     url = db.Column(db.String(120), unique=False, nullable=True)
-    #  Date of birth (or something blurred).
-    date_of_birth = db.Column(db.DateTime, nullable=True)
-
-
+    date_of_birth = db.Column(db.DateTime, nullable=True) #  We should blur this -- or apply some anonymization technique
 
     # --------------------------------------------------------------------------
     # Here's where I need help with...
+    # Convert this to a one to many...
     gender_identity_id = db.Column(db.Integer, db.ForeignKey('broadway.gender_identity.id'))
     gender_identity = db.relationship('GenderIdentity', backref="broadway.person",lazy="joined",join_depth=3)
 
     # --------------------------------------------------------------------------
 
     # one to many
-    # roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
     roles = relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
     shows = relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+
 
     racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='joined', join_depth=4), passive_deletes=True)
 
@@ -167,7 +178,18 @@ class Person(db.Model, BaseModel):
 
 
     # Assert is lowercase
-    @validates('f_name', 'm_name', 'l_name', 'full_name', 'country_of_birth', 'fluent_languages')
+    @validates(
+        'f_name',
+        'm_name',
+        'l_name',
+        # 'full_name',
+        'phonetic_pronunciation_f_name',
+        'phonetic_pronunciation_m_name',
+        'phonetic_pronunciation_l_name',
+        'phonetic_pronunciation_nickname',
+        'country_of_birth',
+        'fluent_languages',
+        )
     def convert_lower(self, key, value):
         if isinstance(value, str):
             return value.lower()
