@@ -238,8 +238,71 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         ;
     """
 
+    # --------------------------------------------------------------------------
+    # Ugly but it works
+    try:
+        df = pd.read_sql(query, db.get_engine(bind='broadway'))
 
-    df = pd.read_sql(query, db.get_engine(bind='broadway'))
+    # --------------------------------------------------------------------------
+
+    except ValueError:
+        dt_format = '%%m/%%d/%%Y'
+        query = f"""
+                SELECT
+            	person.id AS person_id,
+            		 CONCAT_WS(
+            			' ',
+            			person.name_title,
+            			person.f_name,
+            			person.m_name,
+            			person.l_name,
+            			person.name_nickname,
+            			person.name_suffix
+            		) AS 'full_name',
+            	 DATE_FORMAT(person.date_of_birth, '{dt_format}') AS date_of_birth,
+                 gender_identity.name as 'gender_identity',
+                 GROUP_CONCAT(DISTINCT racial_identity.name SEPARATOR ', ') as 'racial_identities',
+            	 -- GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
+            	 COUNT(DISTINCT(shows.id)) AS 'n shows',
+                 MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
+                 -- GROUP_CONCAT(DISTINCT role.name ) AS 'all roles',
+                 -- MIN(shows.year) AS 'earliest show year',
+                 MAX(shows.year) AS 'most recent show year',
+                 SUBSTRING_INDEX(GROUP_CONCAT(shows.title ORDER BY shows.opening_date DESC), ',', 1) AS 'most recent show'
+
+            FROM
+                shows
+                    INNER JOIN
+                shows_roles_link ON shows_roles_link.show_id = shows.id
+                    INNER JOIN
+                role ON role.id = shows_roles_link.role_id
+                INNER JOIN
+            		person ON person.id = shows_roles_link.person_id
+                LEFT JOIN
+            		gender_identity ON gender_identity.id = person.gender_identity_id
+            	LEFT JOIN
+            		racial_identity_lookup_table ON racial_identity_lookup_table.person_id = person.id
+            	LEFT JOIN
+            		racial_identity ON racial_identity.id = racial_identity_lookup_table.racial_identity_id
+
+            WHERE(
+                    shows.year >= {params['shows_year_from']}
+                    AND shows.year <=  {params['shows_year_to']}
+                    AND (role.name LIKE '{params['role_name']}%%'
+                    OR role.name LIKE 'stage {params['role_name']}'
+                    OR role.name LIKE 'co-{params['role_name']}')
+                    {"AND role.name NOT LIKE '%%marketing' AND role.name NOT LIKE '%%manager%%'" if params['role_name']=='director' else ""}
+
+            	)
+            GROUP BY(person.id)
+            ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
+            ;
+        """
+        df = pd.read_sql(query, db.get_engine(bind='broadway'))
+    # --------------------------------------------------------------------------
+
+
+
 
     if not include_show_data_json:
         df.drop(columns=['show_data'], inplace=True, errors='ignore')
