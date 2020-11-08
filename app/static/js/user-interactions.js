@@ -115,6 +115,8 @@ $(document).ready(function() {
       this.value = myVal+'/';
     }
 
+    
+
 }) // Close on keyup function
 
 }) // Close main function
