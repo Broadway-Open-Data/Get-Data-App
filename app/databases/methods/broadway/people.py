@@ -2,9 +2,10 @@ import sys
 
 # from databases import db
 from sqlalchemy.orm import load_only
+
 import sqlalchemy.sql.functions as func
 
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from databases.models.broadway import Person, Show, ShowsRolesLink, Role, GenderIdentity, RacialIdentity, race_table, gender_table
 from databases.models import db
 import datetime as dt
@@ -182,6 +183,74 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         params['role_name'] = 'director'
 
 
+
+    # fancy sql statement...
+    if os.environ.get('EXPERIMENTAL'):
+        # get all director roles
+        valid_roles = Role.query.filter(
+            Role.name.ilike('{}%%'.format(params['role_name']))
+            ).subquery(with_labels=False)
+
+        # get all shows in valid period
+        valid_shows = Show.query.filter(
+            and_(
+                Show.year >= params['shows_year_from'],
+                Show.year <= params['shows_year_from']
+                )
+            ).subquery(with_labels=False)
+
+        # get the union between the two of these...
+        valid_shows_link = ShowsRolesLink.query.filter(
+            ShowsRolesLink.show_id.in_([valid_shows.c.id]),
+            ShowsRolesLink.role_id.in_([valid_roles.c.id])
+            ).subquery(with_labels=False)
+
+
+        # get all people
+        all_directors = db.session.query(
+                Person,
+                GenderIdentity.name.label('gender_identity'),
+                func.concat(RacialIdentity.name).label('racial identities'),
+            )\
+            .filter(Person.id.in_([valid_shows_link.c.person_id]))\
+            .join(
+                valid_shows_link,
+                valid_shows_link.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                gender_table,
+                gender_table.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                GenderIdentity,
+                GenderIdentity.id==gender_table.c.gender_identity_id,
+                isouter=True
+                )\
+            .join(
+                race_table,
+                race_table.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                RacialIdentity,
+                RacialIdentity.id==race_table.c.racial_identity_id,
+                isouter=True
+                )\
+            .order_by(
+                # people_role_ids.c.year.asc(),
+                # people_role_ids.c.show_title.asc(),
+                Person.l_name.asc(),
+                Person.f_name.asc()
+            ).subquery()
+
+
+        df = pd.read_sql(all_directors, db.get_engine(bind='broadway'))
+
+
+    # Regular sql
+
     # In python 3.8 and on, a "%" does not need special escaping.
     # In versions prior, special escaping ("%%") is needed.
 
@@ -189,7 +258,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         if sys.version_info.minor>=8 and sys.version_info.micro>=3: dt_format = '%m/%d/%Y'
         else: dt_format = '%%m/%%d/%%Y'
     # Maybe this works... ?
-    else: dt_format = '%m/%d/%Y'
+    else: dt_format = '%%m/%%d/%%Y'
 
     query = f"""
             SELECT
@@ -246,8 +315,8 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         ;
     """
 
-
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
+
 
     if not include_show_data_json:
         df.drop(columns=['show_data'], inplace=True, errors='ignore')
@@ -257,7 +326,8 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     if output_format=='html':
 
         # also, fix full name
-        df['full_name'] = df['full_name'].str.title()
+        if 'full_name' in df.columns:
+            df['full_name'] = df['full_name'].str.title()
 
         # fix column names
         df.columns = df.columns.str.replace('_',' ').str.title()
