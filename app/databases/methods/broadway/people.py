@@ -13,6 +13,7 @@ import datetime as dt
 
 import pandas as pd
 
+
 # define a lambda to convert to datetime
 year_to_dt = lambda x: dt.datetime(year=x, month=1, day=1)
 
