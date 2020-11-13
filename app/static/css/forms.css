@@ -51,6 +51,11 @@ form input,textarea {
   background-color: #f8f8f8;
 
 }
+/* CSS for checkboxes */
+input[type=checkbox]{
+  padding: 5px;
+  margin: 5px;
+}
 
 form textarea{
   height:100px;
