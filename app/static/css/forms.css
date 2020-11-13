@@ -40,9 +40,12 @@ form .help-text{
 form input,textarea {
   width: 90%;
   max-width: 500px;
+  color: var(--myGreenAlt);
+  font-weight: 100;
+  font-size: 16px;
   display:block;
   margin-bottom: 20px;
-  padding: 6px 12px;
+  padding: 0px 6px;
   border: 2px solid #ccc;
   border-radius: 4px;
   background-color: #f8f8f8;
