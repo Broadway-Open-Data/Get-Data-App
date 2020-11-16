@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 import pandas as pd
 
 # flasks stuff
-from forms import dataForm
+from forms import dataForm, shows
 from common.extensions import cache
 import utils
 
@@ -16,28 +16,39 @@ from . import page
 # Allow the user to request specific data from the app
 @page.route('/get-data/',  methods=['GET', 'POST'])
 @login_required
+# Add this code (and modify it) to accept any role...
+# @require_role("admin-master")
 def get_data_simple():
 
     # Don't allow non-approved users
     if not current_user.approved:
         return redirect("/")
 
-    form = dataForm(request.form)
+    # TO DO: 1) Examine this form, can we restructure it?
+    # form = dataForm(request.form)
+    form = shows.Query(request.form)
+    # print("****"*5,form, "****"*5, sep="\n")
 
-    if request.method == 'POST':
-        if True:  #form.validate():
-            my_data = {}
-            for _, value in form.allFields.data.items():
-                if type(value) == dict:
-                    my_data.update(value)
-            # get rid of the csrf token
-            del my_data["csrf_token"]
 
-            cache.set("user_query", my_data)
-
-            return redirect('/analyze/get-data-success/')
-    else:
-        return render_template('analyze/get-data.html', title='Submit Data', form=form)
+    # if request.method == 'POST':
+    #     if True:  #form.validate():
+    #         my_data = {}
+    #         # TO DO: 2) Extract values from the form
+    #         # print("****"*5, form.allFields.data.items(), "****"*5, sep="\n")
+    #
+    #         for _, value in form.allFields.data.items():
+    #             if type(value) == dict:
+    #                 my_data.update(value)
+    #
+    #         # get rid of the csrf token
+    #         del my_data["csrf_token"]
+    #
+    #         cache.set("user_query", my_data)
+    #
+    #         return redirect('/analyze/get-data-success/')
+    # else:
+    #     # TO DO: 3) Format values correctly on the page
+    return render_template('analyze/get-data.html', title='Submit Data', form=form)
 
 
 # ------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 # import submodules
 from . import people
+from . import shows
 
 # import files
 from .admin import *
