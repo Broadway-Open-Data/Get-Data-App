@@ -24,7 +24,6 @@ def get_data_simple():
     if not current_user.approved:
         return redirect("/")
 
-    # TO DO: 1) Examine this form, can we restructure it?
     # form = dataForm(request.form)
     form = shows.Query(request.form)
     # print("****"*5,form, "****"*5, sep="\n")

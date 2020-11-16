@@ -24,7 +24,7 @@ class Query(FlaskForm):
     other_production_type = BooleanField(label="Others", default=False, render_kw ={'unchecked':''})
 
     # Theatre Info
-    theatre_info = BooleanField(label="Theatre Info", default=False, render_kw ={'unchecked':''})
+    theatre_info = BooleanField(label="Theatre Info", description="include theatre info?", default=False, render_kw ={'unchecked':''})
     theatreName = StringField(label="Theatre Name (fuzzy)")
 
 
@@ -36,12 +36,8 @@ class Query(FlaskForm):
     shows_year_to = IntegerField(label="Show Year To",default=2020, validators=[DataRequired()])
 
 
-    # People?
+    # People
     person_name = StringField(label='Person Name', validators=[Optional(strip_whitespace=True)])
-
-
-    shows_title = StringField(label='Show Title', validators=[Optional(strip_whitespace=True)])
-
 
 
 

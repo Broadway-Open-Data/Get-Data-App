@@ -11,8 +11,6 @@
     <h2>Query Shows</h2>
       <form method="POST" action="">
             {{ form.csrf_token }}
-            <h3>Show Info</h3>
-            <div>{{ form.shows_title.label }} {{ form.shows_title() }}</div>
 
             <h3>Show Genre</h3>
             <div>{{ form.musicals.label }} {{ form.musicals() }}</div>
@@ -23,6 +21,28 @@
             <div>{{ form.originals.label }} {{ form.originals() }}</div>
             <div>{{ form.revivals.label }} {{ form.revivals() }}</div>
             <div>{{ form.other_production_type.label }} {{ form.other_production_type() }}</div>
+
+            <h3>Theatre Info</h3>
+            <div>{{ form.theatre_info.label }}{{ form.theatre_info.description }} {{ form.theatre_info() }}</div>
+
+
+            <h3>Date Range</h3>
+            <div>{{ form.shows_year_from.label }} {{ form.shows_year_from() }}</div>
+            <div>{{ form.shows_year_to.label }} {{ form.shows_year_to() }}</div>
+
+            <!-- Advanced stuff below... -->
+            <div class="advanced" id="advanced-data-query">
+              <div class="advanced-label" id="advanced-data-query-label">Advanced Options  <i class="fas fa-wrench"></i></div>
+                  <div id="advanced-data-query-content" style="display:none;">
+                    <h3>Show Info</h3>
+                    <div>{{ form.shows_title.label }} {{ form.shows_title() }}</div>
+                    <div>{{ form.theatreName.label }} {{ form.theatreName() }}</div>
+
+                    <h3>People</h3>
+                    <div>{{ form.person_name.label }} {{ form.person_name() }}</div>
+                </div>
+            </div>
+
 
             <input type="submit" value="Submit"/>
         </form>
@@ -37,11 +57,3 @@
 <div>{{ form.role_name.label }} {{ form.role_name(size=10) }}</div>
 <div>{{ form.shows_title.label }} {{ form.shows_title(size=10) }}</div>
 <div>{{ form.shows_year.label }} {{ form.shows_year(size=10) }}</div> -->
-
-<!-- <div class="advanced" id="advanced-data-query">
-  <div class="advanced-label" id="advanced-data-query-label">Advanced Options  <i class="fas fa-wrench"></i></div>
-      <div id="advanced-data-query-content" style="display:none;">
-        <div>{{ form.shows_year_from.label }} {{ form.shows_year_from(size=10) }}</div>
-        <div>{{ form.shows_year_to.label }} {{ form.shows_year_to(size=10) }}</div>
-    </div>
-</div> -->
