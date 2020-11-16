@@ -23,29 +23,34 @@ def summarize_broadway_shows(df, detail_level=3):
     my_vals = []
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     cat = "Date Range Info"
-    if "title" in df.columns:
-        my_vals.extend([
-            {"Category":cat, "Key": "N Shows", "Val":df["title"].count()}
-        ])
-
-    if "opening_date" in df.columns:
-        my_vals.append(
-            {"Category":cat, "Key":"Days in Range", "Val":df["opening_date"].count()},
-            )
-        if detail_level>1:
+    for COL in ['title', 'Show Title']:
+        if "title" in df.columns:
             my_vals.extend([
-            {"Category":cat, "Key":"Earliest Date", "Val":df["opening_date"].min().strftime("%Y-%m-%d")},
-            {"Category":cat, "Key":"Latest Date", "Val":df["opening_date"].max().strftime("%Y-%m-%d")},
-        ])
+                {"Category":cat, "Key": "N Shows", "Val":df[COL].count()}
+            ])
+
+    for COL in ['opening_date', 'Opening Data']:
+        if COL in df.columns:
+            my_vals.append(
+                {"Category":cat, "Key":"Days in Range", "Val":df[COL].count()},
+                )
+            if detail_level>1:
+                my_vals.extend([
+                {"Category":cat, "Key":"Earliest Date", "Val":df[COL].min().strftime("%Y-%m-%d")},
+                {"Category":cat, "Key":"Latest Date", "Val":df[COL].max().strftime("%Y-%m-%d")},
+            ])
+
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     cat = "Show Info"
-    if "theatre_name" in df.columns:
-        my_vals.append(
-            {"Category":cat, "Key":"N Unique Theaters", "Val":df["theatre_name"].nunique()}
-        )
+    for COL in ['theatre_name', 'Theatre Name']:
+        if COL in df.columns:
+            my_vals.append(
+                {"Category":cat, "Key":"N Unique Theaters", "Val":df[COL].nunique()}
+            )
 
     # User chooses the level of detail
-    for col in ["n_performances", "intermissions"]:
+
+    for col in ["n_performances", "N Performances", "intermissions", "Intermissions"]:
 
         # Only proceed if relevant
         if col not in df.columns or detail_level<2:
@@ -78,7 +83,7 @@ def summarize_broadway_shows(df, detail_level=3):
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    iter_cols = ["show_type_simple","production_type"]
+    iter_cols = ["show_type_simple", "Show Type (Simple)", "production_type", "Production Type"]
     for col in iter_cols:
 
         if col not in df.columns:
