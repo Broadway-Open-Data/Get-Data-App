@@ -18,6 +18,7 @@ def summarize_data():
     data = common.cache.get("my_data")
     df = pd.DataFrame.from_dict(data)
 
+    print(df)
     summary = utils.summarize_broadway_shows(df, detail_level)
 
     # Return the response in json format
