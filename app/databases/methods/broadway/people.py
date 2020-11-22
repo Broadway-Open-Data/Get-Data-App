@@ -255,14 +255,14 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     # In python 3.8 and on, a "%" does not need special escaping.
     # In versions prior, special escaping ("%%") is needed.
-
+    
     if sys.version_info.major==3:
-        if sys.version_info.minor>=8 and sys.version_info.micro>=3: dt_format = '%m/%d/%Y'
+        if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
         else: dt_format = '%%m/%%d/%%Y'
     # Maybe this works... ?
     else: dt_format = '%%m/%%d/%%Y'
 
-    
+
     query = f"""
             SELECT
         	person.id AS person_id,
@@ -317,10 +317,10 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
         ;
     """
-    
-    
+
+
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
-    
+
     # --------------------------------------------------------------------------
 
 
