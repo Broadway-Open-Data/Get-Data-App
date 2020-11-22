@@ -15,7 +15,7 @@ $(document).ready(function() {
       let rowId = parseInt(myRow[0].innerText)
       let userId = parseInt(myRow[1].innerText)
       let rowEmail = myRow[2].innerText
-      let rowStatus = myRow[4].innerText
+      let rowStatus = parseInt(myRow[4].innerText)
 
       // For testing
       if(debug==true){
@@ -26,10 +26,19 @@ $(document).ready(function() {
           "approval status: " + rowStatus + "; "
         );
       }
-  //
-  //
-  //     // Set values
-  //     $('input[name=person_id]').val(rowId);
+  
+  
+      // Set values
+      $('input[id=allFields-userEmail]').val(rowEmail);
+      // if user is approved:
+        if (rowStatus == 1){
+          $('input[id=allFields-un_approve]').prop("checked", true);
+          $('input[id=allFields-approve]').prop("checked", false);
+        } 
+        else {
+          $('input[id=allFields-un_approve]').prop("checked", false);
+          $('input[id=allFields-approve]').prop("checked", true);
+        }
   //     $('input[name=date_of_birth]').val(rowDOB);
   //     $('input[name=racial_identity]').val(rowRacialIdentity);
   //     $('input[name=gender_identity]').val(rowGenderIdentity);
