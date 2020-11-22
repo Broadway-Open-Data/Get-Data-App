@@ -262,6 +262,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     # Maybe this works... ?
     else: dt_format = '%%m/%%d/%%Y'
 
+    
     query = f"""
             SELECT
         	person.id AS person_id,
@@ -316,8 +317,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
         ;
     """
-
+    
+    
     df = pd.read_sql(query, db.get_engine(bind='broadway'))
+    
+    # --------------------------------------------------------------------------
 
 
     if not include_show_data_json:
