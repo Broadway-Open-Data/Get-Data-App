@@ -1,5 +1,5 @@
 // Toggle this for rich console printouts
-var debug = false;
+var debug = true;
 
 
 
@@ -48,5 +48,7 @@ $(document).ready(function() {
   //     // Do something here if you want...
   //
   // });
+
+});
 
 })
