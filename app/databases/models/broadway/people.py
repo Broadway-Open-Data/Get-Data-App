@@ -80,9 +80,15 @@ class RacialIdentity(db.Model, BaseModel):
 
     # Methods
     @classmethod
-    def get_by_name(self, name):
+    def get_by_name(self, name, create_mode=False):
         """Get the id, name, description of a role based on the role name"""
-        return self.query.filter_by(name=name).first()
+        res = self.query.filter_by(name=name).first()
+        if create_mode and not res:
+            new_val = RacialIdentity(name=name, description="made automatically with 'create_mode' via 'get_by_name' method")
+            new_val.save_to_db()
+            print(new_val)
+            return new_val
+        return res
 
     def __repr__(self):
         return f"{self.id}: {self.name}"
@@ -117,9 +123,15 @@ class GenderIdentity(db.Model, BaseModel):
 
     # Methods
     @classmethod
-    def get_by_name(self, name):
+    def get_by_name(self, name, create_mode=False):
         """Get the id, name, description of a role based on the role name"""
-        return self.query.filter_by(name=name).first()
+
+        res = self.query.filter_by(name=name).first()
+        if create_mode and not res:
+            new_val = GenderIdentity(name=name, description="made automatically with 'create_mode' via 'get_by_name' method")
+            new_val.save_to_db()
+            return new_val
+        return res
 
     def __repr__(self):
         return f"{self.id}: {self.name}"
@@ -173,16 +185,12 @@ class Person(db.Model, BaseModel):
     date_of_birth = db.Column(db.DateTime, nullable=True) #  We should blur this -- or apply some anonymization technique
 
     # --------------------------------------------------------------------------
-    # Here's where I need help with...
-    # Convert this to a one to many...
-    gender_identity_id = db.Column(db.Integer, db.ForeignKey('broadway.gender_identity.id'))
-    # gender_identity = db.relationship('GenderIdentity', backref="broadway.person",lazy="joined",join_depth=3)
 
-    # --------------------------------------------------------------------------
+    # RELATIONSHIPS
 
-    # one to many
     roles = db.relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
     shows = db.relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+
 
     gender_identity = db.relationship('GenderIdentity', secondary='broadway.gender_identity_lookup_table', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
     racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='joined', join_depth=4), passive_deletes=True)

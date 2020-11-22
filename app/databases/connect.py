@@ -11,7 +11,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-from databases.models.broadway import Person, DataEdits, RacialIdentity
+from databases.models.broadway import Person, DataEdits, RacialIdentity, GenderIdentity
 from databases.methods.broadway import update_person_identities
 from utils.get_db_uri import get_db_uri
 
@@ -114,14 +114,30 @@ class ConnectApp():
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    def update_gender(self):
+    def update_gender(self, person_id=18174):
         """Try changing multiple things"""
 
         # Alt:
-        my_person = Person.get_by_id(18174)
-        print("gender identity:", my_person.gender_identity_id, my_person.gender_identity)
-        
+        my_person = Person.get_by_id(person_id)
+        curr_gender_ids = my_person.gender_identity # will be single value:
 
+        print("pre:", my_person.gender_identity)
+
+        if not curr_gender_ids:
+            return
+
+        # otherwise
+        curr_gender_ids = [x.name for x in curr_gender_ids]
+
+        if 'non binary' not in curr_gender_ids:
+            curr_gender_ids.append('non binary')
+        else:
+            curr_gender_ids.remove('non binary')
+
+        # let's give it a go...
+        update_person_identities(person_id, 'gender_identity', curr_gender_ids, track_changes=True)
+
+        print("post:", my_person.gender_identity)
 
     # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -150,7 +166,8 @@ if __name__ =='__main__':
     if 'test_multi_change' in args.function_name:
         db_app.test_multi_change()
 
-
+    if 'update_gender' in args.function_name:
+        db_app.update_gender()
 
 
 

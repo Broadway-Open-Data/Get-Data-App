@@ -43,22 +43,23 @@ def update_people_data(params):
 
     # ==========================================================================
 
-    # 1. Update racial identities
-    if params.get('racial_identity'):
+    # 1. Update racial identities and gender identities!
+    for attr in ['racial_identity', 'gender_identity']:
+        if params.get(attr):
 
-        # this works for gender identity and racial identity
-        update_person_identities(
-            person_id=params['person_id'],
-            attr='racial_identity',
-            children_names=str_to_list(params.get('racial_identity'), unique=True),
-            track_changes=True,
-            # meta stuff
-            edit_id=edit_id,
-            edit_by=current_user.email,
-            edit_comment=edit_comment,
-            edit_citation = params.get('edit_citation'),
-            approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
-        )
+            # this works for gender identity and racial identity
+            update_person_identities(
+                person_id=params['person_id'],
+                attr=attr,
+                children_names=str_to_list(params.get(attr), unique=True),
+                track_changes=True,
+                # meta stuff
+                edit_id=edit_id,
+                edit_by=current_user.email,
+                edit_comment=edit_comment,
+                edit_citation = params.get('edit_citation'),
+                approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+            )
 
     # ==========================================================================
 
@@ -81,32 +82,32 @@ def update_people_data(params):
     # ==========================================================================
 
 
-
-    # Gender identity
-    if params.get('gender_identity'):
-
-        # reload the person?
-        my_person = Person.get_by_id(params['person_id'])
-
-        my_gender = GenderIdentity.get_by_name(params['gender_identity'])
-
-        # If the gender identity doesn't exist, create it...
-        if not my_gender:
-            my_gender = GenderIdentity(name=params['gender_identity'], description=f"Created by '{current_user.email}' through the OBD app.")
-            my_gender.save_to_db()
-
-        # now set the person's gender identity
-        my_person.update_info_and_track(
-            update_dict={'gender_identity_id':my_gender.id},
-            # meta stuff
-            edit_id=edit_id,
-            edit_by=current_user.email,
-            edit_comment=edit_comment,
-            edit_citation = params.get('edit_citation'),
-            approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
-            debug=False
-            )
-
+    #
+    # # Gender identity
+    # if params.get('gender_identity'):
+    #
+    #     # reload the person?
+    #     my_person = Person.get_by_id(params['person_id'])
+    #
+    #     my_gender = GenderIdentity.get_by_name(params['gender_identity'])
+    #
+    #     # If the gender identity doesn't exist, create it...
+    #     if not my_gender:
+    #         my_gender = GenderIdentity(name=params['gender_identity'], description=f"Created by '{current_user.email}' through the OBD app.")
+    #         my_gender.save_to_db()
+    #
+    #     # now set the person's gender identity
+    #     my_person.update_info_and_track(
+    #         update_dict={'gender_identity_id':my_gender.id},
+    #         # meta stuff
+    #         edit_id=edit_id,
+    #         edit_by=current_user.email,
+    #         edit_comment=edit_comment,
+    #         edit_citation = params.get('edit_citation'),
+    #         approved_comment=f"Edit made by '{current_user.email}' through the open broadway data `contribute` interface.",
+    #         debug=False
+    #         )
+    #
 
     # ==========================================================================
 
@@ -134,13 +135,12 @@ def update_person_identities(person_id:int, attr:str, children_names:list, track
     curr_children = getattr(my_person, attr)
     field_type = 'RELATIONSHIP (LIST CHILD.IDS)' # this is the max str length (40 chars)
 
-
     # You must pass a list of racial identity ids
     # Conver a list of names to ids with the following:
     if attr=='racial_identity':
-        new_children = [RacialIdentity.get_by_name(x) for x in children_names]
+        new_children = [RacialIdentity.get_by_name(x, create_mode=True) for x in children_names]
     elif attr=='gender_identity':
-        new_children = [GenderIdentity.get_by_name(x) for x in children_names]
+        new_children = [GenderIdentity.get_by_name(x, create_mode=True) for x in children_names]
     else:
         raise NameError(f'{attr} not recognized')
 

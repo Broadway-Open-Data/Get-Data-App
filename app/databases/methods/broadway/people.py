@@ -1,15 +1,18 @@
 import sys
+import os
 
 # from databases import db
 from sqlalchemy.orm import load_only
+
 import sqlalchemy.sql.functions as func
 
-from sqlalchemy import select
-from databases.models.broadway import Person, Show, ShowsRolesLink, Role, GenderIdentity, RacialIdentity, race_table
+from sqlalchemy import select, and_
+from databases.models.broadway import Person, Show, ShowsRolesLink, Role, GenderIdentity, RacialIdentity, race_table, gender_table
 from databases.models import db
 import datetime as dt
 
 import pandas as pd
+
 
 # define a lambda to convert to datetime
 year_to_dt = lambda x: dt.datetime(year=x, month=1, day=1)
@@ -120,8 +123,13 @@ def get_all_people(params, output_format='html'):
             isouter=True
             )\
         .join(
+            gender_table,
+            gender_table.c.person_id==Person.id,
+            isouter=True
+            )\
+        .join(
             GenderIdentity,
-            GenderIdentity.id==Person.gender_identity_id,
+            GenderIdentity.id==gender_table.c.gender_identity_id,
             isouter=True
             )\
         .join(
@@ -177,15 +185,84 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         params['role_name'] = 'director'
 
 
+
+    # fancy sql statement...
+    if os.environ.get('EXPERIMENTAL'):
+        # get all director roles
+        valid_roles = Role.query.filter(
+            Role.name.ilike('{}%%'.format(params['role_name']))
+            ).subquery(with_labels=False)
+
+        # get all shows in valid period
+        valid_shows = Show.query.filter(
+            and_(
+                Show.year >= params['shows_year_from'],
+                Show.year <= params['shows_year_from']
+                )
+            ).subquery(with_labels=False)
+
+        # get the union between the two of these...
+        valid_shows_link = ShowsRolesLink.query.filter(
+            ShowsRolesLink.show_id.in_([valid_shows.c.id]),
+            ShowsRolesLink.role_id.in_([valid_roles.c.id])
+            ).subquery(with_labels=False)
+
+
+        # get all people
+        all_directors = db.session.query(
+                Person,
+                GenderIdentity.name.label('gender_identity'),
+                func.concat(RacialIdentity.name).label('racial identities'),
+            )\
+            .filter(Person.id.in_([valid_shows_link.c.person_id]))\
+            .join(
+                valid_shows_link,
+                valid_shows_link.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                gender_table,
+                gender_table.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                GenderIdentity,
+                GenderIdentity.id==gender_table.c.gender_identity_id,
+                isouter=True
+                )\
+            .join(
+                race_table,
+                race_table.c.person_id==Person.id,
+                isouter=True
+                )\
+            .join(
+                RacialIdentity,
+                RacialIdentity.id==race_table.c.racial_identity_id,
+                isouter=True
+                )\
+            .order_by(
+                # people_role_ids.c.year.asc(),
+                # people_role_ids.c.show_title.asc(),
+                Person.l_name.asc(),
+                Person.f_name.asc()
+            ).subquery()
+
+
+        df = pd.read_sql(all_directors, db.get_engine(bind='broadway'))
+
+
+    # Regular sql
+
     # In python 3.8 and on, a "%" does not need special escaping.
     # In versions prior, special escaping ("%%") is needed.
 
     if sys.version_info.major==3:
-        if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
+        if sys.version_info.minor>=8 and sys.version_info.micro>=3: dt_format = '%m/%d/%Y'
         else: dt_format = '%%m/%%d/%%Y'
     # Maybe this works... ?
-    else: dt_format = '%m/%d/%Y'
+    else: dt_format = '%%m/%%d/%%Y'
 
+    
     query = f"""
             SELECT
         	person.id AS person_id,
@@ -199,7 +276,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         			person.name_suffix
         		) AS 'full_name',
         	 DATE_FORMAT(person.date_of_birth, '{dt_format}') AS date_of_birth,
-             gender_identity.name as 'gender_identity',
+             GROUP_CONCAT(DISTINCT gender_identity.name SEPARATOR ', ') as 'gender_identities',
              GROUP_CONCAT(DISTINCT racial_identity.name SEPARATOR ', ') as 'racial_identities',
         	 -- GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
         	 COUNT(DISTINCT(shows.id)) AS 'n shows',
@@ -217,8 +294,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
             role ON role.id = shows_roles_link.role_id
             INNER JOIN
         		person ON person.id = shows_roles_link.person_id
+            -- Personal Identifiers
             LEFT JOIN
-        		gender_identity ON gender_identity.id = person.gender_identity_id
+        		gender_identity_lookup_table ON gender_identity_lookup_table.person_id = person.id
+        	LEFT JOIN
+        		gender_identity ON gender_identity.id = gender_identity_lookup_table.gender_identity_id
         	LEFT JOIN
         		racial_identity_lookup_table ON racial_identity_lookup_table.person_id = person.id
         	LEFT JOIN
@@ -237,71 +317,11 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
         ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
         ;
     """
-
+    
+    
+    df = pd.read_sql(query, db.get_engine(bind='broadway'))
+    
     # --------------------------------------------------------------------------
-    # Ugly but it works
-    try:
-        df = pd.read_sql(query, db.get_engine(bind='broadway'))
-
-    # --------------------------------------------------------------------------
-
-    except ValueError:
-        dt_format = '%%m/%%d/%%Y'
-        query = f"""
-                SELECT
-            	person.id AS person_id,
-            		 CONCAT_WS(
-            			' ',
-            			person.name_title,
-            			person.f_name,
-            			person.m_name,
-            			person.l_name,
-            			person.name_nickname,
-            			person.name_suffix
-            		) AS 'full_name',
-            	 DATE_FORMAT(person.date_of_birth, '{dt_format}') AS date_of_birth,
-                 gender_identity.name as 'gender_identity',
-                 GROUP_CONCAT(DISTINCT racial_identity.name SEPARATOR ', ') as 'racial_identities',
-            	 -- GROUP_CONCAT(JSON_OBJECT('id', shows.id, 'title', shows.title, 'year', shows.year, 'role', role.name)) AS show_data,
-            	 COUNT(DISTINCT(shows.id)) AS 'n shows',
-                 MAX(shows.year)  - MIN(shows.year) AS 'n years directing',
-                 -- GROUP_CONCAT(DISTINCT role.name ) AS 'all roles',
-                 -- MIN(shows.year) AS 'earliest show year',
-                 MAX(shows.year) AS 'most recent show year',
-                 SUBSTRING_INDEX(GROUP_CONCAT(shows.title ORDER BY shows.opening_date DESC), ',', 1) AS 'most recent show'
-
-            FROM
-                shows
-                    INNER JOIN
-                shows_roles_link ON shows_roles_link.show_id = shows.id
-                    INNER JOIN
-                role ON role.id = shows_roles_link.role_id
-                INNER JOIN
-            		person ON person.id = shows_roles_link.person_id
-                LEFT JOIN
-            		gender_identity ON gender_identity.id = person.gender_identity_id
-            	LEFT JOIN
-            		racial_identity_lookup_table ON racial_identity_lookup_table.person_id = person.id
-            	LEFT JOIN
-            		racial_identity ON racial_identity.id = racial_identity_lookup_table.racial_identity_id
-
-            WHERE(
-                    shows.year >= {params['shows_year_from']}
-                    AND shows.year <=  {params['shows_year_to']}
-                    AND (role.name LIKE '{params['role_name']}%%'
-                    OR role.name LIKE 'stage {params['role_name']}'
-                    OR role.name LIKE 'co-{params['role_name']}')
-                    {"AND role.name NOT LIKE '%%marketing' AND role.name NOT LIKE '%%manager%%'" if params['role_name']=='director' else ""}
-
-            	)
-            GROUP BY(person.id)
-            ORDER BY  MAX(shows.year) DESC, MIN(shows.year) ASC
-            ;
-        """
-        df = pd.read_sql(query, db.get_engine(bind='broadway'))
-    # --------------------------------------------------------------------------
-
-
 
 
     if not include_show_data_json:
@@ -312,7 +332,8 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
     if output_format=='html':
 
         # also, fix full name
-        df['full_name'] = df['full_name'].str.title()
+        if 'full_name' in df.columns:
+            df['full_name'] = df['full_name'].str.title()
 
         # fix column names
         df.columns = df.columns.str.replace('_',' ').str.title()
