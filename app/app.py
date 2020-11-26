@@ -69,8 +69,9 @@ def create_mail(app):
     mail_settings['MAIL_DEFAULT_SENDER'] = "Open Broadway Data <{}>".format(mail_settings["MAIL_USERNAME"])
     mail = Mail(app)
     app.config.update(mail_settings)
-    app.extensions['mail'].debug = 0
-    return mail
+    # app.extensions['mail'].debug = 0
+
+    # return mail
 
 
 
@@ -111,8 +112,10 @@ def register_dash(app):
 
 # The actual stuff...
 class myApp:
-    app = create_app()
-    mail = create_mail(app)
+
+    def __init__(self, **kwargs):
+        self.app = create_app()
+        self.mail = create_mail(self.app)
 
     def register_things(self):
         register_login_manager(self.app)
