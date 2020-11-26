@@ -5,7 +5,7 @@ from forms import SignupForm
 from databases.models.users import User, Role
 
 from utils import get_email_content
-from common import send_email
+import mail
 
 from . import page
 # page = Blueprint('signup', __name__, template_folder='templates')
@@ -54,7 +54,7 @@ def signup():
 
             # Send the welcome email
             email_content = get_email_content("Welcome")
-            send_email(
+            mail.send_email(
                 recipients = [user.email],
                 subject = email_content.get("emailSubject"),
                 html = render_template('emails/welcome.html')

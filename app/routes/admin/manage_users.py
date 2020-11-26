@@ -14,7 +14,7 @@ import databases.methods.users as user_methods
 
 # Import utils and common
 from utils import get_email_content
-from common import send_email
+import mail
 from utils import require_role
 from . import page
 
@@ -60,7 +60,7 @@ def approve_users():
                     token = user.get_secret_token(60*24*3) #Allow token to expire in 3 days
                     email_content = get_email_content("Approved")
 
-                    send_email(
+                    mail.send_email(
                         recipients = [user.email],
                         subject = email_content.get("emailSubject"),
                         html = render_template('emails/approved.html', token=token)

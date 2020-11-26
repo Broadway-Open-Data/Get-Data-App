@@ -9,7 +9,7 @@ from utils.get_email_content import get_email_content
 from forms import ForgotPasswordForm
 from forms import ChangePasswordForm
 
-from common import send_email
+import mail
 
 #  Import the blueprint page
 from . import page
@@ -31,7 +31,7 @@ def forgot_password():
 
         # with page.app_context():
         email_content = get_email_content("Forgot Password", varDict={"link":"www.google.com"})
-        send_email(
+        mail.send_email(
             recipients = [user.email],
             subject = email_content.get("emailSubject"),
             html = render_template('emails/reset_password.html', token=token)
