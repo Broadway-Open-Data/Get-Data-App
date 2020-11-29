@@ -13,7 +13,7 @@ import datetime
 class Show(db.Model, BaseModel):
     """"""
     __tablename__ = "shows"
-    
+
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
@@ -30,6 +30,7 @@ class Show(db.Model, BaseModel):
 
     # types
     production_type = db.Column(db.String(20), nullable=True)
+    production_type_simple = db.Column(db.String(20), nullable=True)
     show_type = db.Column(db.String(20), nullable=True)
     show_type_simple = db.Column(db.String(20), nullable=True)
 

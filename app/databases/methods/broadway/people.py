@@ -18,18 +18,18 @@ import pandas as pd
 year_to_dt = lambda x: dt.datetime(year=x, month=1, day=1)
 
 
-def build_query_with_dict(base_query, params, myClass):
+def build_query_with_dict(base_query, params, myClass, **kwargs):
     """Assumes the objects are being entered correctly..."""
 
-    table_name = myClass.__tablename__ + "_"
+    prefix = kwargs.get('prefix', myClass.__tablename__) + "_"
     numerical_fields = ['year','year_from','year_to','id']
     for key, value in params.items():
 
         # Only choose keys relevant to this table
-        if key.startswith(table_name):
+        if key.startswith(prefix):
 
             # Get the field name
-            field_name = key.replace(table_name,'')
+            field_name = key.replace(prefix,'')
 
             # convert int values
             if any([key.endswith(x) for x in numerical_fields]):
@@ -255,7 +255,7 @@ def get_all_directors(params, include_show_data_json=False, output_format='html'
 
     # In python 3.8 and on, a "%" does not need special escaping.
     # In versions prior, special escaping ("%%") is needed.
-    
+
     if sys.version_info.major==3:
         if sys.version_info.minor>=8: dt_format = '%m/%d/%Y'
         else: dt_format = '%%m/%%d/%%Y'

@@ -51,7 +51,7 @@ def summarize_broadway_shows(df, detail_level=3):
     # User chooses the level of detail
 
     for col in ["n_performances", "N Performances", "intermissions", "Intermissions"]:
-
+        continue
         # Only proceed if relevant
         if col not in df.columns or detail_level<2:
             continue

@@ -49,7 +49,7 @@ def get_data_simple():
                     query_data[k] = False
 
             # There probably is a better way to do this too...
-            num_keys = ['shows_year_from', 'shows_year_to']
+            num_keys = ['show_year_from', 'show_year_to']
             for key in num_keys:
                 if key in query_data.keys():
                     query_data[key] = int(query_data[key])

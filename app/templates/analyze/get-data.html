@@ -12,34 +12,59 @@
       <form method="POST" action="">
             {{ form.csrf_token }}
 
-            <h3>Show Genre</h3>
-            <div>{{ form.musicals.label }} {{ form.musicals() }}</div>
-            <div>{{ form.plays.label }} {{ form.plays() }}</div>
-            <div>{{ form.other_show_genre.label }} {{ form.other_show_genre() }}</div>
+            <!-- Loop through each element and seperate by name... -->
+            <!-- Ideally, this is done as a macro... -->
+            <div class="show_genre">
+              <h3>Show Genre</h3>
+              {% for field in form %}
+                {% if field.name.startswith('show_genre') %}
+                  <div>{{ field.label }} {{ field() }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
 
-            <h3>Production Type</h3>
-            <div>{{ form.originals.label }} {{ form.originals() }}</div>
-            <div>{{ form.revivals.label }} {{ form.revivals() }}</div>
-            <div>{{ form.other_production_type.label }} {{ form.other_production_type() }}</div>
+            <div class="show_type">
+              <h3>Production Type</h3>
+              {% for field in form %}
+                {% if field.name.startswith('show_type') %}
+                  <div>{{ field.label }} {{ field() }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
 
-            <h3>Theatre Info</h3>
-            <div>{{ form.theatre_info.label }}{{ form.theatre_info.description }} {{ form.theatre_info() }}</div>
+            <div class="theatre">
+              <h3>Theatre Info</h3>
+              {% for field in form %}
+                {% if field.name.startswith('theatre_info') %}
+                  <div>{{ field.label }} {{ field() }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="date_range">
+              <h3>Date Range</h3>
+              {% for field in form %}
+                {% if field.name.startswith('show_year') %}
+                  <div>{{ field.label }} {{ field() }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
 
 
-            <h3>Date Range</h3>
-            <div>{{ form.shows_year_from.label }} {{ form.shows_year_from() }}</div>
-            <div>{{ form.shows_year_to.label }} {{ form.shows_year_to() }}</div>
+
 
             <!-- Advanced stuff below... -->
             <div class="advanced" id="advanced-data-query">
               <div class="advanced-label" id="advanced-data-query-label">Advanced Options  <i class="fas fa-wrench"></i></div>
                   <div id="advanced-data-query-content" style="display:none;">
-                    <h3>Show Info</h3>
-                    <div>{{ form.shows_title.label }} {{ form.shows_title() }}</div>
-                    <div>{{ form.theatreName.label }} {{ form.theatreName() }}</div>
-
-                    <h3>People</h3>
-                    <div>{{ form.person_name.label }} {{ form.person_name() }}</div>
+                    <div class="ADVANCED">
+                      <h3>Advanced</h3>
+                      {% for field in form %}
+                        {% if field.name.endswith('ADVANCED') %}
+                          <div>{{ field.label }} {{ field() }}</div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
                 </div>
             </div>
 
@@ -55,5 +80,5 @@
 <!-- <div>{{ form.person_m_name.label }} {{ form.person_m_name(size=10) }}</div>
 <div>{{ form.person_l_name.label }} {{ form.person_l_name(size=10) }}</div>
 <div>{{ form.role_name.label }} {{ form.role_name(size=10) }}</div>
-<div>{{ form.shows_title.label }} {{ form.shows_title(size=10) }}</div>
-<div>{{ form.shows_year.label }} {{ form.shows_year(size=10) }}</div> -->
+<div>{{ form.show_title.label }} {{ form.show_title(size=10) }}</div>
+<div>{{ form.show_year.label }} {{ form.show_year(size=10) }}</div> -->
