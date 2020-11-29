@@ -1,6 +1,9 @@
-from databases.models.broadway import Show, Person, GenderIdentity, RacialIdentity, race_table, DataEdits
+from databases.models.broadway import Show, ShowsRolesLink, Role, Person, GenderIdentity, RacialIdentity, race_table, DataEdits
 from databases.methods.broadway import build_query_with_dict
 from databases.models import db
+from sqlalchemy import func, Integer
+from sqlalchemy.sql.expression import cast
+
 import datetime as dt
 
 import pandas as pd
@@ -15,6 +18,13 @@ def get_all_shows(params, output_format='pandas'):
     assert(isinstance(params, dict))
     assert(isinstance(output_format, str) and output_format in ('html','pandas','dict'))
 
+    # To do:
+    # 1. Rename params to include prefix connoting the field and value
+    # 2. Dynamically loop over fields and filter for values
+    # What we're working with:
+    #   {'musicals': True, 'plays': True, 'originals': True, 'revivals': True, 'shows_year_from': 1990, 'shows_year_to': 2020}
+
+
     # Go through the following steps:
     # 1. Show genre (music/play)
     # 2. Production type (original/revival)
@@ -27,8 +37,7 @@ def get_all_shows(params, output_format='pandas'):
     # --------------------------------------------------------------------------
 
     # Query all shows in this selection
-    valid_shows = Show.query\
-        .with_entities(
+    valid_shows = db.session.query(
             Show.id.label("Show ID"),
             Show.title.label("Show Title"),
             Show.year.label("Year"),
@@ -45,13 +54,40 @@ def get_all_shows(params, output_format='pandas'):
             Show.show_never_opened.label("Show Not Opened"),
             Show.revival.label("Revival"),
             Show.other_titles.label("Other Titles"),
-            Show.official_website.label("Official Website")
+            Show.official_website.label("Official Website"),
+            func.COUNT(func.DISTINCT(ShowsRolesLink.person_id)).cast(Integer).label('N People'),
+            func.SUM(func.IF(Role.name == 'performer', 1, 0)).cast(Integer).label('N Performers'),
+            func.SUM(func.IF(Role.name != 'performer', 1, 0)).cast(Integer).label('N Creative Team'),
+        )\
+        .join(
+            ShowsRolesLink,
+            Show.id == ShowsRolesLink.show_id,
+        )\
+        .join(
+            Role,
+            Role.id == ShowsRolesLink.role_id,
         )\
         .filter(
             Show.year >= params['shows_year_from'],
             Show.year <= params['shows_year_from']
             )\
+        .group_by(
+            Show.id
+        )\
         .subquery()
+
+
+
+    # Now, apply filters to subquery as needed...
+    # valid_shows = db.session.query(
+    #         valid_shows,
+    #
+    #     )\
+    #     .group_by(
+    #         valid_shows.c['Show ID']
+    #     )\
+    #     .subquery()
+
 
 
     df = pd.read_sql(valid_shows, db.get_engine(bind='broadway'))
