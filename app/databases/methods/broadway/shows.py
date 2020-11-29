@@ -70,7 +70,7 @@ def get_all_shows(params, output_format='pandas'):
         .filter(
             and_(
                 Show.year >= params['shows_year_from'],
-                Show.year <= params['shows_year_from']
+                Show.year <= params['shows_year_to']
                 )
             )\
         .group_by(
