@@ -1,7 +1,7 @@
 from databases.models.broadway import Show, ShowsRolesLink, Role, Person, GenderIdentity, RacialIdentity, race_table, DataEdits
 from databases.methods.broadway import build_query_with_dict
 from databases.models import db
-from sqlalchemy import func, Integer
+from sqlalchemy import func, Integer, and_
 from sqlalchemy.sql.expression import cast
 
 import datetime as dt
@@ -68,8 +68,10 @@ def get_all_shows(params, output_format='pandas'):
             Role.id == ShowsRolesLink.role_id,
         )\
         .filter(
-            Show.year >= params['shows_year_from'],
-            Show.year <= params['shows_year_from']
+            and_(
+                Show.year >= params['shows_year_from'],
+                Show.year <= params['shows_year_from']
+                )
             )\
         .group_by(
             Show.id
