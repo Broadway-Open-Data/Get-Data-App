@@ -41,25 +41,68 @@ def get_all_shows(params, output_format='pandas'):
         'show':{
             'genre':'show_type_simple',
             'type':'production_type_simple'
+        },
+        'person':{
+            'name':'full_name'
         }
     }
 
     # Filter with these queries...
     my_filters = {
-        'show':{'classObject':Show},
+        'show':{'classObject':Show, 'query':Show.query},
         'theatre':{'classObject':Theatre, 'query':Theatre.query},
         'person':{'classObject':Person, 'query':Person.query}
     }
 
     for key, value in params.items():
+
+
         # skip these guys
-        if key in ['show_year_from', 'show_year_to'] or key.endswith('ADVANCED'):
+        if key in ['show_year_from', 'show_year_to']:
             continue
 
         rich_key = key.split('_')
 
+        # Now we do specialized searches
+        if rich_key[-1]=='ADVANCED' or len(rich_key)==2:
+
+            class_name, field_name = rich_key[:2]
+
+            if class_name=='person' and field_name == 'name':
+                my_filters[class_name]['query'] = my_filters[class_name]['query']\
+                    .filter(
+                        or_(
+                            func.lower(func.CONCAT_WS(
+                                ' ',
+                                Person.f_name,
+                                Person.m_name,
+                                Person.l_name,
+                                )).like('%' + value.lower() + '%'),
+                            func.lower(func.CONCAT_WS(
+                                ' ',
+                                Person.f_name,
+                                Person.l_name,
+                                )).like('%' + value.lower() + '%')
+                        )
+                    )
+                continue;
+
+            # Try to update if you can...
+            field_name = field_name_mapper.get(class_name,{}).get(field_name, field_name)
+            myClassObject =  my_filters[class_name]['classObject']
+
+            # print(myClassObject,class_name, field_name, value)
+
+            # Modify your filter...
+            my_filters[class_name]['query'] = my_filters[class_name]['query']\
+                .filter(
+                    func.lower(getattr(myClassObject, field_name)).like('%' + value.lower() + '%')
+                )
+
+
+
         # These are all boolean...
-        if len(rich_key)==3:
+        elif len(rich_key)==3:
             # Unpack
             class_name, field_name, field_value = rich_key
             # Try to update if you can...
@@ -79,12 +122,13 @@ def get_all_shows(params, output_format='pandas'):
 
             my_filters[class_name][field_name].append(r)
 
+
     # Now build the filters
     for class_name, class_values in my_filters.items():
 
-        myClassObject = class_values['classObject']
+        myClassObject =  class_values['classObject']
 
-        my_filters[class_name]['query'] = myClassObject.query\
+        my_filters[class_name]['query'] = my_filters[class_name]['query']\
             .filter(
             and_(*[
                 or_(*[getattr(myClassObject, field_name) == x['field_value'] for x in field_values
@@ -94,10 +138,12 @@ def get_all_shows(params, output_format='pandas'):
             )
 
 
+
+
     # Get this
     Show_q = my_filters['show']['query'].subquery(with_labels=False)
-    # Theatre_q = my_filters['theatre']['query'].subquery(with_labels=False)
-    # Person_q = my_filters['person']['query'].subquery(with_labels=False)
+    Theatre_q = my_filters['theatre']['query'].subquery(with_labels=False)
+    Person_q = my_filters['person']['query'].subquery(with_labels=False)
 
 
     my_query = db.session.query(
@@ -132,11 +178,23 @@ def get_all_shows(params, output_format='pandas'):
             Role.id == ShowsRolesLink.role_id,
             isouter=True
         )\
+        .join(
+            Person,
+            Person.id == ShowsRolesLink.person_id,
+            isouter=True
+        )\
+        .join(
+            Theatre,
+            Theatre.id == Show.theatre_id,
+            isouter=True
+        )\
         .filter(
             and_(
                 Show.year >= params['show_year_from'],
                 Show.year <= params['show_year_to'],
                 Show.id == Show_q.c.id,
+                Theatre.id == Theatre_q.c.id,
+                Person.id == Person_q.c.id
                 )
             )\
         .group_by(
