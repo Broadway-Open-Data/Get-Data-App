@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
+{% block javascript %}
+  <script type=text/javascript src="{{url_for('static', filename='js/generate-erd.js') }}"></script>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+
   <h1>Access Data – Advanced</h1>
   <p class="important">
     Write an SQL query to the following route:
@@ -12,10 +17,11 @@
   <h3>Data Schema</h3>
   <div class="data-schema">
     {{ data_schema|safe}}
-  <h4>Database ERD</h4>
-  <p>Ignore the `alembic table` and `data_edits` --> they are for internal use only...</p>
-    <img src="{{ url_for('static', filename='images/databases-ERD/broadway.png') }}" alt="Database ERD for Broadway data",  class="enlarge-on-hover">
-
+    <h4>Database ERD</h4>
+    <p>Ignore the `alembic table` and `data_edits` --> they are for internal use only...</p>
+      <!-- <img class='erd-broadway' id='erd-broadway' src="{{ url_for('static', filename='images/databases-ERD/broadway.png') }}" alt="Database ERD for Broadway data",  class="enlarge-on-hover"> -->
+      <button type="button" name="Update ERD" id="update-erd-broadway">Update ERD</button>
+      <img id="erd-broadway" alt="Database ERD for Broadway data" class="enlarge-on-hover" style="display: none;">
 
   </div>
   <h3>Alternatively, you can write your SQL query below:</h3>

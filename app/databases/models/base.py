@@ -13,7 +13,6 @@ class dbTable():
     # Lookup by id
     @classmethod
     def get_by_id(self, id):
-        """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(id=id).first()
 
     # Method to save role to DB

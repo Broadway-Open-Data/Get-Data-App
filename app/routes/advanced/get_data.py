@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import redirect, url_for, \
     flash, render_template, request, jsonify
 from flask_login import login_required, current_user
@@ -30,11 +31,6 @@ def get_data_advanced():
 
     data_schema = db_methods.broadway.get_db_schema()
 
-    # generate the erd?
-    save_path = 'app/static/images/databases-ERD/broadway.png'
-    if not os.path.isfile(save_path):
-        db_methods.get_db_ERD('broadway', save_path=save_path)
-
     form = sqlForm()
 
     if request.method == 'POST':
@@ -57,7 +53,6 @@ def get_data_advanced():
     form.allFields.API_KEY.data = current_user.api_key
 
     return render_template('advanced/get-data.html', data_schema=data_schema, form=form, title="Get Data Avanced")
-
 
 
 
