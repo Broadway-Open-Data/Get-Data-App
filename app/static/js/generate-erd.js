@@ -3,19 +3,33 @@
 $(document).ready(function() {
 
 
-   // $('#update-erd-broadway').click(function(e) {
+  // On page load
+  $.ajax({
+   url: "generate-erd/broadway",
+   type: "get",
+    data: {generate: false},
+    success: function(response) {
+      let path = encodeURIComponent(response)
 
-    // Simplified things
-    // console.log("ID", e.target.id, e.target.value)
-    //let new_status = e.target.value
-    // Update the toggle value
+      $("#erd-broadway").attr({'src':response}).css({"display": "block"});
+    },
+    error: function(xhr) {
+     //Do Something to handle error
+     console.log("error")
+    }
+  });
+
+
+
+   $('#update-erd-broadway').click(function(e) {
     $.ajax({
      url: "generate-erd/broadway",
      type: "get",
-      data: {generate: false},
+      data: {generate: true},
       success: function(response) {
         let path = encodeURIComponent(response)
-        $("#erd-broadway").attr({'src':path}).css({"display": "inline"});
+
+        $("#erd-broadway").attr({'src':response}).css({"display": "block"});
       },
       error: function(xhr) {
        //Do Something to handle error
@@ -23,5 +37,5 @@ $(document).ready(function() {
       }
     });
 
-    // })
+    })
   })

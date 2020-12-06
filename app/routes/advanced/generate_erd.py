@@ -22,10 +22,11 @@ def generate_erd(engine_name):
     """Create an erd and send path"""
 
     # Generate or return path?
-    generate = bool(request.args.get('generate', False))
+    generate = request.args.get('generate', False)
+    generate = True if generate=='true' else False
 
-    # if generate:
-    #     db_methods.get_db_ERD('broadway')
+    if generate:
+        db_methods.get_db_ERD('broadway')
 
 
     # Get the path...
@@ -44,8 +45,9 @@ def generate_erd(engine_name):
 
 
     newest_path = max(my_paths, key=os.path.getctime)
-    newest_path = newest_path.replace('app/static/','')
-    return send_from_directory('static', newest_path)
+    newest_path = newest_path.replace('app','')
+    
+    return newest_path
 
 
 

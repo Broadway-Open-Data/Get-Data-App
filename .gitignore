@@ -27,3 +27,7 @@ _migrations
 
 # Ignore backups
 db_backups/
+
+
+# ignore erds
+**/images/databases-ERD
