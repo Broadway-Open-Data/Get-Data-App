@@ -3,6 +3,7 @@ from databases.methods.broadway import build_query_with_dict
 from databases.models import db
 from sqlalchemy import func, Integer, and_, or_
 from sqlalchemy.sql.expression import cast
+from sqlalchemy.dialects.mysql import JSON
 
 import datetime as dt
 
@@ -98,12 +99,27 @@ def get_all_shows(params, output_format='pandas'):
         func.SUM(func.IF(Role.name == 'performer', 1, 0)).cast(Integer).label('N Performers'),
         func.SUM(func.IF(Role.name != 'performer', 1, 0)).cast(Integer).label('N Creative Team'),
     ]
+    # --------------------------------------------------------------------------
     # Include additional info?
     if params.get('person_info_include'):
         q_cols.extend([
-            Person
+            func.json_arrayagg(
+                func.json_object(
+                    'person_id', Person.id,
+                    'role_name', Role.name,
+                    'f_name', Person.f_name,
+                    'm_name', Person.m_name,
+                    'l_name', Person.l_name,
+                    'name_suffix',Person.name_suffix,
+                    'name_title', Person.name_title,
+                    'name_nickname', Person.name_nickname,
+                    'url', Person.url,
+                    )
+                )\
+                .label('Person Data')
         ])
 
+    # --------------------------------------------------------------------------
     if params.get('theatre_info_include'):
         q_cols.extend([
             Theatre.id.label('theatre_id'),
@@ -125,6 +141,7 @@ def get_all_shows(params, output_format='pandas'):
         ])
 
 
+    # --------------------------------------------------------------------------
 
     my_query = db.session.query(
         *q_cols
@@ -157,8 +174,7 @@ def get_all_shows(params, output_format='pandas'):
             Show.opening_date
         )\
         .filter(
-            Show.year >= params['show_year_from'],
-            Show.year <= params['show_year_to']
+            Show.year.between(params['show_year_from'],params['show_year_to'])
         )
 
 
