@@ -35,7 +35,6 @@ def get_all_shows(params, output_format='pandas'):
     # 7. Include theater info? (a sql join is all...)
 
     # --------------------------------------------------------------------------
-
     # Sometimes we use diff names than the db...
     field_name_mapper = {
         'show':{
@@ -47,126 +46,88 @@ def get_all_shows(params, output_format='pandas'):
         }
     }
 
-    # Filter with these queries...
-    my_filters = {
-        'show':{'classObject':Show, 'query':Show.query},
-        'theatre':{'classObject':Theatre, 'query':Theatre.query},
-        'person':{'classObject':Person, 'query':Person.query}
-    }
 
+    new_params = {}
     for key, value in params.items():
-
-
-        # skip these guys
+        # These are required for each query...
         if key in ['show_year_from', 'show_year_to']:
             continue
 
-        rich_key = key.split('_')
+        if key.endswith('_include'):
+            continue
 
-        # Now we do specialized searches
-        if rich_key[-1]=='ADVANCED' or len(rich_key)==2:
+        # Always have 3 values
+        k1, k2, k3 = key.replace('_ADVANCED','').split('_')
 
-            class_name, field_name = rich_key[:2]
+        # Try to update k2:
+        k2 = field_name_mapper.get(k1,{}).get(k2,k2)
 
-            if class_name=='person' and field_name == 'name':
-                my_filters[class_name]['query'] = my_filters[class_name]['query']\
-                    .filter(
-                        or_(
-                            func.lower(func.CONCAT_WS(
-                                ' ',
-                                Person.f_name,
-                                Person.m_name,
-                                Person.l_name,
-                                )).like('%' + value.lower() + '%'),
-                            func.lower(func.CONCAT_WS(
-                                ' ',
-                                Person.f_name,
-                                Person.l_name,
-                                )).like('%' + value.lower() + '%')
-                        )
-                    )
-                continue;
+        if k1 not in new_params.keys():
+            new_params[k1] = {}
 
-            # Try to update if you can...
-            field_name = field_name_mapper.get(class_name,{}).get(field_name, field_name)
-            myClassObject =  my_filters[class_name]['classObject']
-
-            # print(myClassObject,class_name, field_name, value)
-
-            # Modify your filter...
-            my_filters[class_name]['query'] = my_filters[class_name]['query']\
-                .filter(
-                    func.lower(getattr(myClassObject, field_name)).like('%' + value.lower() + '%')
-                )
+        if k2 not in new_params[k1].keys():
+            new_params[k1][k2] = []
+        # ex: show_genre_musical: True
+        if isinstance(value, bool):
+            new_params[k1][k2].append(k3)
+        # ex: 'show_title_str': 'red'
+        elif isinstance(value, str) and k3=='str':
+            new_params[k1][k2] = value
 
 
+    # done...
+    q_cols = [
+        Show.id.label("show_id"),
+        Show.title.label("Show Title"),
+        Show.year.label("Year"),
+        Show.previews_date.label("Previews Date"),
+        Show.opening_date.label("Opening Date"),
+        Show.closing_date.label("Closing Date"),
+        Show.theatre_name.label("Theatre Name"),
+        Show.production_type.label("Production Type"),
+        Show.show_type.label("Show Type"),
+        Show.show_type_simple.label("Show Type (Simple)"),
+        Show.intermissions.cast(Integer).label("Intermissions"),
+        Show.n_performances.cast(Integer).label("N Performances"),
+        Show.run_time.label("Run Time"),
+        Show.show_never_opened.label("Show Not Opened"),
+        Show.revival.label("Revival"),
+        Show.other_titles.label("Other Titles"),
+        Show.official_website.label("Official Website"),
+        func.COUNT(func.DISTINCT(ShowsRolesLink.person_id)).cast(Integer).label('N People'),
+        func.SUM(func.IF(Role.name == 'performer', 1, 0)).cast(Integer).label('N Performers'),
+        func.SUM(func.IF(Role.name != 'performer', 1, 0)).cast(Integer).label('N Creative Team'),
+    ]
+    # Include additional info?
+    if params.get('person_info_include'):
+        q_cols.extend([
+            Person
+        ])
 
-        # These are all boolean...
-        elif len(rich_key)==3:
-            # Unpack
-            class_name, field_name, field_value = rich_key
-            # Try to update if you can...
-            field_name = field_name_mapper.get(class_name,{}).get(field_name, field_name)
+    if params.get('theatre_info_include'):
+        q_cols.extend([
+            Theatre.id.label('theatre_id'),
+            Theatre.name.label('Theatre Name'),
+            func.CONCAT_WS(' ',
+                Theatre.street_address,
+                Theatre.address_locality,
+                Theatre.address_region,
+                Theatre.postal_code
+                )\
+                .label('Theatre Full Address'),
+            Theatre.street_address.label('Theatre Street Address'),
+            Theatre.address_locality.label('Theatre Address Locality'),
+            Theatre.address_region.label('Theatre Address Region'),
+            Theatre.postal_code.label('Theatre Postal Code'),
+            Theatre.year_closed.label('Theatre Year Closed'),
+            Theatre.year_demolished.label('Theatre Year Demolished'),
+            Theatre.capacity.label('Theatre Capacity'),
+        ])
 
-            if class_name not in my_filters.keys():
-                my_filters[class_name] = {}
-
-            if field_name not in my_filters[class_name].keys():
-                my_filters[class_name][field_name] = []
-
-            r = {
-                'field_name':field_name,
-                'field_value':field_value.title(),
-                'operator':'=='
-            }
-
-            my_filters[class_name][field_name].append(r)
-
-
-    # Now build the filters
-    for class_name, class_values in my_filters.items():
-
-        myClassObject =  class_values['classObject']
-
-        my_filters[class_name]['query'] = my_filters[class_name]['query']\
-            .filter(
-            and_(*[
-                or_(*[getattr(myClassObject, field_name) == x['field_value'] for x in field_values
-                ]) # action for total level 2
-                for field_name, field_values in class_values.items() if isinstance(field_values, list) # logic level 1
-                ]) # action for total level 1
-            )
-
-
-
-
-    # Get this
-    Show_q = my_filters['show']['query'].subquery(with_labels=False)
-    Theatre_q = my_filters['theatre']['query'].subquery(with_labels=False)
-    Person_q = my_filters['person']['query'].subquery(with_labels=False)
 
 
     my_query = db.session.query(
-            Show.id.label("show_id"),
-            Show.title.label("Show Title"),
-            Show.year.label("Year"),
-            Show.previews_date.label("Previews Date"),
-            Show.opening_date.label("Opening Date"),
-            Show.closing_date.label("Closing Date"),
-            Show.theatre_name.label("Theatre Name"),
-            Show.production_type.label("Production Type"),
-            Show.show_type.label("Show Type"),
-            Show.show_type_simple.label("Show Type (Simple)"),
-            Show.intermissions.cast(Integer).label("Intermissions"),
-            Show.n_performances.cast(Integer).label("N Performances"),
-            Show.run_time.label("Run Time"),
-            Show.show_never_opened.label("Show Not Opened"),
-            Show.revival.label("Revival"),
-            Show.other_titles.label("Other Titles"),
-            Show.official_website.label("Official Website"),
-            func.COUNT(func.DISTINCT(ShowsRolesLink.person_id)).cast(Integer).label('N People'),
-            func.SUM(func.IF(Role.name == 'performer', 1, 0)).cast(Integer).label('N Performers'),
-            func.SUM(func.IF(Role.name != 'performer', 1, 0)).cast(Integer).label('N Creative Team'),
+        *q_cols
         )\
         .join(
             ShowsRolesLink,
@@ -188,15 +149,6 @@ def get_all_shows(params, output_format='pandas'):
             Theatre.id == Show.theatre_id,
             isouter=True
         )\
-        .filter(
-            and_(
-                Show.year >= params['show_year_from'],
-                Show.year <= params['show_year_to'],
-                Show.id == Show_q.c.id,
-                Theatre.id == Theatre_q.c.id,
-                Person.id == Person_q.c.id
-                )
-            )\
         .group_by(
             Show.id
         )\
@@ -204,27 +156,53 @@ def get_all_shows(params, output_format='pandas'):
             Show.year,
             Show.opening_date
         )\
-        .subquery(with_labels=False)
+        .filter(
+            Show.year >= params['show_year_from'],
+            Show.year <= params['show_year_to']
+        )
 
-    # Perform a union (or an inner join?)
+
+    # Now, iterate over the new params...
+    my_class_objects = {
+        'show':Show,
+        'theatre':Theatre,
+        'person':Person
+    }
+
+    # chain query...
+    for key, value in new_params.items():
+        ClassObject = my_class_objects[key]
+        # Will either be a list or a str value:
+        for k,v in value.items():
+            # string lookup
+            if isinstance(v, str):
+                # if its a full name...
+                if key=='person' and k == 'name':
+                    my_query = my_query.filter(
+                        func.lower(func.CONCAT_WS(
+                            ' ',
+                            Person.f_name,
+                            Person.m_name,
+                            Person.l_name,
+                            )
+                        ).like('%' + value.lower() + '%')
+                    )
+                else:
+                    my_query = my_query.filter(
+                        func.lower(
+                            getattr(ClassObject, k)
+                        ).like('%' + v.lower() + '%')
+                    )
+            # otherwise, check if in this list...
+            elif isinstance(v, list):
+                my_query = my_query.filter(
+                    getattr(ClassObject, k).in_(v)
+                )
 
 
-    # my_query = db.session.query(my_query)\
-    #     .join(
-    #         Show_q,
-    #         Show_q.c.id == my_query.c.show_id,
-    #     )
 
-    # my_query = my_query.subquery(with_labels=False)
-    # Now, apply filters to subquery as needed...
-    # valid_shows = db.session.query(
-    #         valid_shows,
-    #
-    #     )\
-    #     .group_by(
-    #         valid_shows.c['Show ID']
-    #     )\
-    #     .subquery()
+    # finally
+    my_query = my_query.subquery(with_labels=False)
 
 
     df = pd.read_sql(my_query, db.get_engine(bind='broadway'))

@@ -13,7 +13,7 @@ import datetime
 # Make a form
 class Query(FlaskForm):
     # Show Info
-    show_title_ADVANCED = StringField(label='Show Title (fuzzy)', validators=[Optional(strip_whitespace=True)])
+    show_title_str_ADVANCED = StringField(label='Show Title (fuzzy)', validators=[Optional(strip_whitespace=True)])
     # Show genre
     show_genre_musical = BooleanField(label="Musicals", default=True, render_kw = dict(unchecked=''))
     show_genre_play = BooleanField(label="Plays", default=True, render_kw = dict(unchecked=''))
@@ -25,8 +25,8 @@ class Query(FlaskForm):
     show_type_other = BooleanField(label="Others", default=False, render_kw = dict(unchecked=''))
 
     # Theatre Info
-    theatre_info = BooleanField(label="Theatre Info", description="include theatre info?", default=False, render_kw = dict(unchecked=''))
-    theatre_name_ADVANCED = StringField(label="Theatre Name (fuzzy)")
+    theatre_info_include = BooleanField(label="Theatre Info", description="include theatre info?", default=False, render_kw = dict(unchecked=''))
+    theatre_name_str_ADVANCED = StringField(label="Theatre Name (fuzzy)")
 
 
     # Date Range
@@ -38,8 +38,8 @@ class Query(FlaskForm):
 
 
     # People
-    person_name_ADVANCED = StringField(label='Person Name', validators=[Optional(strip_whitespace=True)])
-
+    person_name_str_ADVANCED = StringField(label='Person Name', validators=[Optional(strip_whitespace=True)])
+    person_info_include = BooleanField(label="Person Info", description="include person info?", default=False, render_kw = dict(unchecked=''))
 
 
 
