@@ -40,8 +40,7 @@ table.dataframe.freeze-header  th {
 tr:nth-child(odd)   { background-color:#eee; }
 tr:nth-child(even)  { background-color:#fff; }
 
-/* th:nth-child(21), */
-td:nth-child(21) {
+.nested-data td:nth-child(21) {
   margin-top: 5px;
   margin-bottom: 10px;
 

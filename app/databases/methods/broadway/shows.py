@@ -226,20 +226,11 @@ def get_all_shows(params, output_format='pandas'):
     # styles = [dict(selector='.col3', props=[('min-width', '300px')]), dict(selector='.data', props=[('min-width', '6em')])]
 
 
-
     if output_format=='html':
-        # if 'Person Data' in df.columns:
-        #     df = df.style.set_properties(
-        #         subset=['Person Data'],
-        #         **{
-        #             'width': '100px',
-        #             'max-width': '100px',
-        #             'overflow':'hidden',
-        #             'text-overflow':'ellipsis',
-        #             'white-space':'nowrap',
-        #         }
-        #     )
-        return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, index=False, render_links=True, classes='freeze-header')
+        my_classes = ['freeze-header']
+        if 'Person Data' in df.columns:
+            my_classes.append('nested-data')
+        return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, index=False, render_links=True, classes=my_classes)
 
     elif output_format=='pandas':
         return df

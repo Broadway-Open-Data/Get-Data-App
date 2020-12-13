@@ -89,11 +89,24 @@ def return_data():
 
         summary = utils.summarize_broadway_shows(df, detail_level)
 
+        my_classes = ['freeze-header']
+        if 'Person Data' in df.columns:
+            my_classes.append('nested-data')
+
+
         # Return the response in json format
         return render_template(
             'analyze/display-data.html',
             summary=summary,
-            data=df.to_html(header=True, na_rep='', bold_rows=False, index_names=False, index=False, render_links=True, classes='freeze-header'),
+            data=df.to_html(
+                header=True,
+                na_rep='',
+                bold_rows=False,
+                index_names=False,
+                index=False,
+                render_links=True,
+                classes=my_classes
+            ),
             title="Data")
 
     else:
