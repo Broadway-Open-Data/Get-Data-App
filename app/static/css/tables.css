@@ -40,6 +40,30 @@ table.dataframe.freeze-header  th {
 tr:nth-child(odd)   { background-color:#eee; }
 tr:nth-child(even)  { background-color:#fff; }
 
+/* th:nth-child(21), */
+td:nth-child(21) {
+  margin-top: 5px;
+  margin-bottom: 10px;
+
+  line-height: 1.1em;
+  white-space: normal;
+  overflow: scroll;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  width: 200px;
+  max-width: 200px;
+
+  color:grey;
+  font-size:10px;
+  font-family: monospace;
+}
+
+
+
+
+
 /* Highlight rows and columns */
 table#show-data .hover {
   background: rgba(248, 241, 132, .35);

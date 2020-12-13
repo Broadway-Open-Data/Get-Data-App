@@ -223,8 +223,22 @@ def get_all_shows(params, output_format='pandas'):
 
     df = pd.read_sql(my_query, db.get_engine(bind='broadway'))
     # df.drop_duplicates(inplace=True) # <---- may not need to drop...
+    # styles = [dict(selector='.col3', props=[('min-width', '300px')]), dict(selector='.data', props=[('min-width', '6em')])]
+
+
 
     if output_format=='html':
+        # if 'Person Data' in df.columns:
+        #     df = df.style.set_properties(
+        #         subset=['Person Data'],
+        #         **{
+        #             'width': '100px',
+        #             'max-width': '100px',
+        #             'overflow':'hidden',
+        #             'text-overflow':'ellipsis',
+        #             'white-space':'nowrap',
+        #         }
+        #     )
         return df.to_html(header=True, na_rep='',bold_rows=False, index_names=False, index=False, render_links=True, classes='freeze-header')
 
     elif output_format=='pandas':
