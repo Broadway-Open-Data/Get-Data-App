@@ -11,7 +11,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal stuff
 from create_db import db
-from databases.models.broadway import Person, DataEdits, RacialIdentity, GenderIdentity
+from databases.models.broadway import Person, Show, DataEdits, RacialIdentity, GenderIdentity
 from databases.methods.broadway import update_person_identities
 from utils.get_db_uri import get_db_uri
 
@@ -56,6 +56,23 @@ class ConnectApp():
     # ------------------------------------------------------------------------------
 
     # Create some methods
+    def nick(self):
+        my_person = Person.query.filter_by(f_name='nick', l_name='spangler').first()
+
+        my_show = Show.query.filter(Show.title.ilike('%%book of mormon%%')).first()
+
+        if my_show in my_person.shows:
+            print(f'{my_person.f_name.title()} has been in {my_show.title}')
+
+        # Use a class method
+        res = my_person.is_in_this_show(my_show.id)
+
+        # Another approach
+        # res = my_show.person_in_this_show(my_person.id)
+        # print(res)
+
+
+
 
     def query_all_users(self):
         """Get all existing show ids"""
@@ -153,6 +170,9 @@ if __name__ =='__main__':
     args = parser.parse_args()
 
     db_app = ConnectApp()
+
+    if 'nick' in args.function_name:
+        db_app.nick()
 
     if 'query_all_users' in args.function_name:
         all_user_ids = db_app.query_all_users()

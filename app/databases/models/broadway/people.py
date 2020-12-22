@@ -188,12 +188,13 @@ class Person(db.Model, BaseModel):
 
     # RELATIONSHIPS
 
-    roles = db.relationship(Role, secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
-    shows = db.relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+    # Need to order this relationship...
+    roles = db.relationship(Role, secondary='broadway.shows_roles_link', order_by='broadway.shows_roles_link.c.show_id', backref=db.backref('people', lazy='dynamic'), passive_deletes=True)
+    shows = db.relationship('Show', secondary='broadway.shows_roles_link', order_by='broadway.shows_roles_link.c.show_id', backref=db.backref('people', lazy='dynamic'), passive_deletes=True)
 
 
-    gender_identity = db.relationship('GenderIdentity', secondary='broadway.gender_identity_lookup_table', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
-    racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('broadway.person', lazy='joined', join_depth=4), passive_deletes=True)
+    gender_identity = db.relationship('GenderIdentity', secondary='broadway.gender_identity_lookup_table', backref=db.backref('people', lazy='dynamic'), passive_deletes=True)
+    racial_identity = db.relationship('RacialIdentity', secondary='broadway.racial_identity_lookup_table', backref=db.backref('people', lazy='dynamic', join_depth=4), passive_deletes=True)
 
 
     # Additional fields
@@ -236,6 +237,18 @@ class Person(db.Model, BaseModel):
             self.update_info(update_dict={'gender_identity_id':my_gender.id})
 
 
+    # Is this person in this show (id)
+    def is_in_this_show(self, show_name):
+        """If this person was in this this show, return True"""
+
+        my_shows = self.shows
+
+        # bad way to do it...
+        # my_shows = session.query(self).get(self.id).first().shows
+        for show in my_shows:
+            if show_id == show.id:
+                return True
+        return False
 
 
 

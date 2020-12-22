@@ -59,6 +59,16 @@ class Show(db.Model, BaseModel):
     # def people(self):
     #     return models.ShowsRolesLink.query.filter(show_id=self.id).all()
 
+
+    def person_in_this_show(self, person_id):
+        """If this person was in this this show, return True"""
+
+        print(self.person)
+        # shows = db.relationship('Show', secondary='broadway.shows_roles_link', backref=db.backref('broadway.person', lazy='dynamic'), passive_deletes=True)
+
+    
+
+
 # def foo(mapper, connection, target):
 #     state = db.inspect(target)
 #     changes = {}
